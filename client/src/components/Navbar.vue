@@ -1,7 +1,7 @@
 <template>
   <v-sheet>
 
-    <v-navigation-drawer v-model="drawer" absolute expand-on-hover permanent>
+    <v-navigation-drawer v-model="drawer" absolute expand-on-hover permanent class="elevation-5" style="top: 57px;">
       <v-list-item>
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
