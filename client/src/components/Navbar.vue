@@ -1,7 +1,7 @@
 <template>
   <v-sheet>
 
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+    <v-navigation-drawer v-model="drawer" absolute expand-on-hover permanent>
       <v-list-item>
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
@@ -14,28 +14,30 @@
 
       <v-divider></v-divider>
 
-      <v-list dense>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>dashboard</v-icon>
-          </v-list-item-icon>
+      <v-list>
+        <router-link to="/dashboard">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>dashboard</v-icon>
+            </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Dashboard</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+        <router-link to="/subjects">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>subject</v-icon>
+            </v-list-item-icon>
 
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>subject</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>Subjects</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Subjects</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+        <v-list-item link>
           <v-list-item-icon>
             <v-icon>schedule</v-icon>
           </v-list-item-icon>
@@ -45,7 +47,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item link>
           <v-list-item-icon>
             <v-icon>list</v-icon>
           </v-list-item-icon>
@@ -55,7 +57,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item link>
           <v-list-item-icon>
             <v-icon>calendar_today</v-icon>
           </v-list-item-icon>
@@ -65,7 +67,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item link>
           <v-list-item-icon>
             <v-icon>list_alt</v-icon>
           </v-list-item-icon>
@@ -75,7 +77,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item link>
           <v-list-item-icon>
             <v-icon>local_offer</v-icon>
           </v-list-item-icon>
