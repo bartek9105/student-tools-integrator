@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <h1>Offers</h1>
   </v-container>
 </template>
 
