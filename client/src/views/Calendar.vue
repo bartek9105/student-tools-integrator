@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Calendar</h1>
+
   </v-container>
 </template>
 
