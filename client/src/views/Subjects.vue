@@ -1,5 +1,7 @@
 <template>
-  <h1>Subjects</h1>
+  <v-container>
+    <h1>Subjects</h1>
+  </v-container>
 </template>
 
 <script>
