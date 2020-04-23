@@ -15,7 +15,7 @@
       <v-divider></v-divider>
 
       <v-list>
-        <router-link to="/dashboard">
+        <router-link to="/">
           <v-list-item link>
             <v-list-item-icon>
               <v-icon>dashboard</v-icon>
@@ -26,6 +26,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link to="/subjects">
           <v-list-item link>
             <v-list-item-icon>
@@ -37,46 +38,56 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
-        <v-list-item link>
-          <v-list-item-icon>
-            <v-icon>schedule</v-icon>
-          </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>Schedule</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <router-link to="/schedule">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>schedule</v-icon>
+            </v-list-item-icon>
 
-        <v-list-item link>
-          <v-list-item-icon>
-            <v-icon>list</v-icon>
-          </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Schedule</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
 
-          <v-list-item-content>
-            <v-list-item-title>To do list</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <router-link to="/todo">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>list</v-icon>
+            </v-list-item-icon>
 
-        <v-list-item link>
-          <v-list-item-icon>
-            <v-icon>calendar_today</v-icon>
-          </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>To do list</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
 
-          <v-list-item-content>
-            <v-list-item-title>Calendar</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <router-link to="/calendar">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>calendar_today</v-icon>
+            </v-list-item-icon>
 
-        <v-list-item link>
-          <v-list-item-icon>
-            <v-icon>list_alt</v-icon>
-          </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Calendar</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
 
-          <v-list-item-content>
-            <v-list-item-title>Exams</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <router-link to="/exams">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>list_alt</v-icon>
+            </v-list-item-icon>
 
+            <v-list-item-content>
+              <v-list-item-title>Exams</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+
+      <router-link to="/offers">
         <v-list-item link>
           <v-list-item-icon>
             <v-icon>local_offer</v-icon>
@@ -86,6 +97,7 @@
             <v-list-item-title>Offers</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+      </router-link>
       </v-list>
     </v-navigation-drawer>
   </v-sheet>
