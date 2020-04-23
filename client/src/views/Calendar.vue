@@ -1,5 +1,7 @@
 <template>
-  <h1>Calendar</h1>
+  <v-container>
+    <h1>Calendar</h1>
+  </v-container>
 </template>
 
 <script>

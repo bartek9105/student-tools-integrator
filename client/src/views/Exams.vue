@@ -1,5 +1,7 @@
 <template>
-  <h1>Exams</h1>
+  <v-container>
+    <h1>Exams</h1>
+  </v-container>
 </template>
 
 <script>
