@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
-  a{
+  a {
     text-decoration: none;
   }
 </style>
