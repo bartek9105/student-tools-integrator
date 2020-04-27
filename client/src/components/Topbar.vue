@@ -16,6 +16,12 @@
         <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
       </v-list-item-avatar>
 
+      <v-list-item>
+        <router-link to="/login">
+          Logout
+        </router-link>
+      </v-list-item>
+
     </v-app-bar>
     <v-sheet
       id="scrolling-techniques-7"
