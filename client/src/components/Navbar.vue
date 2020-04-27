@@ -1,7 +1,7 @@
 <template>
   <v-sheet>
 
-    <v-navigation-drawer v-model="drawer" absolute expand-on-hover permanent class="elevation-1" style="top: 57px;">
+    <v-navigation-drawer v-if="!$route.meta.hideNav" v-model="drawer" absolute expand-on-hover permanent class="elevation-1" style="top: 57px;">
 
       <v-divider></v-divider>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="overflow-hidden">
+  <v-card v-if="!$route.meta.hideNav" class="overflow-hidden">
     <v-app-bar
       absolute
       color="white"
@@ -16,11 +16,9 @@
         <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
       </v-list-item-avatar>
 
-      <v-list-item>
-        <router-link to="/login">
-          Logout
-        </router-link>
-      </v-list-item>
+      <router-link to="/login">
+        Logout
+      </router-link>
 
     </v-app-bar>
     <v-sheet

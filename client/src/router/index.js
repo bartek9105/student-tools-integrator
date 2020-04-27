@@ -7,6 +7,8 @@ import Exams from '@/views/Exams'
 import Offers from '@/views/Offers'
 import Schedule from '@/views/Schedule'
 import Todo from '@/views/Todo'
+import Login from '@/views/Login'
+import Register from '@/views/Register'
 
 Vue.use(VueRouter)
 
@@ -45,6 +47,22 @@ const routes = [
     path: '/todo',
     name: 'Todo',
     component: Todo
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      hideNav: true
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    meta: {
+      hideNav: true
+    }
   }
 ]
 
