@@ -29,7 +29,7 @@
           </router-link>
         </p>
         <router-link to="/">
-          <v-btn color="primary">Login</v-btn>
+          <v-btn color="primary" @click="signIn">Login</v-btn>
         </router-link>
       </v-row>
     </v-container>
@@ -37,11 +37,26 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data () {
     return {
       email: '',
       password: ''
+    }
+  },
+  methods: {
+    async signIn () {
+      try {
+        const res = await axios.post('http://localhost:3000/user/login', {
+          email: this.email,
+          password: this.password
+        })
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
