@@ -28,17 +28,13 @@
             Signup
           </router-link>
         </p>
-        <router-link to="/">
-          <v-btn color="primary" @click="signIn">Login</v-btn>
-        </router-link>
+        <v-btn color="primary" @click="signIn">Login</v-btn>
       </v-row>
     </v-container>
   </v-form>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   data () {
     return {
@@ -47,16 +43,13 @@ export default {
     }
   },
   methods: {
-    async signIn () {
-      try {
-        const res = await axios.post('http://localhost:3000/user/login', {
-          email: this.email,
-          password: this.password
-        })
-        console.log(res)
-      } catch (error) {
-        console.log(error)
-      }
+    signIn () {
+      this.$store.dispatch('signIn', {
+        email: this.email,
+        password: this.password
+      }).then(() => {
+        this.$router.push('/')
+      })
     }
   }
 }
