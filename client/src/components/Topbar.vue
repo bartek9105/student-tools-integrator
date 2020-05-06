@@ -43,7 +43,6 @@ export default {
   },
   methods: {
     logout () {
-      console.log('works?')
       this.$store.dispatch('logout')
     }
   }

@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
                 password: hashPassword
             })
             const savedUser = await user.save()
-            res.send({
+            res.status(409).send({
                 user: savedUser
             })        
         } else {
@@ -33,13 +33,13 @@ exports.login = async (req, res) => {
             email: req.body.email
         })
         if (!user) {
-            res.send({
+            res.status(404).send({
                 error: 'User not found'
             })
         }
         const isEqual = await bcrypt.compare(req.body.password, user.password)
         if (!isEqual) {
-            res.send({
+            res.status(401).send({
                 error: 'Wrong password'
             })
         }

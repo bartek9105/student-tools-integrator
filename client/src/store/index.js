@@ -17,26 +17,21 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async signIn ({ commit }, credentials) {
-      try {
-        const res = await axios.post('http://localhost:3000/user/login', {
-          email: credentials.email,
-          password: credentials.password
-        })
+    signIn ({ commit }, credentials) {
+      return axios.post('http://localhost:3000/user/login', {
+        email: credentials.email,
+        password: credentials.password
+      }).then(res => {
         commit('SET_USER_DATA', res.data)
-      } catch (error) {
-        console.log(error)
-      }
+      })
     },
-    async signUp ({ commit }, credentials) {
-      try {
-        await axios.post('http://localhost:3000/user/register', {
-          email: credentials.email,
-          password: credentials.password
-        })
-      } catch (error) {
-        console.log(error)
-      }
+    signUp ({ commit }, credentials) {
+      return axios.post('http://localhost:3000/user/register', {
+        email: credentials.email,
+        password: credentials.password
+      }).then(res => {
+        commit('SET_USER_DATA', res.data)
+      })
     },
     logout ({ commmit }) {
       this.commit('DELETE_USER_DATA')
