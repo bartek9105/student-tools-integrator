@@ -28,9 +28,7 @@
             Login
           </router-link>
         </p>
-        <router-link to="/login">
-          <v-btn color="primary" @click="signUp">Register</v-btn>
-        </router-link>
+        <v-btn color="primary" @click="signUp">Register</v-btn>
       </v-row>
     </v-container>
   </v-form>
