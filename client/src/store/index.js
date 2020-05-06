@@ -11,6 +11,9 @@ export default new Vuex.Store({
   mutations: {
     SET_USER_DATA (state, userData) {
       state.user = userData
+    },
+    DELETE_USER_DATA (state) {
+      state.user = null
     }
   },
   actions: {
@@ -34,6 +37,9 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
+    },
+    logout ({ commmit }) {
+      this.commit('DELETE_USER_DATA')
     }
   },
   modules: {

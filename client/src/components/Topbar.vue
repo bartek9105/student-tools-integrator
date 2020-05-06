@@ -17,7 +17,7 @@
       </v-list-item-avatar>
 
       <router-link to="/login">
-        Logout
+        <span @click="logout">Logout</span>
       </router-link>
 
     </v-app-bar>
@@ -35,7 +35,18 @@
 
 <script>
 export default {
+  name: 'Topbar',
+  data () {
+    return {
 
+    }
+  },
+  methods: {
+    logout () {
+      console.log('works?')
+      this.$store.dispatch('logout')
+    }
+  }
 }
 </script>
 
