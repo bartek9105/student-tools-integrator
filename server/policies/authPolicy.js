@@ -9,7 +9,7 @@ exports.authValidator = (req, res, next) => {
     const { error, value } = schema.validate(req.body)
 
     if (error) {
-        res.send({
+        res.status(400).send({
             error: error
         })
     }
