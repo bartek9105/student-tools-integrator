@@ -35,6 +35,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -47,7 +48,9 @@ export default {
       this.$store.dispatch('signUp', {
         email: this.email,
         password: this.password
-      })
+      }).then(() => {
+        this.$router.push('/login')
+      }).catch(err => console.log(err.response.data.error))
     }
   }
 }

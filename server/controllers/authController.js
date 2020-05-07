@@ -14,11 +14,11 @@ exports.register = async (req, res) => {
                 password: hashPassword
             })
             const savedUser = await user.save()
-            res.status(409).send({
+            res.send({
                 user: savedUser
             })        
         } else {
-            res.send({
+            res.status(409).send({
                 error: 'User already exists'
             })
         }
