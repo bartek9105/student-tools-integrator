@@ -49,8 +49,20 @@ export default {
         email: this.email,
         password: this.password
       }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Successfully registered'
+        })
         this.$router.push('/login')
-      }).catch(err => console.log(err.response.data.error))
+      }).catch(err => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: `${err.response.data.error}`
+        })
+        console.log(err.response.data.error)
+      })
     }
   }
 }
