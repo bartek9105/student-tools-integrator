@@ -7,14 +7,13 @@
           md="10"
         >
           <v-text-field
-            v-model="firstname"
-            :rules="nameRules"
+            v-model="subjectName"
             label="Subject name"
             required
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="2">
-          <v-btn small color="primary">Add</v-btn>
+          <v-btn small color="primary" @click="addSubject">Add</v-btn>
         </v-col>
       </v-row>
       <v-card
@@ -32,9 +31,6 @@
             <tr>
               <td>Economics</td>
             </tr>
-            <tr>
-              <td>Machine learning</td>
-            </tr>
           </tbody>
         </template>
       </v-simple-table>
@@ -44,11 +40,21 @@
 </template>
 
 <script>
-
+import axios from 'axios'
 
 export default {
   data () {
     return {
+      subjectName: ''
+    }
+  },
+  methods: {
+    addSubject () {
+      axios.post('http://localhost:3000/subjects/add', {
+        name: this.subjectName
+      }).then(() => {
+        console.log('Added')
+      }).catch(err => console.log(err))
     }
   }
 }
