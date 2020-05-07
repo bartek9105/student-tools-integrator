@@ -43,6 +43,11 @@ export default {
   },
   methods: {
     logout () {
+      this.$store.dispatch('showSnackbar', {
+        snackbar: true,
+        color: 'success',
+        text: 'Successfully logged out'
+      })
       this.$store.dispatch('logout')
     }
   }

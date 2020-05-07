@@ -1,22 +1,15 @@
 <template>
   <div class="text-center">
-    <v-btn
-      dark
-      color="red darken-2"
-      @click="snackbar = true"
-    >
-      Open Snackbar
-    </v-btn>
-
     <v-snackbar
-      v-model="snackbar"
-      :multi-line="multiLine"
+      v-model="snackbarOptions.snackbar"
+      :timeout="timeout"
+      :color="snackbarOptions.color"
     >
-      {{ text }}
+      {{ snackbarOptions.text }}
       <v-btn
-        color="red"
+        color
         text
-        @click="snackbar = false"
+        @click="snackbarOptions.snackbar = false"
       >
         Close
       </v-btn>
@@ -25,13 +18,24 @@
 </template>
 <script>
 export default {
-    data() {
-        return{
-            multiLine: true,
-            snackbar: false,
-            text: 'I\'m a multi-line snackbar.'
-        }
+  data () {
+    return {
+      timeout: 2500,
+      snackbarOptions: {
+        snackbar: false,
+        text: '',
+        color: ''
+      }
     }
+  },
+  created () {
+    this.$store.watch(state => state.notifications.snackbar, () => {
+      const options = this.$store.state.notifications.snackbar
+      if (options) {
+        this.snackbarOptions = options
+      }
+    })
+  }
 }
 </script>
 
