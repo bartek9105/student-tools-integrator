@@ -13,3 +13,12 @@ exports.addSubject = async (req, res) => {
         console.log(error);
     }
 }
+
+exports.getSubjeects = async (req, res) => {
+    try {
+        const subjects = await Subject.find()
+        res.send(subjects)       
+    } catch (error) {
+        console.log(subjects)
+    }
+}
