@@ -5,9 +5,11 @@
       color="white"
       scroll-target="#scrolling-techniques-7"
     >
+      <router-link to="/">
+        <v-icon color="blue" class="mr-5">collections_bookmark</v-icon>
+      </router-link>
 
-      <v-toolbar-title>{{ this.$route.name }}</v-toolbar-title>
-
+      <v-toolbar-title> / {{ this.$route.name }}</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <v-icon>notifications</v-icon>
@@ -17,7 +19,7 @@
       </v-list-item-avatar>
 
       <router-link to="/login">
-        <span @click="logout">Logout</span>
+        <span @click="logout" class="ml-3">Logout</span>
       </router-link>
 
     </v-app-bar>
@@ -26,7 +28,7 @@
       class="overflow-y-auto"
       max-height="600"
     >
-      <v-container style="height: 55px;">
+      <v-container style="height: 60px;">
 
       </v-container>
     </v-sheet>
