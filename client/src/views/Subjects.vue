@@ -28,8 +28,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Economics</td>
+            <tr v-for="subject in subjects" :key="subject._id">
+              <td>{{ subject.name }}</td>
             </tr>
           </tbody>
         </template>
@@ -43,9 +43,11 @@
 import axios from 'axios'
 
 export default {
+  name: 'Subjects',
   data () {
     return {
-      subjectName: ''
+      subjectName: '',
+      subjects: []
     }
   },
   methods: {
@@ -54,8 +56,17 @@ export default {
         name: this.subjectName
       }).then(() => {
         console.log('Added')
+        this.subjects.push({ name: this.subjectName })
+      }).catch(err => console.log(err))
+    },
+    getSubjects () {
+      axios.get('http://localhost:3000/subjects').then(res => {
+        this.subjects = res.data
       }).catch(err => console.log(err))
     }
+  },
+  mounted () {
+    this.getSubjects()
   }
 }
 </script>
