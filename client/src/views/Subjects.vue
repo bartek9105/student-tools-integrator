@@ -51,18 +51,24 @@ export default {
     }
   },
   methods: {
-    addSubject () {
-      axios.post('http://localhost:3000/subjects/add', {
-        name: this.subjectName
-      }).then(() => {
-        console.log('Added')
-        this.subjects.push({ name: this.subjectName })
-      }).catch(err => console.log(err))
+    async addSubject () {
+      try {
+        const res = await axios.post('http://localhost:3000/subjects/add', {
+          name: this.subjectName
+        })
+        this.subjects.push(res.data.subject)
+      } catch (error) {
+        console.log(error)
+      }
     },
-    getSubjects () {
-      axios.get('http://localhost:3000/subjects').then(res => {
-        this.subjects = res.data
-      }).catch(err => console.log(err))
+    async getSubjects () {
+      try {
+        await axios.get('http://localhost:3000/subjects').then(res => {
+          this.subjects = res.data
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mounted () {
