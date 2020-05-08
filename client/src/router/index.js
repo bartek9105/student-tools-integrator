@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Dashboard from '@/views/Dashboard'
 import Subjects from '@/views/Subjects'
+import SubjectDetails from '@/views/SubjectDetails'
 import Calendar from '@/views/Calendar'
 import Exams from '@/views/Exams'
 import Offers from '@/views/Offers'
@@ -22,6 +23,11 @@ const routes = [
     path: '/subjects',
     name: 'Subjects',
     component: Subjects
+  },
+  {
+    path: '/subject/:id',
+    name: 'Subject',
+    component: SubjectDetails
   },
   {
     path: '/calendar',
