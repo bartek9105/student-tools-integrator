@@ -7,14 +7,14 @@ exports.addSubject = async (req, res) => {
         })
         const savedSubject = await newSubject.save()
         res.send({
-            message: savedSubject
+            subject: savedSubject
         })
     } catch (error) {
         console.log(error);
     }
 }
 
-exports.getSubjeects = async (req, res) => {
+exports.getSubjects = async (req, res) => {
     try {
         const subjects = await Subject.find()
         res.send(subjects)       
