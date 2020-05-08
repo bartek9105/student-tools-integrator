@@ -22,3 +22,12 @@ exports.getSubjects = async (req, res) => {
         console.log(subjects)
     }
 }
+
+exports.getSubject = async (req, res) => {
+    try {
+        const subjects = await Subject.findById(req.params.id)
+        res.send(subjects)       
+    } catch (error) {
+        console.log(subjects)
+    }
+}

@@ -29,7 +29,11 @@
           </thead>
           <tbody>
             <tr v-for="subject in subjects" :key="subject._id">
-              <td>{{ subject.name }}</td>
+              <td>
+                <router-link :to="'/subject/' + subject._id">
+                  {{ subject.name }}
+                </router-link>
+              </td>
             </tr>
           </tbody>
         </template>
