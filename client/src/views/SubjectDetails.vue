@@ -28,6 +28,11 @@
             </v-list-item>
 
         </v-card>
+        <h3>Upload files</h3>
+        <template>
+          <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
+          <button @click="submitFile">Send</button>
+        </template>
     </v-container>
 </template>
 
@@ -39,7 +44,8 @@ export default {
   data () {
     return {
       subjectDetails: [],
-      requirements: ''
+      requirements: '',
+      file: ''
     }
   },
   methods: {
@@ -53,6 +59,23 @@ export default {
           requirement: this.requirements
         })
         this.subjectDetails[0].requirements.push(this.requirements)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    fileUpload () {
+      this.file = this.$refs.file.files[0]
+    },
+    async submitFile () {
+      const formData = new FormData()
+      formData.append('file', this.file)
+      try {
+        const res = await axios.post('http://localhost:3000/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        console.log(res)
       } catch (error) {
         console.log(error)
       }
