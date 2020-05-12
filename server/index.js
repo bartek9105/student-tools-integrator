@@ -2,19 +2,18 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const cors = require('cors')
-const path = require('path')
-const crypto = require('crypto')
 const multer = require('multer')
-const GridFsStorage = require('multer-gridfs-storage')
-const Grid = require('gridfs-stream')
+const path = require('path')
+const assert = require('assert')
+const fs = require('fs')
+const mongodb = require('mongodb')
 
 dotenv.config()
 
 const app = express()
 app.use(express.json())
 app.use(cors())
-
-let gfs
+app.use('/files', express.static(path.join(__dirname, 'files')))
 
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
@@ -22,41 +21,67 @@ const subjectRoutes = require('./routes/subject')
 app.use('/user', userRoutes)
 app.use('/subjects', subjectRoutes)
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/student-integrator?retryWrites=true&w=majority`, {useNewUrlParser: true})
-
-const db = mongoose.connection
-
-db.once('open', () => {
-    console.log('works')
-    gfs = Grid(db, mongoose.mongo)
-    gfs.collection('uploads')
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'files')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
 })
 
-const storage = new GridFsStorage({
-    url: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/student-integrator?retryWrites=true&w=majority`,
-    file: (req, file) => {
-      return new Promise((resolve, reject) => {
-        crypto.randomBytes(16, (err, buf) => {
-          if (err) {
-            return reject(err);
-          }
-          const filename = buf.toString('hex') + path.extname(file.originalname);
-          const fileInfo = {
-            filename: filename,
-            bucketName: 'uploads'
-          };
-          resolve(fileInfo);
-        });
-      });
-    }
+const upload = multer({ storage: fileStorage })
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  console.log(req.file)
+  fs.createReadStream(req.file.path).
+    pipe(bucket.openUploadStream(req.file.filename)).
+    on('error', function(error) {
+      assert.ifError(error);
+    }).
+    on('finish', function() {
+      console.log('done!');
+    });
+})
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/student-integrator?retryWrites=true&w=majority`
+
+let bucket
+
+mongoose.connect(uri, { useNewUrlParser: true })
+
+mongoose.connection.on('connected', () => {
+  console.log('connected')
+  bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db)
+})
+
+app.get('/files', async (req, res) => {
+  try {
+    const result = await mongoose.connection.db.collection('fs.files').find().toArray()
+    res.send(result)    
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get('/files/:name', async (req, res) => {
+  try {
+    const result = await mongoose.connection.db.collection('fs.files').findOne({ filename: req.params.name })
+    res.send(result)    
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get('/file/:name', async (req, res) => {
+  bucket.openDownloadStreamByName(req.params.name).
+  pipe(fs.createWriteStream(req.params.name)).
+  on('error', function(error) {
+    assert.ifError(error);
+  }).
+  on('finish', function() {
+    console.log('done!');
   });
-
-  const upload = multer({ storage })
-
-  app.post('/upload', upload.single('file'), (req, res) => {
-    res.json({
-        file: req.file
-    })
-  })
+})
 
 app.listen(3000)
