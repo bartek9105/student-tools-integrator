@@ -48,7 +48,7 @@
             </v-list-item>
 
             <v-card-actions>
-              <v-btn text>View</v-btn>
+              <v-btn text @click="downloadFile(file.filename)">View</v-btn>
               <v-btn text>Delete</v-btn>
             </v-card-actions>
           </v-card>
@@ -104,6 +104,18 @@ export default {
     async getUploadedFiles () {
       const files = await axios.get('http://localhost:3000/files')
       this.uploadedFiles = files.data
+    },
+    downloadFile (fileName) {
+      axios.get(`http://localhost:3000/files/${fileName}`, {
+        responseType: 'blob'
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `${fileName}`)
+        document.body.appendChild(link)
+        link.click()
+      })
     }
   },
   mounted () {

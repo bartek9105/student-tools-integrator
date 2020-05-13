@@ -1,4 +1,0 @@
-1) new Set(array) returns an object
-2) +d to make d integer
-3) x.toString(2) converts x to binary or any base
-4) to sort array of strings case insensitive use localecompare

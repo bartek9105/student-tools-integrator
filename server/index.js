@@ -18,6 +18,11 @@ app.use('/files', express.static(path.join(__dirname, 'files')))
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
 
+app.use((req, res, next) => {
+  res.append('Access-Control-Expose-Headers', 'Content-Disposition')
+  next();
+});
+
 app.use('/user', userRoutes)
 app.use('/subjects', subjectRoutes)
 
@@ -63,7 +68,7 @@ app.get('/files', async (req, res) => {
     console.log(error)
   }
 })
-
+// show file contents if is downloaded
 app.get('/files/:name', async (req, res) => {
   try {
     const result = await mongoose.connection.db.collection('fs.files').findOne({ filename: req.params.name })
@@ -72,7 +77,7 @@ app.get('/files/:name', async (req, res) => {
     console.log(error)
   }
 })
-
+// download file
 app.get('/file/:name', async (req, res) => {
   bucket.openDownloadStreamByName(req.params.name).
   pipe(fs.createWriteStream(`files/${req.params.name}`)).
