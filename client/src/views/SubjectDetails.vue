@@ -65,7 +65,7 @@ export default {
     return {
       subjectDetails: [],
       requirements: '',
-      file: '',
+      file: null,
       uploadedFiles: []
     }
   },
@@ -91,12 +91,11 @@ export default {
       const formData = new FormData()
       formData.append('file', this.file)
       try {
-        const res = await axios.post('http://localhost:3000/upload', formData, {
+        await axios.post('http://localhost:3000/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         })
-        console.log(res)
       } catch (error) {
         console.log(error)
       }
@@ -128,6 +127,9 @@ export default {
   },
   mounted () {
     this.getSubjectDetails()
+    this.getUploadedFiles()
+  },
+  updated () {
     this.getUploadedFiles()
   }
 }
