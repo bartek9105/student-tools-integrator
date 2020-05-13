@@ -49,7 +49,7 @@
 
             <v-card-actions>
               <v-btn text @click="downloadFile(file.filename)">View</v-btn>
-              <v-btn text>Delete</v-btn>
+              <v-btn text @click="deleteFile(file._id)">Delete</v-btn>
             </v-card-actions>
           </v-card>
         </div>
@@ -116,6 +116,14 @@ export default {
         document.body.appendChild(link)
         link.click()
       })
+    },
+    async deleteFile (id) {
+      try {
+        await axios.delete(`http://localhost:3000/file/${id}`)
+        console.log(id)
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mounted () {
