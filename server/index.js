@@ -43,10 +43,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     pipe(bucket.openUploadStream(req.file.filename)).
     on('error', function(error) {
       assert.ifError(error);
-    }).
-    on('finish', function() {
-      console.log('done!');
-    });
+    })
 })
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/student-integrator?retryWrites=true&w=majority`
@@ -83,10 +80,7 @@ app.get('/file/:name', (req, res) => {
   pipe(fs.createWriteStream(`files/${req.params.name}`)).
   on('error', function(error) {
     assert.ifError(error);
-  }).
-  on('finish', function() {
-    console.log('done!');
-  });
+  })
 })
 //delete file
 app.delete('/file/:id', async (req, res) => {
