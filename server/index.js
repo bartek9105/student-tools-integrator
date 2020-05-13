@@ -78,7 +78,7 @@ app.get('/files/:name', async (req, res) => {
   }
 })
 // download file
-app.get('/file/:name', async (req, res) => {
+app.get('/file/:name', (req, res) => {
   bucket.openDownloadStreamByName(req.params.name).
   pipe(fs.createWriteStream(`files/${req.params.name}`)).
   on('error', function(error) {
@@ -87,6 +87,16 @@ app.get('/file/:name', async (req, res) => {
   on('finish', function() {
     console.log('done!');
   });
+})
+//delete file
+app.delete('/file/:id', async (req, res) => {
+  try {
+    const obj_id = new mongoose.Types.ObjectId(req.params.id)
+    await mongoose.connection.db.collection('fs.chunks').deleteMany({ files_id: obj_id })
+    bucket.delete(obj_id)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 app.listen(3000)
