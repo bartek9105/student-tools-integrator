@@ -1,0 +1,28 @@
+const Event = require('../models/Event')
+
+exports.getEvents = async (req, res) => {
+    try {
+        const events = await Event.find()
+        res.send(events)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.addEvent = async (req, res) => {
+    try {
+        const event = new Event({
+            name: req.body.name,
+            details: req.body.details,
+            start: req.body.start,
+            end: req.body.end,
+            color: req.body.color
+        })
+        const savedEvent = await event.save()
+        res.send({
+            event: savedEvent
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
