@@ -22,17 +22,37 @@
             tile
         >
             <v-list-item v-for="(requirement, index) in subjectDetails[0].requirements" :key="index">
-            <v-list-item-content>
-                <v-list-item-title>{{ requirement }}</v-list-item-title>
-            </v-list-item-content>
+              <v-list-item-content>
+                  <v-list-item-title>{{ requirement }}</v-list-item-title>
+              </v-list-item-content>
             </v-list-item>
-
         </v-card>
+
         <h3>Upload files</h3>
         <template>
           <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
           <button @click="submitFile">Send</button>
         </template>
+        <div>
+          <v-card
+            width="344"
+            outlined
+            v-for="file in uploadedFiles" :key="file._id"
+          >
+            <v-list-item three-line>
+              <v-list-item-content>
+                <div class="overline mb-4">File</div>
+                <v-list-item-title class="headline mb-1">{{ file.filename }}</v-list-item-title>
+              </v-list-item-content>
+            <v-icon>attachment</v-icon>
+            </v-list-item>
+
+            <v-card-actions>
+              <v-btn text>View</v-btn>
+              <v-btn text>Delete</v-btn>
+            </v-card-actions>
+          </v-card>
+        </div>
     </v-container>
 </template>
 
@@ -45,7 +65,8 @@ export default {
     return {
       subjectDetails: [],
       requirements: '',
-      file: ''
+      file: '',
+      uploadedFiles: []
     }
   },
   methods: {
@@ -79,10 +100,15 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    async getUploadedFiles () {
+      const files = await axios.get('http://localhost:3000/files')
+      this.uploadedFiles = files.data
     }
   },
   mounted () {
     this.getSubjectDetails()
+    this.getUploadedFiles()
   }
 }
 </script>

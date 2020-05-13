@@ -75,7 +75,7 @@ app.get('/files/:name', async (req, res) => {
 
 app.get('/file/:name', async (req, res) => {
   bucket.openDownloadStreamByName(req.params.name).
-  pipe(fs.createWriteStream(req.params.name)).
+  pipe(fs.createWriteStream(`files/${req.params.name}`)).
   on('error', function(error) {
     assert.ifError(error);
   }).
