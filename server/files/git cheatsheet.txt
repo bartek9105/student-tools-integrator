@@ -1,0 +1,39 @@
+INITIALIZE GIT:
+
+git init
+
+git add {file name/files}
+
+git commit -m {message}
+
+git remote add origin {url}
+
+git push -f origin master (first ever push)
+
+then use upstream something (copy)
+
+every other push need only this:
+
+git push
+
+
+CLONE PROJECT:
+
+git clone {url}
+
+git add {file name/files}
+
+git commit -m {message}
+
+git push
+
+
+
+TO REMOVE FILE FROM COMMITED:
+
+git rm --cached {file_name}
+
+
+
+
+git diff
