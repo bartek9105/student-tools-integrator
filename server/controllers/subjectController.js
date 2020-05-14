@@ -29,7 +29,7 @@ exports.getSubject = async (req, res) => {
         const subjects = await Subject.findById(req.params.id)
         res.send(subjects)       
     } catch (error) {
-        console.log(subjects)
+        console.log(subjects) 
     }
 }
 
@@ -37,6 +37,24 @@ exports.updateSubject = async (req, res) => {
     try {
         const updatedSubject = await Subject.updateOne({_id: req.params.id}, {$push: {requirements: req.body.requirement}})
         res.send(updatedSubject)
+    } catch (error) {
+        console.log(subjects)
+    }
+}
+
+exports.deleteSubject = async (req, res) => {
+    try {
+        const deletedSubject = await Subject.findByIdAndRemove({_id: req.params.id})
+        res.send(deletedSubject)
+    } catch (error) {
+        console.log(subjects)
+    }
+}
+
+exports.editSubject = async (req, res) => {
+    try {
+        const editedSubject = await Subject.findByIdAndUpdate({ _id: req.params.id }, { name: req.body.name })
+        res.send(editedSubject)
     } catch (error) {
         console.log(subjects)
     }
