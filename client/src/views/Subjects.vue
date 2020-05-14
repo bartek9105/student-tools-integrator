@@ -26,9 +26,16 @@
             <tr>
               <th class="text-left">Name</th>
             </tr>
+            <tr>
+              <v-text-field
+                v-model="search"
+                label="Search"
+                required
+              ></v-text-field>
+            </tr>
           </thead>
           <tbody>
-            <tr v-for="subject in subjects" :key="subject._id">
+            <tr v-for="subject in subjectsFilter" :key="subject._id">
               <td class="d-flex justify-space-between align-center">
                 <div>
                   <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
@@ -79,7 +86,8 @@ export default {
       subjectName: '',
       subjects: [],
       editing: null,
-      editName: ''
+      editName: '',
+      search: ''
     }
   },
   methods: {
@@ -152,6 +160,13 @@ export default {
           text: error
         })
       }
+    }
+  },
+  computed: {
+    subjectsFilter () {
+      return this.subjects.filter(subject => {
+        return subject.name.toLowerCase().match(this.search)
+      })
     }
   },
   mounted () {
