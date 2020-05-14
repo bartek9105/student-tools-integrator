@@ -31,20 +31,30 @@
             <tr v-for="subject in subjects" :key="subject._id">
               <td class="d-flex justify-space-between align-center">
                 <div>
-                  <router-link :to="'/subject/' + subject._id">
+                  <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
                     {{ subject.name }}
                   </router-link>
+                  <div class="d-flex align-center" v-else>
+                    <v-text-field
+                      v-model="editName"
+                      label="Edit name"
+                      class="mr-2"
+                      small
+                      required
+                    ></v-text-field>
+                    <v-btn color="primary" @click="updateSubject(subject._id)">Save</v-btn>
+                  </div>
                 </div>
                 <div>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-icon class="mr-2" @click="editSubject(subject._id)" v-on="on">create</v-icon>
+                      <v-icon class="mr-2" @click="editing = subject._id" v-on="on">create</v-icon>
                     </template>
                     <span>Edit subject name</span>
                   </v-tooltip>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-icon @click="deleteSubject(subject._id)" v-on="on">delete</v-icon>
+                      <v-icon v-on="on">delete</v-icon>
                     </template>
                     <span>Delete subject</span>
                   </v-tooltip>
@@ -67,7 +77,9 @@ export default {
   data () {
     return {
       subjectName: '',
-      subjects: []
+      subjects: [],
+      editing: null,
+      editName: ''
     }
   },
   methods: {
@@ -76,6 +88,7 @@ export default {
         const res = await axios.post('http://localhost:3000/subjects/add', {
           name: this.subjectName
         })
+        this.subjectName = ''
         this.subjects.push(res.data.subject)
       } catch (error) {
         console.log(error)
@@ -90,18 +103,26 @@ export default {
         console.log(error)
       }
     },
-    async editSubject (id) {
+    async updateSubject (id) {
       try {
-        
+        axios.patch(`http://localhost:3000/subjects/${id}/edit`, {
+          name: this.editName
+        })
+        this.editing = null
+        this.getSubjects()
+        this.editName = ''
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Subject name updated'
+        })
       } catch (error) {
-        
-      }
-    },
-    async deleteSubject (id) {
-      try {
-        
-      } catch (error) {
-        
+        console.log(error)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: error
+        })
       }
     }
   },
