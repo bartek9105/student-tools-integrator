@@ -54,7 +54,7 @@
                   </v-tooltip>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-icon v-on="on">delete</v-icon>
+                      <v-icon v-on="on" @click="deleteSubject(subject._id)">delete</v-icon>
                     </template>
                     <span>Delete subject</span>
                   </v-tooltip>
@@ -90,8 +90,18 @@ export default {
         })
         this.subjectName = ''
         this.subjects.push(res.data.subject)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'New subject added'
+        })
       } catch (error) {
         console.log(error)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: error
+        })
       }
     },
     async getSubjects () {
@@ -109,13 +119,31 @@ export default {
           name: this.editName
         })
         this.editing = null
-        this.getSubjects()
         this.editName = ''
+        this.getSubjects()
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
           text: 'Subject name updated'
         })
+      } catch (error) {
+        console.log(error)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: error
+        })
+      }
+    },
+    async deleteSubject (id) {
+      try {
+        axios.delete(`http://localhost:3000/subjects/${id}/delete`)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Subject deleted'
+        })
+        this.getSubjects()
       } catch (error) {
         console.log(error)
         this.$store.dispatch('showSnackbar', {
