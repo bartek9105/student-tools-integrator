@@ -29,10 +29,26 @@
           </thead>
           <tbody>
             <tr v-for="subject in subjects" :key="subject._id">
-              <td>
-                <router-link :to="'/subject/' + subject._id">
-                  {{ subject.name }}
-                </router-link>
+              <td class="d-flex justify-space-between align-center">
+                <div>
+                  <router-link :to="'/subject/' + subject._id">
+                    {{ subject.name }}
+                  </router-link>
+                </div>
+                <div>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-icon class="mr-2" @click="editSubject(subject._id)" v-on="on">create</v-icon>
+                    </template>
+                    <span>Edit subject name</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-icon @click="deleteSubject(subject._id)" v-on="on">delete</v-icon>
+                    </template>
+                    <span>Delete subject</span>
+                  </v-tooltip>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -72,6 +88,20 @@ export default {
         })
       } catch (error) {
         console.log(error)
+      }
+    },
+    async editSubject (id) {
+      try {
+        
+      } catch (error) {
+        
+      }
+    },
+    async deleteSubject (id) {
+      try {
+        
+      } catch (error) {
+        
       }
     }
   },
