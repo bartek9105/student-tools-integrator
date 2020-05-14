@@ -176,9 +176,19 @@ export default {
             end: this.end,
             color: this.color
           })
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'Event added'
+          })
         }
       } catch (error) {
         console.log(error)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: error
+        })
       }
       this.getEvents()
       this.name = ''
@@ -195,8 +205,18 @@ export default {
         await axios.patch(`http://localhost:3000/events/edit/${ev._id}`, {
           details: ev.details
         })
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Event updated'
+        })
       } catch (error) {
         console.log(error)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: error
+        })
       }
       this.selectedOpen = false
       this.editing = null
@@ -204,8 +224,18 @@ export default {
     async deleteEvent (id) {
       try {
         await axios.delete(`http://localhost:3000/events/delete/${id}`)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Event deleted'
+        })
       } catch (error) {
         console.log(error)
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: error
+        })
       }
       this.selectedOpen = false
       this.getEvents()
