@@ -6,7 +6,8 @@
       tile
     >
       <h1>Upcoming events</h1>
-      <v-list-item two-line v-for="event in getEvents" :key="event._id">
+      <p v-if="getEvents.length < 1">No events</p>
+      <v-list-item two-line v-else v-for="event in getEvents" :key="event._id">
         <v-list-item-content>
           <v-list-item-title>{{ event.name }}</v-list-item-title>
           <v-list-item-subtitle>{{ event.details }}</v-list-item-subtitle>
