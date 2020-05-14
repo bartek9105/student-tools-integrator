@@ -26,3 +26,12 @@ exports.addEvent = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.editEvent = async (req, res) => {
+    try {
+        const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, { details: req.body.details })
+        res.send(editedEvent)
+    } catch (error) {
+        console.log(error)
+    }
+}

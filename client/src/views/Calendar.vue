@@ -145,8 +145,19 @@ export default {
         console.log(error)
       }
     },
-    editEvent (ev) {
+    async editEvent (ev) {
       this.editing = ev._id
+    },
+    async updateEvent (ev) {
+      try {
+        await axios.patch(`http://localhost:3000/events/edit/${ev._id}`, {
+          details: ev.details
+        })
+      } catch (error) {
+        console.log(error)
+      }
+      this.selectedOpen = false
+      this.editing = null
     },
     viewDay ({ date }) {
       this.focus = date
