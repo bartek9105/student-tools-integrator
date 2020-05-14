@@ -159,6 +159,15 @@ export default {
       this.selectedOpen = false
       this.editing = null
     },
+    async deleteEvent (id) {
+      try {
+        await axios.delete(`http://localhost:3000/events/delete/${id}`)
+      } catch (error) {
+        console.log(error)
+      }
+      this.selectedOpen = false
+      this.getEvents()
+    },
     viewDay ({ date }) {
       this.focus = date
       this.type = 'day'
