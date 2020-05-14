@@ -35,3 +35,12 @@ exports.editEvent = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.deleteEvent = async (req, res) => {
+    try {
+        await Event.findByIdAndRemove({ _id: req.params.id })
+        res.send('Deleted')
+    } catch (error) {
+        console.log(error)
+    }
+}
