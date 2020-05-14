@@ -158,13 +158,10 @@ export default {
     }
   },
   methods: {
-    async getEvents () {
-      try {
-        const events = await axios.get('http://localhost:3000/events')
-        this.events = events.data
-      } catch (error) {
-        console.log(error)
-      }
+    getEvents () {
+      this.$store.dispatch('getEvents').then(() => {
+        this.events = this.$store.getters.eventsGetter
+      })
     },
     async addEvent () {
       try {

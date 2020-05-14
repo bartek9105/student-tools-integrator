@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import notifications from './notifications'
+import calendar from './calendar'
 
 Vue.use(Vuex)
 
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    notifications
+    notifications,
+    calendar
   }
 })
