@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <Breadcrumbs/>
      <v-row class="fill-height">
         <v-col>
           <v-sheet height="64">
@@ -132,11 +133,13 @@
 <script>
 import axios from 'axios'
 import CalendarToday from '@/components/CalendarToday'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export default {
   name: 'Calendar',
   components: {
-    CalendarToday
+    CalendarToday,
+    Breadcrumbs
   },
   data () {
     return {
