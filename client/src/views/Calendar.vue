@@ -125,14 +125,19 @@
           </v-sheet>
         </v-col>
       </v-row>
+    <CalendarToday/>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
+import CalendarToday from '@/components/CalendarToday'
 
 export default {
   name: 'Calendar',
+  components: {
+    CalendarToday
+  },
   data () {
     return {
       today: new Date().toISOString().substr(0, 10),
