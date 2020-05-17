@@ -2,14 +2,41 @@
   <v-container>
     <Breadcrumbs/>
       <v-row>
-        <v-col cols="12" md="8" class="d-flex align-items-center">
-          <v-text-field
-            label="Add task"
-            required
-          ></v-text-field>
-          <v-btn color="primary">Add task</v-btn>
+        <v-col cols="12" md="4">
+          <v-card
+            class="mx-auto"
+            max-width="300"
+            tile
+          >
+            <v-text-field
+              label="Add project"
+              required
+            ></v-text-field>
+          <v-expansion-panels>
+            <v-expansion-panel
+              v-for="(item,i) in 5"
+              :key="i"
+            >
+              <v-expansion-panel-header>Item</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                abc
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          </v-card>
         </v-col>
         <v-col cols="12" md="8">
+          <div class="d-flex">
+            <v-text-field
+              label="Add task"
+              required
+            ></v-text-field>
+            <v-btn color="primary">Add task</v-btn>
+          </div>
+          <v-text-field
+            label="Search"
+            filled
+          ></v-text-field>
           <v-simple-table class="mb-8 elevation-1">
             <template v-slot:default>
               <thead>
@@ -183,7 +210,9 @@
             </template>
           </v-simple-table>
         </v-col>
-        <v-col cols="12" md="4" class="white elevation-1">
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="12" class="white elevation-1 mt-8">
           <Chart/>
         </v-col>
       </v-row>
