@@ -1,18 +1,22 @@
-
 <script>
-import { Bar } from 'vue-chartjs'
+import { Line } from 'vue-chartjs'
 
 export default {
   name: 'Chart',
-  extends: Bar,
+  extends: Line,
   data: () => ({
     chartdata: {
-      labels: ['January', 'February'],
+      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
       datasets: [
         {
-          label: 'Data One',
+          label: 'Completed tasks',
           backgroundColor: '#f87979',
-          data: [40, 20]
+          data: [40, 20, 15, 32, 12, 15]
+        },
+        {
+          label: 'All tasks',
+          backgroundColor: '#efd321',
+          data: [10, 30, 140, 20, 15, 96]
         }
       ]
     },
