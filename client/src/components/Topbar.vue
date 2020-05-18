@@ -5,11 +5,6 @@
       color="white"
       scroll-target="#scrolling-techniques-7"
     >
-      <router-link to="/">
-        <v-icon color="blue" class="mr-5">collections_bookmark</v-icon>
-      </router-link>
-
-      <v-toolbar-title> / {{ this.$route.name }}</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <v-icon>notifications</v-icon>
