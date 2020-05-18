@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumbs>{{ this.$route.name }}</v-breadcrumbs>
+        <v-breadcrumbs class="pl-2">{{ this.$route.name }}</v-breadcrumbs>
     </div>
 </template>
 
