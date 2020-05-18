@@ -78,7 +78,7 @@
         ></v-text-field>
         <div class="d-flex pl-6 mb-4" @click="dialogProject = true">
           <v-icon class="mr-2">add</v-icon>
-          <span>Add project</span>
+          <span class="body-2">Add project</span>
         </div>
         <v-expansion-panels>
           <v-expansion-panel
@@ -86,8 +86,8 @@
             :key="i"
           >
             <v-expansion-panel-header class="d-block">
-            <v-icon class="mr-2">folder_open</v-icon>
-              Item
+              <v-icon class="mr-3">folder_open</v-icon>
+              <span class="body-2">Item</span>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pl-6">
               <v-icon color="red" class="mr-4">
@@ -218,7 +218,9 @@
     </v-row>
     <v-row>
       <v-col cols="12" md="12" class="white elevation-1 mt-8">
-        <Chart/>
+        <v-container>
+          <Chart/>
+        </v-container>
       </v-col>
     </v-row>
   </v-container>
