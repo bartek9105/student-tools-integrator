@@ -4,13 +4,54 @@
       <v-col cols="12" md="12">
         <div class="d-flex justify-space-between">
           <Breadcrumbs/>
-          <v-btn class="primary">
+          <v-btn class="primary" @click="dialog = true">
             <v-icon class="mr-2">add</v-icon>
             Add task
           </v-btn>
         </div>
       </v-col>
     </v-row>
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card>
+        <v-container>
+          <v-form>
+            <v-text-field type="text" label="Task"></v-text-field>
+            <v-select
+              :items="items"
+              label="Select project"
+              solo
+            ></v-select>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="date"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="date"
+                label="Due date"
+                prepend-icon="event"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="date" no-title scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+            </v-date-picker>
+            </v-menu>
+            <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
+              Create task
+            </v-btn>
+          </v-form>
+        </v-container>
+      </v-card>
+    </v-dialog>
     <v-row>
       <v-col cols="12" md="3">
         <v-card
@@ -180,6 +221,14 @@ export default {
   components: {
     Breadcrumbs,
     Chart
+  },
+  data () {
+    return {
+      dialog: false,
+      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      picker: new Date().toISOString().substr(0, 10),
+      menu: false
+    }
   }
 }
 </script>
