@@ -4,14 +4,26 @@
       <v-col cols="12" md="12">
         <div class="d-flex justify-space-between">
           <Breadcrumbs/>
-          <v-btn class="primary" @click="dialog = true">
+          <v-btn class="primary" @click="dialogTask = true">
             <v-icon class="mr-2">add</v-icon>
             Add task
           </v-btn>
         </div>
       </v-col>
     </v-row>
-    <v-dialog v-model="dialog" max-width="500">
+    <v-dialog v-model="dialogProject" max-width="500">
+      <v-card>
+        <v-container>
+          <v-form>
+            <v-text-field type="text" label="Project name"></v-text-field>
+            <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialogProject = false">
+              Create project
+            </v-btn>
+          </v-form>
+        </v-container>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogTask" max-width="500">
       <v-card>
         <v-container>
           <v-form>
@@ -45,7 +57,7 @@
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
+            <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialogTask = false">
               Create task
             </v-btn>
           </v-form>
@@ -64,7 +76,7 @@
           label="Search"
           filled
         ></v-text-field>
-        <div class="d-flex pl-6 mb-4">
+        <div class="d-flex pl-6 mb-4" @click="dialogProject = true">
           <v-icon class="mr-2">add</v-icon>
           <span>Add project</span>
         </div>
@@ -224,7 +236,8 @@ export default {
   },
   data () {
     return {
-      dialog: false,
+      dialogTask: false,
+      dialogProject: false,
       items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
       picker: new Date().toISOString().substr(0, 10),
       menu: false
