@@ -4,8 +4,8 @@
      <v-row class="fill-height">
         <v-col>
           <v-sheet height="64">
-            <v-toolbar flat color="white">
-              <v-btn class="mr-4" dark color="primary" @click="dialog = true">
+            <v-toolbar flat>
+              <v-btn class="mr-4" color="primary" @click="dialog = true">
                 Add Event
               </v-btn>
               <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">

@@ -1,12 +1,18 @@
 <template>
-  <v-card v-if="!$route.meta.hideNav" class="overflow-hidden">
+  <v-card v-if="!$route.meta.hideNav" class="overflow-hidden elevation-0">
     <v-app-bar
       absolute
-      color="white"
       scroll-target="#scrolling-techniques-7"
     >
       <v-spacer></v-spacer>
-
+      <v-switch
+        v-model="$vuetify.theme.dark"
+        hide-details
+        inset
+      ></v-switch>
+      <v-icon class="mr-2">
+        brightness_2
+      </v-icon>
       <v-icon>notifications</v-icon>
 
       <v-list-item-avatar>

@@ -1,8 +1,10 @@
 <template>
   <v-sheet>
 
-    <v-navigation-drawer v-if="!$route.meta.hideNav" v-model="drawer" absolute expand-on-hover permanent class="elevation-1" style="top: 61px; z-index: 9999;">
-
+    <v-navigation-drawer v-if="!$route.meta.hideNav" v-model="drawer" absolute dark expand-on-hover permanent class="elevation-1" style="z-index: 9999;">
+      <div class="d-flex justify-center py-4">
+        <v-icon>toll</v-icon>
+      </div>
       <v-divider></v-divider>
       <v-list>
         <router-link to="/">
