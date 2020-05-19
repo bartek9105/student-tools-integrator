@@ -82,7 +82,7 @@
         </div>
         <v-expansion-panels>
           <v-expansion-panel
-            v-for="(item,i) in 4"
+            v-for="(item,i) in 1"
             :key="i"
           >
             <v-expansion-panel-header class="d-block">
