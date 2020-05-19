@@ -10,22 +10,35 @@ export default {
       datasets: [
         {
           label: 'Completed tasks',
-          backgroundColor: '#f87979',
+          backgroundColor: '#556ee6',
           data: [40, 20, 15, 32, 12, 15]
         },
         {
           label: 'All tasks',
-          backgroundColor: '#efd321',
+          backgroundColor: '#34c38f',
           data: [10, 30, 140, 20, 15, 96]
         }
       ]
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      display: false,
+      scales: {
+        xAxes: [{
+          gridLines: {
+            display: false
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: false
+          }
+        }]
+      }
     }
-  }),
 
+  }),
   mounted () {
     this.renderChart(this.chartdata, this.options)
   }
