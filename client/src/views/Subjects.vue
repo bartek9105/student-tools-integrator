@@ -35,57 +35,87 @@
           label="Search"
           filled
         ></v-text-field>
-        <v-card
-          class="mx-auto"
-          tile
-        >
-        <v-simple-table>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">Name</th>
-              </tr>
-              <tr>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="subject in subjectsFilter" :key="subject._id">
-                <td class="d-flex justify-space-between align-center" color="red">
-                  <div>
-                    <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
-                      {{ subject.name }}
-                    </router-link>
-                    <div class="d-flex align-center" v-else>
-                      <v-text-field
-                        v-model="editName"
-                        label="Edit name"
-                        class="mr-2"
-                        small
-                        required
-                      ></v-text-field>
-                      <v-btn color="primary" @click="updateSubject(subject._id)">Save</v-btn>
+        <!--
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">Name</th>
+                </tr>
+                <tr>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="subject in subjectsFilter" :key="subject._id">
+                  <td class="d-flex justify-space-between align-center" color="red">
+                    <div>
+                      <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
+                        {{ subject.name }}
+                      </router-link>
+                      <div class="d-flex align-center" v-else>
+                        <v-text-field
+                          v-model="editName"
+                          label="Edit name"
+                          class="mr-2"
+                          small
+                          required
+                        ></v-text-field>
+                        <v-btn color="primary" @click="updateSubject(subject._id)">Save</v-btn>
+                      </div>
                     </div>
+                    <div>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon class="mr-2" @click="editing = subject._id" v-on="on">create</v-icon>
+                        </template>
+                        <span>Edit subject name</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon v-on="on" @click="deleteSubject(subject._id)">delete</v-icon>
+                        </template>
+                        <span>Delete subject</span>
+                      </v-tooltip>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        -->
+        <v-row>
+          <v-col cols="12" md="4" v-for="subject in subjectsFilter" :key="subject._id">
+            <v-card
+              class="mx-auto"
+              max-width="500"
+              outlined
+            >
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <div class="overline mb-4"></div>
+                  <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
+                    <v-list-item-title class="headline mb-1">{{ subject.name }}</v-list-item-title>
+                  </router-link>
+                  <div v-else>
+                    <v-text-field
+                      v-model="editName"
+                      label="Edit name"
+                      class="mr-2"
+                      small
+                      required
+                    ></v-text-field>
+                    <v-btn text @click="updateSubject(subject._id)">Save</v-btn>
                   </div>
-                  <div>
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-icon class="mr-2" @click="editing = subject._id" v-on="on">create</v-icon>
-                      </template>
-                      <span>Edit subject name</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-icon v-on="on" @click="deleteSubject(subject._id)">delete</v-icon>
-                      </template>
-                      <span>Delete subject</span>
-                    </v-tooltip>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-        </v-card>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-card-actions>
+                <v-btn text @click="editing = subject._id">Edit</v-btn>
+                <v-btn text @click="deleteSubject(subject._id)">Delete</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
     </v-form>
   </v-container>
