@@ -10,13 +10,14 @@
         hide-details
         inset
       ></v-switch>
-      <v-icon class="mr-2">
+      <v-icon class="mr-5">
         brightness_2
       </v-icon>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-icon
             v-on="on"
+            class="mr-3"
           >
             notifications
           </v-icon>
@@ -35,7 +36,7 @@
       </v-list-item-avatar>
 
       <router-link to="/login">
-        <span @click="logout" class="ml-3">Logout</span>
+        <span @click="logout" class="ml-5">Logout</span>
       </router-link>
 
     </v-app-bar>
