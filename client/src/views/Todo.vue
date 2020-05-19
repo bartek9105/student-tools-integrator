@@ -67,7 +67,7 @@
     <v-row>
       <v-col cols="12" md="3">
         <v-card
-          class="mx-auto rounded"
+          class="mx-auto rounded pb-4"
           max-width="400"
           tile
         >
@@ -80,23 +80,14 @@
           <v-icon class="mr-2">add</v-icon>
           <span class="body-2">Add project</span>
         </div>
-        <v-expansion-panels>
-          <v-expansion-panel
-            v-for="(item,i) in 1"
-            :key="i"
-          >
-            <v-expansion-panel-header class="d-block">
-              <v-icon class="mr-3">folder_open</v-icon>
-              <span class="body-2">Item</span>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content class="pl-6">
-              <v-icon color="red" class="mr-4">
-                fiber_manual_record
-              </v-icon>
-              <span class="caption">Project 1</span>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+        <div class="d-flex pl-6 mb-4">
+          <div>
+            <v-icon color="red" class="mr-4">
+              fiber_manual_record
+            </v-icon>
+            <span class="caption">Sport</span>
+          </div>
+        </div>
         </v-card>
       </v-col>
       <v-col cols="12" md="9">
