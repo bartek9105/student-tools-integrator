@@ -13,8 +13,23 @@
       <v-icon class="mr-2">
         brightness_2
       </v-icon>
-      <v-icon>notifications</v-icon>
-
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-icon
+            v-on="on"
+          >
+            notifications
+          </v-icon>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in items"
+            :key="index"
+          >
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-list-item-avatar>
         <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
       </v-list-item-avatar>
@@ -41,7 +56,12 @@ export default {
   name: 'Topbar',
   data () {
     return {
-
+      items: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' }
+      ]
     }
   },
   methods: {
