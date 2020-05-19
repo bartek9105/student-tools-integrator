@@ -18,6 +18,7 @@ app.use('/files', express.static(path.join(__dirname, 'files')))
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
 const eventsRoutes = require('./routes/event')
+const projectRoutes = require('./routes/project')
 
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 app.use('/user', userRoutes)
 app.use('/subjects', subjectRoutes)
 app.use('/events', eventsRoutes)
+app.use('/projects', projectRoutes)
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
