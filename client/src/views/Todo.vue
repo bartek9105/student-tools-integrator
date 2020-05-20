@@ -88,7 +88,14 @@
         </div>
         <div class="mb-4" v-else v-for="project in projects" :key="project._id">
           <div @click="getTasksByProject(project._id)" class="d-flex justify-space-between">
-            <div>
+            <div v-if="editing == project._id">
+              <v-text-field
+                label="Edit project name"
+                v-model="projectName"
+              ></v-text-field>
+              <v-btn @click="editProject(project._id)">Save</v-btn>
+            </div>
+            <div v-else>
               <v-icon color="red" class="mr-4">
                 fiber_manual_record
               </v-icon>
@@ -102,7 +109,7 @@
               </template>
               <v-list>
                 <v-list-item>
-                  <v-list-item-title class="body-2">
+                  <v-list-item-title class="body-2" @click="editing = project._id">
                     <v-icon class="mr-2">create</v-icon> Edit
                   </v-list-item-title>
                 </v-list-item>
@@ -198,7 +205,8 @@ export default {
       date: null,
       tasks: [],
       taskName: '',
-      selectedProject: ''
+      selectedProject: '',
+      editing: null
     }
   },
   methods: {
@@ -239,6 +247,18 @@ export default {
     async deleteProject (id) {
       try {
         await axios.delete(`http://localhost:3000/projects/${id}/delete`)
+        this.getProjects()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async editProject (id) {
+      try {
+        await axios.patch(`http://localhost:3000/projects/${id}/edit`, {
+          name: this.projectName
+        })
+        this.editing = null
+        this.projectName = ''
         this.getProjects()
       } catch (error) {
         console.log(error)
