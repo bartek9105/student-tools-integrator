@@ -106,12 +106,14 @@
               <span class="pt-6 pl-4 mb-4">Tasks</span>
               <tr>
                 <th class="text-left">Name</th>
+                <th class="text-left">Due date</th>
                 <th class="text-left">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr class="mt-2" v-for="task in tasks" :key="task._id">
                 <td>{{ task.name }}</td>
+                <td>{{ task.dueDate }}</td>
                 <td>
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
@@ -201,7 +203,8 @@ export default {
     async addTask () {
       const newTask = await axios.post('http://localhost:3000/tasks/add', {
         name: this.taskName,
-        project: this.selectedProject
+        project: this.selectedProject,
+        dueDate: this.date
       })
       this.tasks.push(newTask.data)
     },

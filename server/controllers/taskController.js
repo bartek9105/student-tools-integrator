@@ -13,7 +13,8 @@ exports.addTask = async (req, res) => {
     try {
         const newTask = await new Task({
             name: req.body.name,
-            project: req.body.project
+            project: req.body.project,
+            dueDate: req.body.dueDate
         })
         const savedTask = await newTask.save()
         res.send(savedTask)        
