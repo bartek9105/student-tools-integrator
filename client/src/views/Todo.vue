@@ -71,32 +71,56 @@
       <!-- Projects list -->
       <v-col cols="12" md="3">
         <v-card
-          class="mx-auto rounded pb-4"
+          class="mx-auto rounded px-4 py-6"
           max-width="400"
           tile
         >
         <v-text-field
-          class="px-6 pt-6"
-          label="Search"
+          label="Search projects"
           filled
         ></v-text-field>
-        <div class="d-flex pl-6 mb-4" @click="dialogProject = true">
+        <div class="d-flex mb-4" @click="dialogProject = true">
           <v-icon class="mr-2">add</v-icon>
           <span class="body-2">Add project</span>
         </div>
-        <div class="d-flex pl-6 mb-4" v-for="project in projects" :key="project._id">
-          <div @click="getTasksByProject(project._id)">
-            <v-icon color="red" class="mr-4">
-              fiber_manual_record
-            </v-icon>
-            <span class="caption">{{ project.name }}</span>
+        <div v-if="projects.length == 0" class="text-center">
+          <p>No projects added</p>
+        </div>
+        <div class="mb-4" v-else v-for="project in projects" :key="project._id">
+          <div @click="getTasksByProject(project._id)" class="d-flex justify-space-between">
+            <div>
+              <v-icon color="red" class="mr-4">
+                fiber_manual_record
+              </v-icon>
+              <span class="caption">{{ project.name }}</span>
+            </div>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-icon v-on="on">
+                  more_vert
+                </v-icon>
+              </template>
+              <v-list>
+                <v-list-item>
+                  <v-list-item-title class="body-2">
+                    <v-icon class="mr-2">create</v-icon> Edit
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title class="body-2" @click="deleteProject(project._id)">
+                    <v-icon class="mr-2">delete</v-icon> Delete
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         </v-card>
       </v-col>
+      <!-- Tasks list -->
       <v-col cols="12" md="9">
         <v-text-field
-          label="Search"
+          label="Search tasks"
           filled
         ></v-text-field>
         <!--Tasks list -->
@@ -211,6 +235,14 @@ export default {
     async getTasksByProject (id) {
       const filteredTasks = await axios.get(`http://localhost:3000/tasks/${id}`)
       this.tasks = filteredTasks.data
+    },
+    async deleteProject (id) {
+      try {
+        await axios.delete(`http://localhost:3000/projects/${id}/delete`)
+        this.getProjects()
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mounted () {

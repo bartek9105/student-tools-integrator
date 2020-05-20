@@ -20,3 +20,21 @@ exports.addProject = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.editProject = async (req, res) => {
+    try {
+        await Project.findByIdAndUpdate({ _id: req.params.id }, { name: req.body.name })
+        res.send('Updated')
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.deleteProject = async (req, res) => {
+    try {
+        await Project.findByIdAndRemove({ _id: req.params.id })
+        res.send('Deleted')
+    } catch (error) {
+        console.log(error)
+    }
+}
