@@ -14,9 +14,9 @@
     <v-dialog v-model="dialogProject" max-width="500">
       <v-card>
         <v-container>
-          <v-form>
-            <v-text-field type="text" label="Project name"></v-text-field>
-            <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialogProject = false">
+          <v-form @submit.prevent>
+            <v-text-field type="text" label="Project name" v-model="projectName"></v-text-field>
+            <v-btn type="submit" color="primary" class="mr-4" @click="addProject" @click.stop="dialogProject = false">
               Create project
             </v-btn>
           </v-form>
@@ -80,12 +80,12 @@
           <v-icon class="mr-2">add</v-icon>
           <span class="body-2">Add project</span>
         </div>
-        <div class="d-flex pl-6 mb-4">
+        <div class="d-flex pl-6 mb-4" v-for="project in projects" :key="project._id">
           <div>
             <v-icon color="red" class="mr-4">
               fiber_manual_record
             </v-icon>
-            <span class="caption">Sport</span>
+            <span class="caption">{{ project.name }}</span>
           </div>
         </div>
         </v-card>
@@ -207,6 +207,7 @@
         </v-simple-table>
       </v-col>
     </v-row>
+    <!--Chart-->
     <v-row>
       <v-col cols="12" md="12" class="white elevation-1 mt-8">
         <v-container>
@@ -218,6 +219,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Chart from '@/components/Chart'
 
@@ -233,8 +235,34 @@ export default {
       dialogProject: false,
       items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
       picker: new Date().toISOString().substr(0, 10),
-      menu: false
+      menu: false,
+      projects: [],
+      projectName: '',
+      date: null
     }
+  },
+  methods: {
+    async getProjects () {
+      try {
+        const projects = await axios.get('http://localhost:3000/projects')
+        this.projects = projects.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async addProject () {
+      try {
+        const newProject = await axios.post('http://localhost:3000/projects/add', {
+          name: this.projectName
+        })
+        this.projects.push(newProject.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  },
+  mounted () {
+    this.getProjects()
   }
 }
 </script>

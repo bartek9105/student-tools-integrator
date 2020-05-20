@@ -12,7 +12,8 @@ exports.getTasks = async (req, res) => {
 exports.addTask = async (req, res) => {
     try {
         const newTask = await new Task({
-            name: req.body.name
+            name: req.body.name,
+            project: req.body.project
         })
         const savedTask = await newTask.save()
         res.send(savedTask)        
