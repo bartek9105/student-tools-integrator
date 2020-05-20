@@ -21,3 +21,12 @@ exports.addTask = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.getTasksByProject = async (req, res) => {
+    try {
+        const tasks = await Task.find({ project: req.params.id })
+        res.send(tasks)
+    } catch (error) {
+        console.log(error)
+    }
+}
