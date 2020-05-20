@@ -32,7 +32,9 @@
               :items="projects"
               label="Select project"
               item-text="name"
+              item-value="_id"
               solo
+              v-model="selectedProject"
             ></v-select>
             <v-menu
               ref="menu"
@@ -66,6 +68,7 @@
       </v-card>
     </v-dialog>
     <v-row>
+      <!-- Projects list -->
       <v-col cols="12" md="3">
         <v-card
           class="mx-auto rounded pb-4"
@@ -82,7 +85,7 @@
           <span class="body-2">Add project</span>
         </div>
         <div class="d-flex pl-6 mb-4" v-for="project in projects" :key="project._id">
-          <div>
+          <div @click="getTasksByProject(project._id)">
             <v-icon color="red" class="mr-4">
               fiber_manual_record
             </v-icon>
@@ -96,6 +99,7 @@
           label="Search"
           filled
         ></v-text-field>
+        <!--Tasks list -->
         <v-simple-table class="mb-8 pt-4 elevation-1 rounded">
           <template v-slot:default>
             <thead>
@@ -108,61 +112,6 @@
             <tbody>
               <tr class="mt-2" v-for="task in tasks" :key="task._id">
                 <td>{{ task.name }}</td>
-                <td>
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on }">
-                      <v-icon v-on="on">
-                        more_vert
-                      </v-icon>
-                    </template>
-                    <v-list>
-                      <v-list-item>
-                        <v-list-item-title class="body-2">
-                          <v-icon class="mr-2">create</v-icon> Edit
-                        </v-list-item-title>
-                      </v-list-item>
-                      <v-list-item>
-                        <v-list-item-title class="body-2">
-                          <v-icon class="mr-2">delete</v-icon> Delete
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-        <v-simple-table class=" pt-4 elevation-1">
-          <template v-slot:default>
-            <thead>
-              <span class="pt-6 pl-4">Completed</span>
-              <tr>
-                <th class="text-left">Done</th>
-                <th class="text-left">Name</th>
-                <th class="text-left">Date</th>
-                <th class="text-left">Status</th>
-                <th class="text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="mt-2">
-                <td>
-                  <v-icon>
-                    check_circle_outline
-                  </v-icon>
-                </td>
-                <td>abc</td>
-                <td>abc</td>
-                <td>
-                  <v-chip
-                    class="white--text"
-                    small
-                    color="green"
-                  >
-                    small chip
-                  </v-chip>
-                </td>
                 <td>
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
@@ -216,14 +165,14 @@ export default {
     return {
       dialogTask: false,
       dialogProject: false,
-      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
       picker: new Date().toISOString().substr(0, 10),
       menu: false,
       projects: [],
       projectName: '',
       date: null,
       tasks: [],
-      taskName: ''
+      taskName: '',
+      selectedProject: ''
     }
   },
   methods: {
@@ -251,9 +200,14 @@ export default {
     },
     async addTask () {
       const newTask = await axios.post('http://localhost:3000/tasks/add', {
-        name: this.taskName
+        name: this.taskName,
+        project: this.selectedProject
       })
       this.tasks.push(newTask.data)
+    },
+    async getTasksByProject (id) {
+      const filteredTasks = await axios.get(`http://localhost:3000/tasks/${id}`)
+      this.tasks = filteredTasks.data
     }
   },
   mounted () {
