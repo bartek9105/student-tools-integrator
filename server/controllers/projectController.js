@@ -12,7 +12,8 @@ exports.getProjects = async (req, res) => {
 exports.addProject = async (req, res) => {
     try {
         const newProject = new Project({
-            name: req.body.name
+            name: req.body.name,
+            color: req.body.color
         })
         const savedProject = await newProject.save()
         res.send(savedProject)        

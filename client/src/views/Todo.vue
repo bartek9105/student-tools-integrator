@@ -15,7 +15,11 @@
       <v-card>
         <v-container>
           <v-form @submit.prevent>
-            <v-text-field type="text" label="Project name" v-model="projectName"></v-text-field>
+            <div class="d-flex">
+              <v-text-field type="text" label="Project name" v-model="projectName"></v-text-field>
+              <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
+            </div>
+            <ColorPicker class="mb-8 ml-0" v-if="colorPicker" v-model="color" v-on:changeColor="changeColor($event)"/>
             <v-btn type="submit" color="primary" class="mr-4" @click="addProject" @click.stop="dialogProject = false">
               Create project
             </v-btn>
@@ -96,7 +100,7 @@
               <v-btn @click="editProject(project._id)">Save</v-btn>
             </div>
             <div v-else>
-              <v-icon color="red" class="mr-4">
+              <v-icon :color="project.color" class="mr-4">
                 fiber_manual_record
               </v-icon>
               <span class="caption">{{ project.name }}</span>
@@ -187,12 +191,14 @@
 import axios from 'axios'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Chart from '@/components/Chart'
+import ColorPicker from '@/components/ColorPicker'
 
 export default {
   name: 'Todo',
   components: {
     Breadcrumbs,
-    Chart
+    Chart,
+    ColorPicker
   },
   data () {
     return {
@@ -206,7 +212,9 @@ export default {
       tasks: [],
       taskName: '',
       selectedProject: '',
-      editing: null
+      editing: null,
+      colorPicker: false,
+      color: ''
     }
   },
   methods: {
@@ -221,7 +229,8 @@ export default {
     async addProject () {
       try {
         const newProject = await axios.post('http://localhost:3000/projects/add', {
-          name: this.projectName
+          name: this.projectName,
+          color: this.color
         })
         this.projects.push(newProject.data)
       } catch (error) {
@@ -263,6 +272,9 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    changeColor (color) {
+      this.color = color
     }
   },
   mounted () {
