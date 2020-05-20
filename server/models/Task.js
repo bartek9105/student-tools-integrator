@@ -5,6 +5,9 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    dueDate: {
+        type: String
+    },
     created: {
         type: Date,
         default: Date.now
