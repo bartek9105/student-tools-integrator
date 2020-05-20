@@ -11,6 +11,10 @@ const taskSchema = new mongoose.Schema({
     }, 
     done: {
         dafault: false
+    },
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
     }
 })
 
