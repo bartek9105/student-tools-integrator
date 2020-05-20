@@ -16,17 +16,35 @@
       <v-col cols="12">
         <div class="d-flex justify-space-between">
           <Breadcrumbs/>
-          <v-btn color="primary" @click="dialogSubject = true">
-            <v-icon class="mr-2">add</v-icon>
-            Add subject
-          </v-btn>
+          <div>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon class="mr-2" v-on="on" @click="displayList = true">reorder</v-icon>
+              </template>
+              <span>Display list</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon v-on="on" @click="displayList = false">view_module</v-icon>
+              </template>
+              <span>Display grid</span>
+            </v-tooltip>
+            <v-btn color="primary ml-4" v-if="subjects.length > 0" @click="dialogSubject = true">
+              <v-icon class="mr-2">add</v-icon>
+              Add subject
+            </v-btn>
+          </div>
         </div>
       </v-col>
     </v-row>
-    <v-container v-if="subjects.length == 0" class="d-flex justify-center">
-      <p class="display-1 gray--text">
+    <v-container v-if="subjects.length == 0" class="text-center">
+      <p class="display-1 gray--text mb-8">
         Nothing here! Add your first subject
       </p>
+      <v-btn color="primary" @click="dialogSubject = true">
+        <v-icon class="mr-2">add</v-icon>
+        Add subject
+      </v-btn>
     </v-container>
     <v-form v-else>
       <v-container>
@@ -35,60 +53,59 @@
           label="Search"
           filled
         ></v-text-field>
-        <!--
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left">Name</th>
-                </tr>
-                <tr>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="subject in subjectsFilter" :key="subject._id">
-                  <td class="d-flex justify-space-between align-center" color="red">
-                    <div>
-                      <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
-                        {{ subject.name }}
-                      </router-link>
-                      <div class="d-flex align-center" v-else>
-                        <v-text-field
-                          v-model="editName"
-                          label="Edit name"
-                          class="mr-2"
-                          small
-                          required
-                        ></v-text-field>
-                        <v-btn color="primary" @click="updateSubject(subject._id)">Save</v-btn>
-                      </div>
+        <v-simple-table v-if="displayList">
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Name</th>
+              </tr>
+              <tr>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="subject in subjectsFilter" :key="subject._id">
+                <td class="d-flex justify-space-between align-center" color="red">
+                  <div>
+                    <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
+                      {{ subject.name }}
+                    </router-link>
+                    <div class="d-flex align-center" v-else>
+                      <v-text-field
+                        v-model="editName"
+                        label="Edit name"
+                        class="mr-2"
+                        small
+                        required
+                      ></v-text-field>
+                      <v-btn color="primary" @click="updateSubject(subject._id)">Save</v-btn>
                     </div>
-                    <div>
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <v-icon class="mr-2" @click="editing = subject._id" v-on="on">create</v-icon>
-                        </template>
-                        <span>Edit subject name</span>
-                      </v-tooltip>
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <v-icon v-on="on" @click="deleteSubject(subject._id)">delete</v-icon>
-                        </template>
-                        <span>Delete subject</span>
-                      </v-tooltip>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        -->
-        <v-row>
+                  </div>
+                  <div>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-icon class="mr-2" @click="editing = subject._id" v-on="on">create</v-icon>
+                      </template>
+                      <span>Edit subject name</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-icon v-on="on" @click="deleteSubject(subject._id)">delete</v-icon>
+                      </template>
+                      <span>Delete subject</span>
+                    </v-tooltip>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        <v-row v-else>
           <v-col cols="12" md="4" v-for="subject in subjectsFilter" :key="subject._id">
             <v-card
               class="mx-auto"
               max-width="500"
               outlined
+              style="box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03);"
             >
               <v-list-item three-line>
                 <v-list-item-content>
@@ -137,7 +154,8 @@ export default {
       subjects: [],
       editing: null,
       editName: '',
-      search: ''
+      search: '',
+      displayList: false
     }
   },
   methods: {
@@ -226,5 +244,7 @@ export default {
 </script>
 
 <style>
-
+  .shadow {
+    box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03) !important;
+  }
 </style>
