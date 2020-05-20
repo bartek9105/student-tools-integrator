@@ -27,7 +27,7 @@
       <v-card>
         <v-container>
           <v-form @submit.prevent>
-            <v-text-field type="text" label="Task"></v-text-field>
+            <v-text-field type="text" label="Task" v-model="taskName"></v-text-field>
             <v-select
               :items="projects"
               label="Select project"
@@ -58,7 +58,7 @@
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialogTask = false">
+            <v-btn type="submit" color="primary" class="mr-4" @click="addTask" @click.stop="dialogTask = false">
               Create task
             </v-btn>
           </v-form>
@@ -101,31 +101,13 @@
             <thead>
               <span class="pt-6 pl-4 mb-4">Tasks</span>
               <tr>
-                <th class="text-left">Done</th>
                 <th class="text-left">Name</th>
-                <th class="text-left">Date</th>
-                <th class="text-left">Status</th>
                 <th class="text-left">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="mt-2">
-                <td>
-                  <v-icon>
-                    check_circle_outline
-                  </v-icon>
-                </td>
-                <td>abc</td>
-                <td>abc</td>
-                <td>
-                  <v-chip
-                    class="white--text"
-                    small
-                    color="green"
-                  >
-                    small chip
-                  </v-chip>
-                </td>
+              <tr class="mt-2" v-for="task in tasks" :key="task._id">
+                <td>{{ task.name }}</td>
                 <td>
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
@@ -239,7 +221,9 @@ export default {
       menu: false,
       projects: [],
       projectName: '',
-      date: null
+      date: null,
+      tasks: [],
+      taskName: ''
     }
   },
   methods: {
@@ -260,10 +244,21 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    async getTasks () {
+      const tasks = await axios.get('http://localhost:3000/tasks')
+      this.tasks = tasks.data
+    },
+    async addTask () {
+      const newTask = await axios.post('http://localhost:3000/tasks/add', {
+        name: this.taskName
+      })
+      this.tasks.push(newTask.data)
     }
   },
   mounted () {
     this.getProjects()
+    this.getTasks()
   }
 }
 </script>
