@@ -26,11 +26,12 @@
     <v-dialog v-model="dialogTask" max-width="500">
       <v-card>
         <v-container>
-          <v-form>
+          <v-form @submit.prevent>
             <v-text-field type="text" label="Task"></v-text-field>
             <v-select
-              :items="items"
+              :items="projects"
               label="Select project"
+              item-text="name"
               solo
             ></v-select>
             <v-menu
