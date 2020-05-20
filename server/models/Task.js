@@ -5,7 +5,10 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: new Date(),
+    created: {
+        type: Date,
+        default: Date.now
+    }, 
     done: {
         dafault: false
     }
