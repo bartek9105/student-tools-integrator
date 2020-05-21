@@ -139,7 +139,8 @@
         ></v-text-field>
 
         <!--Tasks list -->
-        <v-simple-table class="mb-8 pt-4 elevation-1 rounded">
+        <p class="text-center headline mt-8" v-if="tasks.length == 0">No tasks added</p>
+        <v-simple-table class="mb-8 pt-4 elevation-1 rounded" v-else>
           <template v-slot:default>
             <thead>
               <span class="pt-6 pl-4 mb-4">Tasks</span>
