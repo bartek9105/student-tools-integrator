@@ -54,12 +54,15 @@
                 <v-form @submit.prevent="addEvent">
                   <v-text-field v-model="name" type="text" label="Event name"></v-text-field>
                   <v-text-field v-model="details" type="text" label="Event details"></v-text-field>
-                  <v-text-field v-model="start" type="date" label="Start date"></v-text-field>
-                  <v-text-field v-model="end" type="date" label="End date"></v-text-field>
-                  <v-text-field v-model="color" type="color" label="Pick color"></v-text-field>
-                  <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
-                    Create event
-                  </v-btn>
+                  <DatePicker v-on:pickDate="pickStartDate($event)"/>
+                  <DatePicker v-on:pickDate="pickEndDate($event)"/>
+                  <ColorPicker class="mb-8" v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
+                  <div class="d-flex justify-space-between">
+                    <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
+                      Create event
+                    </v-btn>
+                    <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
+                  </div>
                 </v-form>
               </v-container>
             </v-card>
@@ -134,12 +137,16 @@
 import axios from 'axios'
 import CalendarToday from '@/components/CalendarToday'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import DatePicker from '@/components/DatePicker'
+import ColorPicker from '@/components/ColorPicker'
 
 export default {
   name: 'Calendar',
   components: {
     CalendarToday,
-    Breadcrumbs
+    Breadcrumbs,
+    DatePicker,
+    ColorPicker
   },
   data () {
     return {
@@ -162,7 +169,8 @@ export default {
       selectedElement: null,
       selectedOpen: false,
       events: [],
-      dialog: false
+      dialog: false,
+      colorPicker: false
     }
   },
   methods: {
@@ -244,6 +252,15 @@ export default {
       }
       this.selectedOpen = false
       this.getEvents()
+    },
+    pickStartDate (startDate) {
+      this.start = startDate
+    },
+    pickEndDate (endDate) {
+      this.end = endDate
+    },
+    changeColor (color) {
+      this.color = color
     },
     viewDay ({ date }) {
       this.focus = date
