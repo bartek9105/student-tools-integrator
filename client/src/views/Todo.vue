@@ -11,6 +11,7 @@
         </div>
       </v-col>
     </v-row>
+    <!-- Add project dialog -->
     <v-dialog v-model="dialogProject" max-width="500">
       <v-card>
         <v-container>
@@ -27,6 +28,7 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <!-- Add task dialog -->
     <v-dialog v-model="dialogTask" max-width="500">
       <v-card>
         <v-container>
@@ -92,7 +94,7 @@
         </div>
         <div class="mb-4" v-else v-for="project in projects" :key="project._id">
           <div @click="getTasksByProject(project._id)" class="d-flex justify-space-between">
-            <div v-if="editing == project._id">
+            <div v-if="editedProject == project._id">
               <v-text-field
                 label="Edit project name"
                 v-model="projectName"
@@ -113,7 +115,7 @@
               </template>
               <v-list>
                 <v-list-item>
-                  <v-list-item-title class="body-2" @click="editing = project._id">
+                  <v-list-item-title class="body-2" @click="editedProject = project._id">
                     <v-icon class="mr-2">create</v-icon> Edit
                   </v-list-item-title>
                 </v-list-item>
@@ -128,12 +130,14 @@
         </div>
         </v-card>
       </v-col>
-      <!-- Tasks list -->
+
+      <!-- Tasks search -->
       <v-col cols="12" md="9">
         <v-text-field
           label="Search tasks"
           filled
         ></v-text-field>
+
         <!--Tasks list -->
         <v-simple-table class="mb-8 pt-4 elevation-1 rounded">
           <template v-slot:default>
@@ -147,7 +151,11 @@
             </thead>
             <tbody>
               <tr class="mt-2" v-for="task in tasks" :key="task._id">
-                <td>{{ task.name }}</td>
+                <div v-if="editedTask == task._id" >
+                  <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
+                  <v-btn @click="editTask(task._id)">Save</v-btn>
+                </div>
+                <td v-else>{{ task.name }}</td>
                 <td>{{ task.dueDate }}</td>
                 <td>
                   <v-menu offset-y>
@@ -158,12 +166,12 @@
                     </template>
                     <v-list>
                       <v-list-item>
-                        <v-list-item-title class="body-2">
+                        <v-list-item-title class="body-2" @click="editedTask = task._id">
                           <v-icon class="mr-2">create</v-icon> Edit
                         </v-list-item-title>
                       </v-list-item>
                       <v-list-item>
-                        <v-list-item-title class="body-2">
+                        <v-list-item-title class="body-2" @click="deleteTask(task._id)">
                           <v-icon class="mr-2">delete</v-icon> Delete
                         </v-list-item-title>
                       </v-list-item>
@@ -212,7 +220,8 @@ export default {
       tasks: [],
       taskName: '',
       selectedProject: '',
-      editing: null,
+      editedProject: null,
+      editedTask: null,
       colorPicker: false,
       color: ''
     }
@@ -248,6 +257,27 @@ export default {
         dueDate: this.date
       })
       this.tasks.push(newTask.data)
+      this.taskName = ''
+    },
+    async deleteTask (id) {
+      try {
+        await axios.delete(`http://localhost:3000/tasks/${id}/delete`)
+        this.getTasks()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async editTask (id) {
+      try {
+        await axios.patch(`http://localhost:3000/tasks/${id}/edit`, {
+          name: this.taskName
+        })
+        this.getTasks()
+        this.editedTask = null
+        this.taskName = ''
+      } catch (error) {
+        console.log(error)
+      }
     },
     async getTasksByProject (id) {
       const filteredTasks = await axios.get(`http://localhost:3000/tasks/${id}`)
@@ -266,7 +296,7 @@ export default {
         await axios.patch(`http://localhost:3000/projects/${id}/edit`, {
           name: this.projectName
         })
-        this.editing = null
+        this.editedProject = null
         this.projectName = ''
         this.getProjects()
       } catch (error) {
