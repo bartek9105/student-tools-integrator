@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import notifications from './notifications'
 import calendar from './calendar'
+import tasks from './tasks'
 
 Vue.use(Vuex)
 
@@ -35,12 +36,13 @@ export default new Vuex.Store({
         commit('SET_USER_DATA', res.data)
       })
     },
-    logout ({ commmit }) {
-      this.commit('DELETE_USER_DATA')
+    logout ({ commit }) {
+      commit('DELETE_USER_DATA')
     }
   },
   modules: {
     notifications,
-    calendar
+    calendar,
+    tasks
   }
 })
