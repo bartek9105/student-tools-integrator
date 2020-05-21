@@ -2,12 +2,8 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="12">
-        <div class="d-flex justify-space-between">
+        <div>
           <Breadcrumbs/>
-          <v-btn class="primary" @click="dialogTask = true">
-            <v-icon class="mr-2">add</v-icon>
-            Add task
-          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -74,7 +70,6 @@
       </v-card>
     </v-dialog>
     <v-row>
-      <!-- Projects list -->
       <v-col cols="12" md="3">
         <v-card
           class="mx-auto rounded px-4 py-6"
@@ -130,16 +125,60 @@
         </div>
         </v-card>
       </v-col>
-
-      <!-- Tasks -->
       <v-col cols="12" md="9">
         <v-text-field
           label="Search tasks"
           filled
         ></v-text-field>
-
-        <!--Tasks list -->
-        <TodoList/>
+        <div class="d-flex justify-space-between align-center mb-4">
+          <span>Tasks</span>
+          <v-btn class="primary" @click="dialogTask = true">
+            <v-icon class="mr-2">add</v-icon>
+              Add task
+          </v-btn>
+        </div>
+        <v-simple-table class="mb-8 pt-4 elevation-1 rounded">
+            <template v-slot:default>
+              <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left">Due date</th>
+                    <th class="text-left">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr class="mt-2" v-for="task in getTasks" :key="task._id">
+                  <div v-if="editedTask == task._id" >
+                      <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
+                      <v-btn @click="editTask(task._id)">Save</v-btn>
+                  </div>
+                  <td v-else>{{ task.name }}</td>
+                  <td>{{ task.dueDate }}</td>
+                  <td>
+                      <v-menu offset-y>
+                      <template v-slot:activator="{ on }">
+                          <v-icon v-on="on">
+                          more_vert
+                          </v-icon>
+                      </template>
+                      <v-list>
+                          <v-list-item>
+                          <v-list-item-title class="body-2" @click="editedTask = task._id">
+                              <v-icon class="mr-2">create</v-icon> Edit
+                          </v-list-item-title>
+                          </v-list-item>
+                          <v-list-item>
+                          <v-list-item-title class="body-2" @click="deleteTask(task._id)">
+                              <v-icon class="mr-2">delete</v-icon> Delete
+                          </v-list-item-title>
+                          </v-list-item>
+                      </v-list>
+                      </v-menu>
+                  </td>
+                  </tr>
+              </tbody>
+            </template>
+        </v-simple-table>
       </v-col>
     </v-row>
     <!--Chart-->
@@ -158,18 +197,17 @@ import axios from 'axios'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Chart from '@/components/Chart'
 import ColorPicker from '@/components/ColorPicker'
-import TodoList from '@/components/TodoList'
 
 export default {
   name: 'Todo',
   components: {
     Breadcrumbs,
     Chart,
-    ColorPicker,
-    TodoList
+    ColorPicker
   },
   data () {
     return {
+      editedTask: null,
       dialogTask: false,
       dialogProject: false,
       picker: new Date().toISOString().substr(0, 10),
@@ -184,8 +222,39 @@ export default {
       date: ''
     }
   },
-
   methods: {
+    fetchTasks () {
+      this.$store.dispatch('fetchTasks')
+    },
+    async addTask () {
+      await axios.post('http://localhost:3000/tasks/add', {
+        name: this.taskName,
+        project: this.selectedProject,
+        dueDate: this.date
+      })
+      this.fetchTasks()
+      this.taskName = ''
+    },
+    async deleteTask (id) {
+      try {
+        await axios.delete(`http://localhost:3000/tasks/${id}/delete`)
+        this.fetchTasks()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async editTask (id) {
+      try {
+        await axios.patch(`http://localhost:3000/tasks/${id}/edit`, {
+          name: this.taskName
+        })
+        this.fetchTasks()
+        this.editedTask = null
+        this.taskName = ''
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async getProjects () {
       try {
         const projects = await axios.get('http://localhost:3000/projects')
@@ -235,8 +304,14 @@ export default {
       this.color = color
     }
   },
+  computed: {
+    getTasks () {
+      return this.$store.getters.getTasks
+    }
+  },
   mounted () {
     this.getProjects()
+    this.fetchTasks()
   }
 }
 </script>
