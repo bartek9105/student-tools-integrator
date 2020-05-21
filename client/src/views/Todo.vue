@@ -131,7 +131,7 @@
         </v-card>
       </v-col>
 
-      <!-- Tasks search -->
+      <!-- Tasks -->
       <v-col cols="12" md="9">
         <v-text-field
           label="Search tasks"
@@ -139,8 +139,8 @@
         ></v-text-field>
 
         <!--Tasks list -->
-        <p class="text-center headline mt-8" v-if="tasks.length == 0">No tasks added</p>
-        <v-simple-table class="mb-8 pt-4 elevation-1 rounded" v-else>
+        <p class="text-center headline mt-8"></p>
+        <v-simple-table class="mb-8 pt-4 elevation-1 rounded">
           <template v-slot:default>
             <thead>
               <span class="pt-6 pl-4 mb-4">Tasks</span>
@@ -151,7 +151,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="mt-2" v-for="task in tasks" :key="task._id">
+              <tr class="mt-2" v-for="task in getTasks" :key="task._id">
                 <div v-if="editedTask == task._id" >
                   <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
                   <v-btn @click="editTask(task._id)">Save</v-btn>
@@ -218,7 +218,6 @@ export default {
       projects: [],
       projectName: '',
       date: null,
-      tasks: [],
       taskName: '',
       selectedProject: '',
       editedProject: null,
@@ -227,7 +226,15 @@ export default {
       color: ''
     }
   },
+  computed: {
+    getTasks () {
+      return this.$store.getters.getTasks
+    }
+  },
   methods: {
+    fetchTasks () {
+      this.$store.dispatch('fetchTasks')
+    },
     async getProjects () {
       try {
         const projects = await axios.get('http://localhost:3000/projects')
@@ -247,23 +254,19 @@ export default {
         console.log(error)
       }
     },
-    async getTasks () {
-      const tasks = await axios.get('http://localhost:3000/tasks')
-      this.tasks = tasks.data
-    },
     async addTask () {
-      const newTask = await axios.post('http://localhost:3000/tasks/add', {
+      await axios.post('http://localhost:3000/tasks/add', {
         name: this.taskName,
         project: this.selectedProject,
         dueDate: this.date
       })
-      this.tasks.push(newTask.data)
+      this.fetchTasks()
       this.taskName = ''
     },
     async deleteTask (id) {
       try {
         await axios.delete(`http://localhost:3000/tasks/${id}/delete`)
-        this.getTasks()
+        this.fetchTasks()
       } catch (error) {
         console.log(error)
       }
@@ -273,17 +276,19 @@ export default {
         await axios.patch(`http://localhost:3000/tasks/${id}/edit`, {
           name: this.taskName
         })
-        this.getTasks()
+        this.fetchTasks()
         this.editedTask = null
         this.taskName = ''
       } catch (error) {
         console.log(error)
       }
     },
+    /*
     async getTasksByProject (id) {
       const filteredTasks = await axios.get(`http://localhost:3000/tasks/${id}`)
-      this.tasks = filteredTasks.data
+      // this.tasks = filteredTasks.data
     },
+    */
     async deleteProject (id) {
       try {
         await axios.delete(`http://localhost:3000/projects/${id}/delete`)
@@ -310,7 +315,7 @@ export default {
   },
   mounted () {
     this.getProjects()
-    this.getTasks()
+    this.fetchTasks()
   }
 }
 </script>
