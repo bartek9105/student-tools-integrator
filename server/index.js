@@ -18,6 +18,8 @@ app.use('/files', express.static(path.join(__dirname, 'files')))
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
 const eventsRoutes = require('./routes/event')
+const projectRoutes = require('./routes/project')
+const taskRoutes = require('./routes/task')
 
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
@@ -27,6 +29,8 @@ app.use((req, res, next) => {
 app.use('/user', userRoutes)
 app.use('/subjects', subjectRoutes)
 app.use('/events', eventsRoutes)
+app.use('/projects', projectRoutes)
+app.use('/tasks', taskRoutes)
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -40,7 +44,6 @@ const fileStorage = multer.diskStorage({
 const upload = multer({ storage: fileStorage })
 
 app.post('/upload', upload.single('file'), (req, res) => {
-  console.log(req.file)
   fs.createReadStream(req.file.path).
     pipe(bucket.openUploadStream(req.file.filename)).
     on('error', function(error) {
