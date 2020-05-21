@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'Upcoming Events',
+  name: 'UpcomingEvents',
   data () {
     return {
 
