@@ -46,11 +46,20 @@
         <router-link to="/todo">
           <v-list-item link>
             <v-list-item-icon>
-              <v-icon>list</v-icon>
+                <v-badge
+                  v-if="taskCount > 0"
+                  color="green"
+                  :content="taskCount"
+                >
+                  <v-icon>list</v-icon>
+                </v-badge>
+                <v-icon v-else>list</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>To do list</v-list-item-title>
+              <v-list-item-title>
+                  To do list
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </router-link>
@@ -100,6 +109,11 @@ export default {
   data () {
     return {
       drawer: true
+    }
+  },
+  computed: {
+    taskCount () {
+      return this.$store.getters.getTasks.length
     }
   }
 }
