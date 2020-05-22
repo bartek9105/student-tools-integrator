@@ -2,7 +2,7 @@ const Exam = require('../models/Exam')
 
 exports.getExams = async (req, res) => {
     try {
-        const exams = await Exam.find()
+        const exams = await Exam.find().populate('subject', 'name')
         res.send(exams)
     } catch (error) {
         console.log(error);
