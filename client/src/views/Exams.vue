@@ -14,7 +14,7 @@
     <v-simple-table class="elevation-1">
       <template v-slot:default>
         <thead>
-          <tr>
+          <tr class="pl-8">
             <th class="text-left">
               <v-icon class="mr-2">class</v-icon>
               Class
@@ -42,7 +42,7 @@
         </thead>
         <tbody>
           <tr v-for="item in desserts" :key="item.name">
-            <td>{{ item.name }}</td>
+            <td class="border" :style="{'border-left-color': color}">{{ item.name }}</td>
             <td>{{ item.calories }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.calories }}</td>
@@ -108,7 +108,8 @@ export default {
           name: 'KitKat',
           calories: 518
         }
-      ]
+      ],
+      color: '#aea'
     }
   }
 }
@@ -117,5 +118,8 @@ export default {
 <style>
   tr {
     height: 70px;
+  }
+  .border {
+    border-left: 3px solid #000;
   }
 </style>
