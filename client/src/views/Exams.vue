@@ -23,7 +23,7 @@
               solo
               v-model="selectedClass"
             ></v-select>
-            <v-text-field type="text" label="Duration" v-model="duration"></v-text-field>
+            <v-text-field type="text" label="Duration (minutes)" v-model="duration"></v-text-field>
             <v-text-field type="text" label="Room" v-model="room"></v-text-field>
             <v-menu
               ref="menu"
@@ -91,25 +91,13 @@
         </thead>
         <tbody>
           <tr v-for="exam in exams" :key="exam._id">
-            <td class="border" :style="{'border-left-color': color}">{{ exam.subject.name }}</td>
+            <td class="border" :style="{'border-left-color': exam.color}">
+              <router-link :to="'/subject/' + exam.subject._id">{{ exam.subject.name }}</router-link>
+            </td>
             <td>
               {{ exam.date }}
-              <v-chip
-                class="ma-2"
-                color="green"
-                text-color="white"
-                small
-                >
-                <v-avatar
-                  left
-                  class="green darken-4"
-                >
-                3
-                </v-avatar>
-                days left
-              </v-chip>
             </td>
-            <td>{{ exam.duration }}</td>
+            <td>{{ exam.duration }} minutes</td>
             <td>Person</td>
             <td>{{ exam.room }}</td>
             <td>
@@ -154,9 +142,15 @@ export default {
           subject: this.selectedClass,
           date: this.date,
           duration: this.duration,
-          room: this.room
+          room: this.room,
+          color: this.color
         })
         this.dialogExam = false
+        this.selectedClass = ''
+        this.date = ''
+        this.duration = ''
+        this.room = ''
+        this.color = ''
         this.getExams()
       } catch (error) {
         console.log(error)
@@ -177,6 +171,15 @@ export default {
   computed: {
     getSubjects () {
       return this.$store.getters.getSubjects
+    },
+    countDays () {
+      const day = 24 * 60 * 60 * 1000
+      const todayDate = new Date().toISOString().substr(0, 10)
+      const examDate = this.date
+      const examDateFormat = examDate.split('').map(el => {
+        return el === '-' ? ',' : el
+      })
+      return Math.round(Math.abs((todayDate - examDateFormat) / day))
     }
   },
   mounted () {
