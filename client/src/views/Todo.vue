@@ -183,7 +183,7 @@
     </v-row>
     <!--Chart-->
     <v-row>
-      <v-col cols="12" md="12" class="white elevation-1 mt-8">
+      <v-col cols="12" md="12" class="mt-8">
         <v-container>
           <Chart/>
         </v-container>
