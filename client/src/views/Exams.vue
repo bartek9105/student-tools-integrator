@@ -16,7 +16,7 @@
         <v-container>
           <v-form @submit.prevent>
             <v-select
-              :items="classes"
+              :items="getSubjects"
               label="Select class"
               item-text="name"
               item-value="_id"
@@ -90,10 +90,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in desserts" :key="item.name">
-            <td class="border" :style="{'border-left-color': color}">{{ item.name }}</td>
+          <tr v-for="exam in exams" :key="exam._id">
+            <td class="border" :style="{'border-left-color': color}">{{ exam.subject.name }}</td>
             <td>
-              {{ item.calories }}
+              {{ exam.date }}
               <v-chip
                 class="ma-2"
                 color="green"
@@ -109,9 +109,9 @@
                 days left
               </v-chip>
             </td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.calories }}</td>
-            <td>{{ item.name }}</td>
+            <td>{{ exam.duration }}</td>
+            <td>Person</td>
+            <td>{{ exam.room }}</td>
             <td>
               <v-icon class="mr-2">more_vert</v-icon>
             </td>
@@ -123,6 +123,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
 
@@ -134,33 +136,7 @@ export default {
   },
   data () {
     return {
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237
-        },
-        {
-          name: 'Eclair',
-          calories: 262
-        },
-        {
-          name: 'Cupcake',
-          calories: 305
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375
-        }
-      ],
-      color: '#aea',
+      color: '',
       dialogExam: false,
       selectedClass: '',
       date: '',
@@ -168,23 +144,43 @@ export default {
       room: '',
       duration: '',
       colorPicker: false,
-      classes: [
-        {
-          name: 'Python programming'
-        },
-        {
-          name: 'Big data'
-        }
-      ]
+      exams: []
     }
   },
   methods: {
-    addExam () {
-      console.log('added')
+    async addExam () {
+      try {
+        await axios.post('http://localhost:3000/exams/add', {
+          subject: this.selectedClass,
+          date: this.date,
+          duration: this.duration,
+          room: this.room
+        })
+        this.dialogExam = false
+        this.getExams()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getExams () {
+      try {
+        const exams = await axios.get('http://localhost:3000/exams')
+        this.exams = exams.data
+      } catch (error) {
+        console.log(error)
+      }
     },
     changeColor (color) {
       this.color = color
     }
+  },
+  computed: {
+    getSubjects () {
+      return this.$store.getters.getSubjects
+    }
+  },
+  mounted () {
+    this.getExams()
   }
 }
 </script>

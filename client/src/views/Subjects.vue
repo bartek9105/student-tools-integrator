@@ -29,7 +29,7 @@
               </template>
               <span>Display grid</span>
             </v-tooltip>
-            <v-btn color="primary ml-4" v-if="subjects.length > 0" @click="dialogSubject = true">
+            <v-btn color="primary ml-4" v-if="getSubjects.length > 0" @click="dialogSubject = true">
               <v-icon class="mr-2">add</v-icon>
               Add subject
             </v-btn>
@@ -37,7 +37,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-container v-if="subjects.length == 0" class="text-center">
+    <v-container v-if="getSubjects.length == 0" class="text-center">
       <p class="display-1 gray--text mb-8">
         Nothing here! Add your first subject
       </p>
@@ -63,7 +63,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="subject in subjectsFilter" :key="subject._id">
+              <tr v-for="subject in getSubjects" :key="subject._id">
                 <td class="d-flex justify-space-between align-center" color="red">
                   <div>
                     <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
@@ -100,7 +100,7 @@
           </template>
         </v-simple-table>
         <v-row v-else>
-          <v-col cols="12" md="4" v-for="subject in subjectsFilter" :key="subject._id">
+          <v-col cols="12" md="4" v-for="subject in getSubjects" :key="subject._id">
             <v-card
               class="mx-auto"
               max-width="500"
@@ -151,7 +151,6 @@ export default {
     return {
       dialogSubject: false,
       subjectName: '',
-      subjects: [],
       editing: null,
       editName: '',
       search: '',
@@ -161,11 +160,11 @@ export default {
   methods: {
     async addSubject () {
       try {
-        const res = await axios.post('http://localhost:3000/subjects/add', {
+        await axios.post('http://localhost:3000/subjects/add', {
           name: this.subjectName
         })
         this.subjectName = ''
-        this.subjects.push(res.data.subject)
+        this.fetchSubjects()
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
@@ -180,14 +179,8 @@ export default {
         })
       }
     },
-    async getSubjects () {
-      try {
-        await axios.get('http://localhost:3000/subjects').then(res => {
-          this.subjects = res.data
-        })
-      } catch (error) {
-        console.log(error)
-      }
+    fetchSubjects () {
+      this.$store.dispatch('fetchSubjects')
     },
     async updateSubject (id) {
       try {
@@ -196,7 +189,7 @@ export default {
         })
         this.editing = null
         this.editName = ''
-        this.getSubjects()
+        this.fetchSubjects()
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
@@ -219,7 +212,7 @@ export default {
           color: 'success',
           text: 'Subject deleted'
         })
-        this.getSubjects()
+        this.fetchSubjects()
       } catch (error) {
         console.log(error)
         this.$store.dispatch('showSnackbar', {
@@ -231,14 +224,19 @@ export default {
     }
   },
   computed: {
+    /*
     subjectsFilter () {
       return this.subjects.filter(subject => {
         return subject.name.toLowerCase().match(this.search)
       })
+    },
+    */
+    getSubjects () {
+      return this.$store.getters.getSubjects
     }
   },
   mounted () {
-    this.getSubjects()
+    this.fetchSubjects()
   }
 }
 </script>
