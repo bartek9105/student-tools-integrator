@@ -168,7 +168,6 @@ export default {
       room: '',
       duration: '',
       colorPicker: false,
-      pickedColor: '',
       classes: [
         {
           name: 'Python programming'
@@ -184,7 +183,7 @@ export default {
       console.log('added')
     },
     changeColor (color) {
-      this.pickedColor = color
+      this.color = color
     }
   }
 }
