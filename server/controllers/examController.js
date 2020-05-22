@@ -16,6 +16,7 @@ exports.addExam = async (req, res) => {
             date: req.body.date,
             duration: req.body.duration,
             room: req.body.room,
+            color: req.body.color
         })
         const savedExam = await newExam.save()
         res.send(savedExam)

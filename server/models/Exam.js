@@ -13,7 +13,8 @@ const examSchema = new mongoose.Schema({
     },
     room: {
         type: String
-    }
+    },
+    color: String
 })
 
 module.exports = mongoose.model('Exam', examSchema)
