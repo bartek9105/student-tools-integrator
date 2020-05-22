@@ -5,7 +5,11 @@ const subjectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    requirements: [String]
+    requirements: [String],
+    exams: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Exam'
+    }
 })
 
 module.exports = mongoose.model('Subject', subjectSchema)

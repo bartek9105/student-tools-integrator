@@ -20,6 +20,7 @@ const subjectRoutes = require('./routes/subject')
 const eventsRoutes = require('./routes/event')
 const projectRoutes = require('./routes/project')
 const taskRoutes = require('./routes/task')
+const examRoutes = require('./routes/exam')
 
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
@@ -31,6 +32,7 @@ app.use('/subjects', subjectRoutes)
 app.use('/events', eventsRoutes)
 app.use('/projects', projectRoutes)
 app.use('/tasks', taskRoutes)
+app.use('/exams', examRoutes)
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
