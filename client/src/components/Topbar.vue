@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="!$route.meta.hideNav" class="overflow-hidden elevation-0">
+  <v-card v-if="!$route.meta.hideNav" class="overflow-hidden elevation-0" :style="{navBackground: $vuetify.theme.themes[theme].background}">
     <v-app-bar
       absolute
       scroll-target="#scrolling-techniques-7"
@@ -73,6 +73,11 @@ export default {
         text: 'Successfully logged out'
       })
       this.$store.dispatch('logout')
+    }
+  },
+  computed: {
+    theme () {
+      return (this.$vuetify.theme.dark) ? 'dark' : 'light'
     }
   }
 }

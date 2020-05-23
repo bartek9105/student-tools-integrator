@@ -56,7 +56,7 @@
                   <v-text-field v-model="details" type="text" label="Event details"></v-text-field>
                   <DatePicker v-on:pickDate="pickStartDate($event)"/>
                   <DatePicker v-on:pickDate="pickEndDate($event)"/>
-                  <ColorPicker class="mb-8" v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
+                  <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
                   <div class="d-flex justify-space-between">
                     <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
                       Create event
