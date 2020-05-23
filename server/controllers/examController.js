@@ -24,3 +24,26 @@ exports.addExam = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.editExam = async (req, res) => {
+    try {
+        const editedTask = await Exam.findByIdAndUpdate({ _id: req.params.id }, {
+            date: req.body.date,
+            duration: req.body.duration,
+            room: req.body.room,
+            color: req.body.color
+        })
+        res.send(editedTask)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.deleteExam = async (req, res) => {
+    try {
+        const deletedTask = await Exam.findByIdAndRemove({ _id: req.params.id })
+        res.send(deletedTask)
+    } catch (error) {
+        console.log(error)
+    }
+}
