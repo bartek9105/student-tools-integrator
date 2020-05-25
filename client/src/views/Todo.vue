@@ -70,7 +70,7 @@
       </v-card>
     </v-dialog>
     <v-row>
-      <v-col cols="12" md="3">
+      <v-col cols="12" sm="12" md="3">
         <v-card
           class="mx-auto rounded px-4 py-6"
           max-width="400"
@@ -137,7 +137,10 @@
               Add task
           </v-btn>
         </div>
-        <v-simple-table class="mb-8 pt-4 elevation-1 rounded">
+        <div class="text-center pt-4" v-if="getTasks.length == 0">
+          <p class="headline">No tasks left!</p>
+        </div>
+        <v-simple-table class="mb-8 pt-4 elevation-1 rounded" v-else>
             <template v-slot:default>
               <thead>
                   <tr>
