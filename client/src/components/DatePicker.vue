@@ -30,7 +30,8 @@ export default {
   name: 'DatePicker',
   data () {
     return {
-      date: ''
+      date: '',
+      menu: false
     }
   },
   methods: {

@@ -10,6 +10,7 @@ import Schedule from '@/views/Schedule'
 import Todo from '@/views/Todo'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import FullCalendar from '@/views/FullCalendar'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/calendar',
     name: 'Calendar',
     component: Calendar
+  },
+  {
+    path: '/fullcalendar',
+    name: 'FullCalendar',
+    component: FullCalendar
   },
   {
     path: '/exams',

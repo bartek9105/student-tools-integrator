@@ -12,11 +12,9 @@ exports.getEvents = async (req, res) => {
 exports.addEvent = async (req, res) => {
     try {
         const event = new Event({
-            name: req.body.name,
-            details: req.body.details,
+            title: req.body.title,
             start: req.body.start,
             end: req.body.end,
-            color: req.body.color
         })
         const savedEvent = await event.save()
         res.send({

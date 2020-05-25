@@ -30,6 +30,18 @@
           </v-list-item>
         </router-link>
 
+        <router-link to="/fullcalendar">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>subject</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Full calendar</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+
         <router-link to="/schedule">
           <v-list-item link>
             <v-list-item-icon>

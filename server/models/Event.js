@@ -1,13 +1,9 @@
 const mongoose = require('mongoose')
 
 const eventSchema = new mongoose.Schema({
-    name: {
+    title: {
         required: true,
         type: String
-    },
-    details: {
-        required: true,
-        type: String,
     },
     start: {
         required: true,
@@ -15,9 +11,6 @@ const eventSchema = new mongoose.Schema({
     },
     end: {
         required: true,
-        type: String
-    },
-    color: {
         type: String
     }
 })
