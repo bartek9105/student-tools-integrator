@@ -167,7 +167,6 @@
                 </v-list>
               </v-menu>
             </td>
-
           </tr>
         </tbody>
       </template>
@@ -283,15 +282,6 @@ export default {
   computed: {
     getSubjects () {
       return this.$store.getters.getSubjects
-    },
-    countDays () {
-      const day = 24 * 60 * 60 * 1000
-      const todayDate = new Date().toISOString().substr(0, 10)
-      const examDate = this.date
-      const examDateFormat = examDate.split('').map(el => {
-        return el === '-' ? ',' : el
-      })
-      return Math.round(Math.abs((todayDate - examDateFormat) / day))
     }
   },
   mounted () {
