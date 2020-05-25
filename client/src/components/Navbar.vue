@@ -1,7 +1,6 @@
 <template>
   <v-sheet>
-
-    <v-navigation-drawer v-if="!$route.meta.hideNav" v-model="drawer" absolute dark expand-on-hover permanent class="elevation-1" style="z-index: 9999;">
+    <v-navigation-drawer v-if="!$route.meta.hideNav" v-model="drawer" absolute dark expand-on-hover permanent class="nav elevation-1" style="z-index: 9999;">
       <div class="d-flex justify-center py-4">
         <v-icon>toll</v-icon>
       </div>
@@ -120,4 +119,9 @@ export default {
 </script>
 
 <style>
+  @media only screen and (max-width: 768px) {
+    .nav {
+      display: none !important;
+    }
+  }
 </style>
