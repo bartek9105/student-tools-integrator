@@ -6,12 +6,24 @@ const eventSchema = new mongoose.Schema({
         type: String
     },
     start: {
-        required: true,
+        required: false,
         type: String
     },
     end: {
-        required: true,
+        required: false,
         type: String
+    },
+    startRecurence: {
+        required: false,
+        type: String
+    },
+    endRecurence: {
+        required: false,
+        type: String
+    },
+    daysOfWeek: {
+        required: false,
+        type: Array
     }
 })
 
