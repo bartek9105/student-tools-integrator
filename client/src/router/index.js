@@ -3,14 +3,13 @@ import VueRouter from 'vue-router'
 import Dashboard from '@/views/Dashboard'
 import Subjects from '@/views/Subjects'
 import SubjectDetails from '@/views/SubjectDetails'
-import Calendar from '@/views/Calendar'
 import Exams from '@/views/Exams'
 import Offers from '@/views/Offers'
 import Schedule from '@/views/Schedule'
 import Todo from '@/views/Todo'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
-import FullCalendar from '@/views/FullCalendar'
+import Calendar from '@/views/Calendar'
 
 Vue.use(VueRouter)
 
@@ -34,11 +33,6 @@ const routes = [
     path: '/calendar',
     name: 'Calendar',
     component: Calendar
-  },
-  {
-    path: '/fullcalendar',
-    name: 'FullCalendar',
-    component: FullCalendar
   },
   {
     path: '/exams',

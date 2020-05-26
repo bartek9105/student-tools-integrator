@@ -34,14 +34,14 @@
               </v-list-item>
             </router-link>
 
-            <router-link to="/fullcalendar">
+            <router-link to="/calendar">
               <v-list-item link>
                 <v-list-item-icon>
-                  <v-icon>subject</v-icon>
+                  <v-icon>calendar_today</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  <v-list-item-title>Full calendar</v-list-item-title>
+                  <v-list-item-title>Calendar</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </router-link>
@@ -75,18 +75,6 @@
                   <v-list-item-title>
                       To do list
                   </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </router-link>
-
-            <router-link to="/calendar">
-              <v-list-item link>
-                <v-list-item-icon>
-                  <v-icon>calendar_today</v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title>Calendar</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </router-link>
@@ -130,6 +118,7 @@
           app
           clipped-left
           dense
+          class="elevation-0"
         >
           <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <v-spacer></v-spacer>
