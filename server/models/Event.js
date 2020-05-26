@@ -5,20 +5,20 @@ const eventSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    start: {
+    startTime: {
         required: false,
         type: String
     },
-    end: {
+    endTime: {
         required: false,
         type: String
     },
-    startRecurence: {
-        required: false,
+    startRecur: {
+        required: true,
         type: String
     },
-    endRecurence: {
-        required: false,
+    endRecur: {
+        required: true,
         type: String
     },
     daysOfWeek: {
