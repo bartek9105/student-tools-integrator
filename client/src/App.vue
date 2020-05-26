@@ -114,7 +114,16 @@
                 </v-list-item-content>
               </v-list-item>
             </router-link>
+
           </v-list>
+          <v-spacer></v-spacer>
+          <v-list-item-avatar>
+            <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+          </v-list-item-avatar>
+          <router-link to="/login">
+            <span @click="logout" class="ml-5">Logout</span>
+          </router-link>
+          <v-icon class="ml-4">exit_to_app</v-icon>
         </v-navigation-drawer>
 
         <v-app-bar
@@ -153,12 +162,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-list-item-avatar>
-            <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
-          </v-list-item-avatar>
-          <router-link to="/login">
-            <span @click="logout" class="ml-5">Logout</span>
-          </router-link>
+
         </v-app-bar>
         <v-content>
           <v-container>

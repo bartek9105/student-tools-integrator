@@ -13,6 +13,8 @@ exports.addEvent = async (req, res) => {
     try {
         const event = new Event({
             title: req.body.title,
+            start: req.body.start,
+            end: req.body.end,
             startTime: req.body.startTime,
             endTime: req.body.endTime,
             startRecur: req.body.startRecurence,
