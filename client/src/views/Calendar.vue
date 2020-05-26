@@ -1,351 +1,240 @@
 <template>
   <v-container>
-    <Breadcrumbs/>
-     <v-row class="fill-height">
-        <v-col>
-          <v-sheet height="64">
-            <v-toolbar flat>
-              <v-btn class="mr-4" color="primary" @click="dialog = true">
-                Add Event
-              </v-btn>
-              <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-                Today
-              </v-btn>
-              <v-btn fab text small color="grey darken-2" @click="prev">
-                <v-icon small>mdi-chevron-left</v-icon>
-              </v-btn>
-              <v-btn fab text small color="grey darken-2" @click="next">
-                <v-icon small>mdi-chevron-right</v-icon>
-              </v-btn>
-              <v-toolbar-title>{{ title }}</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-menu bottom right>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    outlined
-                    color="grey darken-2"
-                    v-on="on"
-                  >
-                    <span>{{ typeToLabel[type] }}</span>
-                    <v-icon right>mdi-menu-down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item @click="type = 'day'">
-                    <v-list-item-title>Day</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = 'week'">
-                    <v-list-item-title>Week</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = 'month'">
-                    <v-list-item-title>Month</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="type = '4day'">
-                    <v-list-item-title>4 days</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-toolbar>
-          </v-sheet>
-
-          <v-dialog v-model="dialog" max-width="500">
-            <v-card>
-              <v-container>
-                <v-form @submit.prevent="addEvent">
-                  <v-text-field v-model="name" type="text" label="Event name"></v-text-field>
-                  <v-text-field v-model="details" type="text" label="Event details"></v-text-field>
-                  <DatePicker v-on:pickDate="pickStartDate($event)"/>
-                  <DatePicker v-on:pickDate="pickEndDate($event)"/>
-                  <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
-                  <div class="d-flex justify-space-between">
-                    <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
-                      Create event
-                    </v-btn>
-                    <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
-                  </div>
-                </v-form>
-              </v-container>
-            </v-card>
-          </v-dialog>
-
-          <v-sheet height="600">
-            <v-calendar
-              ref="calendar"
-              v-model="focus"
-              color="primary"
-              :events="events"
-              :event-color="getEventColor"
-              :now="today"
-              :type="type"
-              @click:event="showEvent"
-              @click:more="viewDay"
-              @click:date="viewDay"
-              @change="updateRange"
-            ></v-calendar>
-            <v-menu
-              v-model="selectedOpen"
-              :close-on-content-click="false"
-              :activator="selectedElement"
-              offset-x
-            >
-              <v-card
-                color="grey lighten-4"
-                min-width="350px"
-                flat
-              >
-                <v-toolbar
-                  :color="selectedEvent.color"
-                  dark
-                >
-
-                  <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                  <v-spacer></v-spacer>
-                  <v-btn icon>
-                    <v-icon @click="deleteEvent(selectedEvent._id)">mdi-delete</v-icon>
-                  </v-btn>
-                </v-toolbar>
+    <div class="d-flex justify-space-between align-center">
+      <Breadcrumbs/>
+      <v-btn class="primary" @click="dialog = true">Add event</v-btn>
+    </div>
+    <FullCalendar
+      defaultView="dayGridMonth"
+      :plugins="calendarPlugins"
+      :header="header"
+      :events="events"
+      :eventColor="eventColor"
+      :eventTextColor="eventTextColor"
+      :height="700"
+      @eventClick="eventInfo"
+    />
+    <v-dialog
+      v-model="dialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+      scrollable
+    >
+      <template>
+        <v-card>
+          <v-toolbar flat color="primary" dark>
+            <v-icon class="mr-4" @click="dialog = false">close</v-icon>
+            <v-toolbar-title>Create new event</v-toolbar-title>
+          </v-toolbar>
+          <v-tabs>
+            <v-tab>
+              Create event
+            </v-tab>
+            <v-tab>
+              Create recurring event
+            </v-tab>
+            <v-tab-item>
+              <v-card flat>
                 <v-card-text>
-                  <form v-if="editing !== selectedEvent._id">
-                    {{ selectedEvent.details }}
-                  </form>
-                  <form v-else>
-                    <textarea v-model="selectedEvent.details" type="text" style="width: 100%" placeholder="Add note"></textarea>
-                  </form>
+                  <v-container>
+                    <v-form @submit.prevent="addEvent">
+                      <v-text-field v-model="title" type="text" label="Event name"></v-text-field>
+                      <DatePicker v-on:pickDate="pickStart($event)"/>
+                      <DatePicker v-on:pickDate="pickEnd($event)"/>
+                      <div class="d-flex justify-space-between my-2">
+                        <div>
+                          Start time
+                          <TimePicker v-on:pickTime="pickStartTime($event)"/>
+                        </div>
+                        <div>
+                          End time
+                          <TimePicker v-on:pickTime="pickEndTime($event)"/>
+                        </div>
+                      </div>
+                      <v-btn type="submit" color="primary" class="mr-4">
+                        Create event
+                      </v-btn>
+                    </v-form>
+                  </v-container>
                 </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    text
-                    color="secondary"
-                    @click="selectedOpen = false"
-                  >
-                    Cancel
-                  </v-btn>
-                  <v-btn text v-if="editing !== selectedEvent._id" @click.prevent="editEvent(selectedEvent)">Edit</v-btn>
-                  <v-btn text v-else @click="updateEvent(selectedEvent)">Save
-                  </v-btn>
-                </v-card-actions>
               </v-card>
-            </v-menu>
-          </v-sheet>
-        </v-col>
-      </v-row>
-    <CalendarToday/>
+            </v-tab-item>
+            <v-tab-item>
+              <v-card flat>
+                <v-card-text>
+                  <v-container>
+                    <v-form @submit.prevent="addEvent">
+                      <v-text-field v-model="title" type="text" label="Event name"></v-text-field>
+                      <DatePicker v-on:pickDate="pickStartDate($event)"/>
+                      <DatePicker v-on:pickDate="pickEndDate($event)"/>
+                      <div class="d-flex justify-space-between my-2">
+                        <div>
+                          Start time
+                          <TimePicker v-on:pickTime="pickStartTime($event)"/>
+                        </div>
+                        <div>
+                          End time
+                          <TimePicker v-on:pickTime="pickEndTime($event)"/>
+                        </div>
+                      </div>
+                      <v-select
+                        :items="days"
+                        item-text="dayName"
+                        item-value="id"
+                        v-model="daysOfWeek"
+                        label="Repeat every"
+                        solo
+                      ></v-select>
+                      <v-btn type="submit" color="primary" class="mr-4">
+                        Create event
+                      </v-btn>
+                    </v-form>
+                  </v-container>
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs>
+        </v-card>
+      </template>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+
 import axios from 'axios'
-import CalendarToday from '@/components/CalendarToday'
-import Breadcrumbs from '@/components/Breadcrumbs'
+
 import DatePicker from '@/components/DatePicker'
-import ColorPicker from '@/components/ColorPicker'
+import TimePicker from '@/components/TimePicker'
+import Breadcrumbs from '@/components/Breadcrumbs'
+
+import FullCalendar from '@fullcalendar/vue'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
 
 export default {
   name: 'Calendar',
   components: {
-    CalendarToday,
-    Breadcrumbs,
+    FullCalendar,
     DatePicker,
-    ColorPicker
+    TimePicker,
+    Breadcrumbs
   },
   data () {
     return {
-      today: new Date().toISOString().substr(0, 10),
-      focus: new Date().toISOString().substr(0, 10),
-      type: 'month',
-      typeToLabel: {
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
-        '4day': '4 Days'
+      calendarPlugins: [dayGridPlugin, timeGridPlugin],
+      header: {
+        left: 'today, prev,next',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      name: null,
-      details: null,
+      title: '',
       start: null,
       end: null,
-      color: '#1976D2',
-      editing: null,
-      selectedEvent: {},
-      selectedElement: null,
-      selectedOpen: false,
+      startTime: null,
+      endTime: null,
+      startRecur: null,
+      endRecur: null,
+      daysOfWeek: null,
       events: [],
       dialog: false,
-      colorPicker: false
+      days: [
+        {
+          id: 0,
+          dayName: 'Sunday'
+        },
+        {
+          id: 1,
+          dayName: 'Monday'
+        },
+        {
+          id: 2,
+          dayName: 'Tuesday'
+        },
+        {
+          id: 3,
+          dayName: 'Wednesday'
+        },
+        {
+          id: 4,
+          dayName: 'Thursday'
+        },
+        {
+          id: 5,
+          dayName: 'Friday'
+        },
+        {
+          id: 6,
+          dayName: 'Saturday'
+        }
+      ],
+      eventColor: '',
+      eventTextColor: '#fff',
+      menuStartTime: false,
+      menuEndTime: false
     }
   },
   methods: {
-    getEvents () {
-      this.$store.dispatch('getEvents').then(() => {
-        this.events = this.$store.getters.eventsGetter
-      })
-    },
     async addEvent () {
       try {
-        if (this.name && this.start && this.end) {
-          await axios.post('http://localhost:3000/events/add', {
-            name: this.name,
-            details: this.details,
-            start: this.start,
-            end: this.end,
-            color: this.color
-          })
-          this.$store.dispatch('showSnackbar', {
-            snackbar: true,
-            color: 'success',
-            text: 'Event added'
-          })
-        }
+        const newEvent = await axios.post('http://localhost:3000/events/add', {
+          title: this.title,
+          start: this.start,
+          end: this.end,
+          startTime: this.startTime,
+          endTime: this.endTime,
+          startRecurence: this.startRecur,
+          endRecurence: this.endRecur,
+          daysOfWeek: this.daysOfWeek
+        })
+        this.events.push(newEvent.data.event)
+        this.dialog = false
       } catch (error) {
         console.log(error)
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'error',
-          text: error
-        })
       }
-      this.getEvents()
-      this.name = ''
-      this.details = ''
-      this.start = ''
-      this.end = ''
-      this.color = '#1976D2'
     },
-    async editEvent (ev) {
-      this.editing = ev._id
-    },
-    async updateEvent (ev) {
+    async getEvents () {
       try {
-        await axios.patch(`http://localhost:3000/events/edit/${ev._id}`, {
-          details: ev.details
-        })
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'Event updated'
-        })
+        const events = await axios.get('http://localhost:3000/events')
+        this.events = events.data
       } catch (error) {
         console.log(error)
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'error',
-          text: error
-        })
       }
-      this.selectedOpen = false
-      this.editing = null
     },
-    async deleteEvent (id) {
-      try {
-        await axios.delete(`http://localhost:3000/events/delete/${id}`)
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'Event deleted'
-        })
-      } catch (error) {
-        console.log(error)
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'error',
-          text: error
-        })
-      }
-      this.selectedOpen = false
-      this.getEvents()
+    eventInfo (arg) {
+      console.log(arg.event.extendedProps._id)
     },
-    pickStartDate (startDate) {
-      this.start = startDate
+    pickStartDate (start) {
+      this.startRecur = start
     },
-    pickEndDate (endDate) {
-      this.end = endDate
+    pickEndDate (end) {
+      this.endRecur = end
     },
-    changeColor (color) {
-      this.color = color
-    },
-    viewDay ({ date }) {
-      this.focus = date
-      this.type = 'day'
-    },
-    getEventColor (event) {
-      return event.color
-    },
-    setToday () {
-      this.focus = this.today
-    },
-    prev () {
-      this.$refs.calendar.prev()
-    },
-    next () {
-      this.$refs.calendar.next()
-    },
-    showEvent ({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event
-        this.selectedElement = nativeEvent.target
-        setTimeout(() => (this.selectedOpen = true), 10)
-      }
-
-      if (this.selectedOpen) {
-        this.selectedOpen = false
-        setTimeout(open, 10)
-      } else {
-        open()
-      }
-
-      nativeEvent.stopPropagation()
-    },
-    updateRange ({ start, end }) {
+    pickStart (start) {
       this.start = start
+    },
+    pickEnd (end) {
       this.end = end
     },
-    nth (d) {
-      return d > 3 && d < 21
-        ? 'th'
-        : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
-    }
-  },
-  computed: {
-    title () {
-      const { start, end } = this
-      if (!start || !end) {
-        return ''
-      }
-
-      const startMonth = this.monthFormatter(start)
-      const endMonth = this.monthFormatter(end)
-      const suffixMonth = startMonth === endMonth ? '' : endMonth
-
-      const startYear = start.year
-      const endYear = end.year
-      const suffixYear = startYear === endYear ? '' : endYear
-
-      const startDay = start.day + this.nth(start.day)
-      const endDay = end.day + this.nth(end.day)
-
-      switch (this.type) {
-        case 'month':
-          return `${startMonth} ${startYear}`
-        case 'week':
-        case '4day':
-          return `${startMonth} ${startDay} ${startYear} - ${suffixMonth} ${endDay} ${suffixYear}`
-        case 'day':
-          return `${startMonth} ${startDay} ${startYear}`
-      }
-      return ''
+    pickStartTime (startTime) {
+      this.startTime = startTime
     },
-    monthFormatter () {
-      return this.$refs.calendar.getFormatter({
-        timeZone: 'UTC', month: 'long'
-      })
+    pickEndTime (endTime) {
+      this.endTime = endTime
+    },
+    changeColor (color) {
+      this.eventColor = color
     }
   },
   mounted () {
     this.getEvents()
-    this.$refs.calendar.checkChange()
   }
 }
+
 </script>
 
-<style>
-
+<style lang="scss">
+  @import '~@fullcalendar/core/main.css';
+  @import '~@fullcalendar/daygrid/main.css';
 </style>
