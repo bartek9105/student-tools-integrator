@@ -1,9 +1,11 @@
 <template>
   <v-card v-if="!$route.meta.hideNav" class="overflow-hidden elevation-0" :style="{navBackground: $vuetify.theme.themes[theme].background}">
     <v-app-bar
-      absolute
-      scroll-target="#scrolling-techniques-7"
+      app
+      clipped-left
+      dense
     >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-switch
         v-model="$vuetify.theme.dark"
@@ -38,17 +40,7 @@
       <router-link to="/login">
         <span @click="logout" class="ml-5">Logout</span>
       </router-link>
-
     </v-app-bar>
-    <v-sheet
-      id="scrolling-techniques-7"
-      class="overflow-y-auto"
-      max-height="600"
-    >
-      <v-container style="height: 60px;">
-
-      </v-container>
-    </v-sheet>
   </v-card>
 </template>
 
