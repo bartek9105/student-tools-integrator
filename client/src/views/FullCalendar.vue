@@ -6,31 +6,41 @@
         :plugins="calendarPlugins"
         :header="header"
         :events="events"
-        :themeSystem="themeSystem"
+        :eventColor="eventColor"
+        :eventTextColor="eventTextColor"
+        :height="700"
         @eventClick="eventInfo"
       />
       <v-dialog v-model="dialog" max-width="500">
         <v-card>
-            <v-container>
+          <v-container>
             <v-form @submit.prevent="addEvent">
-                <v-text-field v-model="title" type="text" label="Event name"></v-text-field>
-                <DatePicker v-on:pickDate="pickStartDate($event)"/>
-                <DatePicker v-on:pickDate="pickEndDate($event)"/>
-                From: <v-time-picker v-model="timeStart"></v-time-picker>
-                To: <v-time-picker v-model="timeEnd"></v-time-picker>
-                <v-select
-                :items="days"
-                item-text="dayName"
-                item-value="id"
-                v-model="daysOfWeek"
-                label="Repeat every"
-                solo
-                ></v-select>
-                <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
-                    Create event
-                </v-btn>
+              <v-text-field v-model="title" type="text" label="Event name"></v-text-field>
+              <DatePicker v-on:pickDate="pickStartDate($event)"/>
+              <DatePicker v-on:pickDate="pickEndDate($event)"/>
+              <div class="d-flex justify-space-between my-2">
+                <div>
+                  Start time
+                  <TimePicker v-on:pickTime="pickStartTime($event)"/>
+                </div>
+                <div>
+                  End time
+                  <TimePicker v-on:pickTime="pickEndTime($event)"/>
+                </div>
+              </div>
+              <v-select
+              :items="days"
+              item-text="dayName"
+              item-value="id"
+              v-model="daysOfWeek"
+              label="Repeat every"
+              solo
+              ></v-select>
+              <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
+                  Create event
+              </v-btn>
             </v-form>
-            </v-container>
+          </v-container>
         </v-card>
         </v-dialog>
   </v-container>
@@ -40,6 +50,7 @@
 
 import axios from 'axios'
 import DatePicker from '@/components/DatePicker'
+import TimePicker from '@/components/TimePicker'
 
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -49,7 +60,8 @@ export default {
   name: 'Fullcalendar',
   components: {
     FullCalendar,
-    DatePicker
+    DatePicker,
+    TimePicker
   },
   data () {
     return {
@@ -59,10 +71,11 @@ export default {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      themeSystem: 'Materia',
       title: '',
-      timeStart: null,
-      timeEnd: null,
+      start: null,
+      end: null,
+      startTime: null,
+      endTime: null,
       startRecur: null,
       endRecur: null,
       daysOfWeek: null,
@@ -97,7 +110,11 @@ export default {
           id: 6,
           dayName: 'Saturday'
         }
-      ]
+      ],
+      eventColor: '',
+      eventTextColor: '#fff',
+      menuStartTime: false,
+      menuEndTime: false
     }
   },
   methods: {
@@ -105,8 +122,10 @@ export default {
       try {
         const newEvent = await axios.post('http://localhost:3000/events/add', {
           title: this.title,
-          start: this.timeStart,
-          end: this.timeEnd,
+          start: this.start,
+          end: this.end,
+          startTime: this.startTime,
+          endTime: this.endTime,
           startRecurence: this.startRecur,
           endRecurence: this.endRecur,
           daysOfWeek: this.daysOfWeek
@@ -132,6 +151,15 @@ export default {
     },
     pickEndDate (end) {
       this.endRecur = end
+    },
+    pickStartTime (startTime) {
+      this.startTime = startTime
+    },
+    pickEndTime (endTime) {
+      this.endTime = endTime
+    },
+    changeColor (color) {
+      this.eventColor = color
     }
   },
   mounted () {
