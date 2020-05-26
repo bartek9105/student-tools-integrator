@@ -98,6 +98,35 @@
         </v-card>
       </template>
     </v-dialog>
+    <!-- Event dialog -->
+    <div class="text-center">
+      <v-dialog
+        v-model="eventDialog"
+        width="500"
+      >
+      <v-card v-if="currentEvent">
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+        {{ currentEvent.title }}
+        </v-card-title>
+
+        <v-card-text>
+          <p>{{ currentEvent.start }}</p>
+          <p>{{ currentEvent.end }}</p>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary">Edit</v-btn>
+          <v-btn color="primary">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+      </v-dialog>
+    </div>
   </v-container>
 </template>
 
@@ -172,7 +201,9 @@ export default {
       eventColor: '',
       eventTextColor: '#fff',
       menuStartTime: false,
-      menuEndTime: false
+      menuEndTime: false,
+      eventDialog: false,
+      currentEvent: null
     }
   },
   methods: {
@@ -203,7 +234,13 @@ export default {
       }
     },
     eventInfo (arg) {
-      console.log(arg.event.extendedProps._id)
+      this.eventDialog = true
+      this.currentEvent = {
+        title: arg.event.title,
+        start: arg.event.start,
+        end: arg.event.end
+      }
+      console.log(arg.event)
     },
     pickStartDate (start) {
       this.startRecur = start
