@@ -14,11 +14,19 @@ const eventSchema = new mongoose.Schema({
         type: String
     },
     startRecur: {
-        required: true,
+        required: false,
         type: String
     },
     endRecur: {
-        required: true,
+        required: false,
+        type: String
+    },
+    start: {
+        required: false,
+        type: String
+    },
+    end: {
+        required: false,
         type: String
     },
     daysOfWeek: {
