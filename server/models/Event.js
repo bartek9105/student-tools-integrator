@@ -32,6 +32,10 @@ const eventSchema = new mongoose.Schema({
     daysOfWeek: {
         required: false,
         type: Array
+    },
+    details: {
+        required: false,
+        type: String
     }
 })
 

@@ -39,7 +39,8 @@
                 <v-card-text>
                   <v-container>
                     <v-form @submit.prevent="addEvent">
-                      <v-text-field v-model="title" type="text" label="Event name"></v-text-field>
+                      <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
+                      <v-text-field v-model="eventDetails.details" type="text" label="Event details (optional)"></v-text-field>
                       <DatePicker v-on:pickDate="pickStart($event)"/>
                       <DatePicker v-on:pickDate="pickEnd($event)"/>
                       <div class="d-flex justify-space-between my-2">
@@ -65,7 +66,7 @@
                 <v-card-text>
                   <v-container>
                     <v-form @submit.prevent="addEvent">
-                      <v-text-field v-model="title" type="text" label="Event name"></v-text-field>
+                      <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
                       <DatePicker v-on:pickDate="pickStartDate($event)"/>
                       <DatePicker v-on:pickDate="pickEndDate($event)"/>
                       <div class="d-flex justify-space-between my-2">
@@ -82,7 +83,7 @@
                         :items="days"
                         item-text="dayName"
                         item-value="id"
-                        v-model="daysOfWeek"
+                        v-model="eventDetails.daysOfWeek"
                         label="Repeat every"
                         solo
                       ></v-select>
@@ -103,18 +104,27 @@
       <v-dialog
         v-model="eventDialog"
         width="500"
+        @input="v=>v||cleanCurrentEvent()"
       >
       <v-card v-if="currentEvent">
         <v-card-title
-          class="headline grey lighten-2"
-          primary-title
+          class="headline primary"
         >
-        {{ currentEvent.title }}
+        <p class="white--text">{{ currentEvent.title }}</p>
         </v-card-title>
 
-        <v-card-text>
-          <p>{{ currentEvent.start }}</p>
-          <p>{{ currentEvent.end }}</p>
+        <v-card-text class="pt-6">
+          <div class="d-flex align-center">
+            <v-icon class="mr-4">date_range</v-icon>
+            <p class="mb-0 subtitle-1">
+              <span class="font-weight-bold">From: </span> {{ currentEvent.start.substr(0, 10) }}
+              <span class="font-weight-bold">To: </span> {{ currentEvent.end.substr(0, 10) }}
+            </p>
+          </div>
+          <div class="d-flex align-center mt-4">
+            <v-icon class="mr-4">description</v-icon>
+            <p class="mb-0 subtitle-1">{{ currentEvent.details }}</p>
+          </div>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -158,14 +168,17 @@ export default {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      title: '',
-      start: null,
-      end: null,
-      startTime: null,
-      endTime: null,
-      startRecur: null,
-      endRecur: null,
-      daysOfWeek: null,
+      eventDetails: {
+        title: '',
+        start: null,
+        end: null,
+        startTime: null,
+        endTime: null,
+        startRecur: null,
+        endRecur: null,
+        daysOfWeek: null,
+        details: null
+      },
       events: [],
       dialog: false,
       days: [
@@ -210,17 +223,29 @@ export default {
     async addEvent () {
       try {
         const newEvent = await axios.post('http://localhost:3000/events/add', {
-          title: this.title,
-          start: this.start,
-          end: this.end,
-          startTime: this.startTime,
-          endTime: this.endTime,
-          startRecurence: this.startRecur,
-          endRecurence: this.endRecur,
-          daysOfWeek: this.daysOfWeek
+          title: this.eventDetails.title,
+          start: this.eventDetails.start,
+          end: this.eventDetails.end,
+          startTime: this.eventDetails.startTime,
+          endTime: this.eventDetails.endTime,
+          startRecurence: this.eventDetails.startRecur,
+          endRecurence: this.eventDetails.endRecur,
+          daysOfWeek: this.eventDetails.daysOfWeek,
+          details: this.eventDetails.details
         })
         this.events.push(newEvent.data.event)
         this.dialog = false
+        this.eventDetails = {
+          title: '',
+          start: null,
+          end: null,
+          startTime: null,
+          endTime: null,
+          startRecur: null,
+          endRecur: null,
+          daysOfWeek: null,
+          details: null
+        }
       } catch (error) {
         console.log(error)
       }
@@ -237,31 +262,39 @@ export default {
       this.eventDialog = true
       this.currentEvent = {
         title: arg.event.title,
-        start: arg.event.start,
-        end: arg.event.end
+        start: arg.event.start.toString(),
+        end: arg.event.end.toString(),
+        details: arg.event.extendedProps.details.toString()
       }
-      console.log(arg.event)
     },
     pickStartDate (start) {
-      this.startRecur = start
+      this.eventDetails.startRecur = start
     },
     pickEndDate (end) {
-      this.endRecur = end
+      this.eventDetails.endRecur = end
     },
     pickStart (start) {
-      this.start = start
+      this.eventDetails.start = start
     },
     pickEnd (end) {
-      this.end = end
+      this.eventDetails.end = end
     },
     pickStartTime (startTime) {
-      this.startTime = startTime
+      this.eventDetails.startTime = startTime
     },
     pickEndTime (endTime) {
-      this.endTime = endTime
+      this.eventDetails.endTime = endTime
     },
     changeColor (color) {
       this.eventColor = color
+    },
+    cleanCurrentEvent () {
+      this.currentEvent = null
+    }
+  },
+  computed: {
+    shortenDate (date) {
+      return date.substr(0, 10)
     }
   },
   mounted () {
