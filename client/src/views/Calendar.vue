@@ -132,7 +132,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary">Edit</v-btn>
-          <v-btn color="primary">Delete</v-btn>
+          <v-btn color="primary" @click="deleteEvent(currentEvent.id)">Delete</v-btn>
         </v-card-actions>
       </v-card>
       </v-dialog>
@@ -258,14 +258,25 @@ export default {
         console.log(error)
       }
     },
+    async deleteEvent (id) {
+      try {
+        await axios.delete(`http://localhost:3000/events/delete/${id}`)
+        this.getEvents()
+        this.eventDialog = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
     eventInfo (arg) {
       this.eventDialog = true
       this.currentEvent = {
+        id: arg.event.extendedProps._id,
         title: arg.event.title,
         start: arg.event.start.toString(),
         end: arg.event.end.toString(),
         details: arg.event.extendedProps.details.toString()
       }
+      console.log(arg.event)
     },
     pickStartDate (start) {
       this.eventDetails.startRecur = start
@@ -290,11 +301,6 @@ export default {
     },
     cleanCurrentEvent () {
       this.currentEvent = null
-    }
-  },
-  computed: {
-    shortenDate (date) {
-      return date.substr(0, 10)
     }
   },
   mounted () {
