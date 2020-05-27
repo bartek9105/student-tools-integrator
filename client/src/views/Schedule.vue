@@ -16,6 +16,25 @@
       <TimePicker v-on:pickTime="pickEndTime($event)"/>
       <v-btn class="primary" type="submit">Add</v-btn>
     </v-form>
+    <div v-for="el in schedule" :key="el._id" class="mt-8">
+      <p class="caption-1">{{ el._id }}</p>
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="subject in el.subjectDetails" :key="subject.subjectId">
+              <td>
+                <router-link :to="'subject/' + subject.subjectId">{{ subject.title}}</router-link>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </div>
   </v-container>
 </template>
 
@@ -39,7 +58,8 @@ export default {
       end: null,
       startTime: null,
       endTime: null,
-      selectedClass: null
+      selectedClass: null,
+      schedule: null
     }
   },
   methods: {
@@ -54,6 +74,14 @@ export default {
           subject: this.selectedClass._id,
           daysOfWeek: null
         })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getSchedule () {
+      try {
+        const schedule = await axios.get('http://localhost:3000/events/getByDate')
+        this.schedule = schedule.data
       } catch (error) {
         console.log(error)
       }
@@ -78,6 +106,9 @@ export default {
     getSubjects () {
       return this.$store.getters.getSubjects
     }
+  },
+  mounted () {
+    this.getSchedule()
   }
 }
 </script>
