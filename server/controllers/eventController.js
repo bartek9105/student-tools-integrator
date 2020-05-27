@@ -20,7 +20,8 @@ exports.addEvent = async (req, res) => {
             startRecur: req.body.startRecurence,
             endRecur: req.body.endRecurence,
             daysOfWeek: req.body.daysOfWeek,
-            details: req.body.details
+            details: req.body.details,
+            subject: req.body.subject
         })
         const savedEvent = await event.save()
         res.send({

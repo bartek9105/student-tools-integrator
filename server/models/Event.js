@@ -31,11 +31,16 @@ const eventSchema = new mongoose.Schema({
     },
     daysOfWeek: {
         required: false,
-        type: Array
+        type: Array,
+        default: null
     },
     details: {
         required: false,
         type: String
+    },
+    subject: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject'
     }
 })
 
