@@ -1,66 +1,77 @@
 <template>
-    <v-container>
-        <h1>{{ subjectDetails[0].name }}</h1>
-        <h3>Requirements</h3>
-        <v-row>
-            <v-col
-            cols="12"
-            md="2"
-            >
-            <v-text-field
-                v-model="requirements"
-                label="Requirements"
-                required
-            ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="2">
-            <v-btn small color="primary" @click="addRequirement">Add</v-btn>
-            </v-col>
-        </v-row>
-        <v-card
-            max-width="400"
-            tile
-        >
-            <v-list-item v-for="(requirement, index) in subjectDetails[0].requirements" :key="index">
-              <v-list-item-content>
-                  <v-list-item-title>{{ requirement }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-        </v-card>
-
-        <h3>Upload files</h3>
+  <v-container>
+    <p class="headline">{{ subjectDetails[0].name }}</p>
+    <v-row class="justify-space-between">
+      <v-col cols="12" md="4">
+        <p>Requirements</p>
+        <v-text-field
+            v-model="requirements"
+            label="Requirements"
+            required
+        ></v-text-field>
+        <v-btn small color="primary" @click="addRequirement">Add</v-btn>
+        <v-list-item v-for="(requirement, index) in subjectDetails[0].requirements" :key="index">
+          <v-list-item-content>
+              <v-list-item-title>{{ requirement }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-col>
+      <v-col cols="12" md="4">
+        <p>Attached files</p>
         <template>
-          <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
-          <button @click="submitFile">Send</button>
+          <div class="d-flex justify-space-between">
+            <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
+            <v-btn class="primary" @click="submitFile">Send</v-btn>
+          </div>
         </template>
-        <div>
-          <v-card
-            width="344"
-            outlined
-            v-for="file in uploadedFiles" :key="file._id"
-          >
-            <v-list-item three-line>
-              <v-list-item-content>
-                <div class="overline mb-4">File</div>
-                <v-list-item-title class="headline mb-1">{{ file.filename }}</v-list-item-title>
-              </v-list-item-content>
-            <v-icon>attachment</v-icon>
-            </v-list-item>
+        <v-divider class="mt-4"></v-divider>
+        <v-card class="elevation-0">
+          <v-list two-line subheader>
+            <v-list-item
+              v-for="file in uploadedFiles"
+              :key="file._id"
+            >
+              <v-list-item-avatar>
+                <v-icon>description</v-icon>
+              </v-list-item-avatar>
 
-            <v-card-actions>
-              <v-btn text @click="downloadFile(file.filename)">View</v-btn>
-              <v-btn text @click="deleteFile(file._id)">Delete</v-btn>
-            </v-card-actions>
-          </v-card>
+              <v-list-item-content>
+                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                <v-list-item-subtitle>dummy</v-list-item-subtitle>
+              </v-list-item-content>
+
+              <v-list-item-action class="d-flex flex-row">
+                <v-btn icon>
+                  <v-icon color="grey lighten-1" @click="downloadFile(file.filename)">system_update_alt</v-icon>
+                </v-btn>
+                <v-btn icon>
+                  <v-icon color="grey lighten-1" @click="deleteFile(file._id)">clear</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
+        <div class="d-flex flex-column align-center">
+          <p>Passing class progress</p>
+          <ChartRadial/>
         </div>
-    </v-container>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import axios from 'axios'
 
+import ChartRadial from '@/components/ChartRadial'
+
 export default {
   name: 'SubjectDetails',
+  components: {
+    ChartRadial
+  },
   data () {
     return {
       subjectDetails: [],
