@@ -10,12 +10,20 @@
         <thead>
           <tr>
             <th class="text-left">Name</th>
+            <th class="text-left">Day</th>
+            <th class="text-left">Reccuring</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="event in getSchedule" :key="event._id">
             <td>
               <router-link :to="'subject/' + event.subject"> {{ event.title }} </router-link>
+            </td>
+            <td>
+              {{ days[new Date(event.start).getDay()] }} ({{ event.start }})
+            </td>
+            <td v-if="event.daysOfWeek">
+              Every {{ days[event.daysOfWeek] }}
             </td>
           </tr>
         </tbody>
@@ -37,7 +45,8 @@ export default {
   },
   data () {
     return {
-      dialog: false
+      dialog: false,
+      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
   methods: {
