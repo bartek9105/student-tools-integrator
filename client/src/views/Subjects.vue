@@ -158,26 +158,24 @@ export default {
     }
   },
   methods: {
-    async addSubject () {
-      try {
-        await axios.post('http://localhost:3000/subjects/add', {
-          name: this.subjectName
-        })
+    addSubject () {
+      this.$store.dispatch('addSubject', {
+        name: this.subjectName
+      }).then(() => {
         this.subjectName = ''
-        this.fetchSubjects()
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
           text: 'New subject added'
         })
-      } catch (error) {
-        console.log(error)
+      }).catch(err => {
+        console.log(err)
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'error',
-          text: error
+          text: err
         })
-      }
+      })
     },
     fetchSubjects () {
       this.$store.dispatch('fetchSubjects')
