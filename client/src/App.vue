@@ -103,6 +103,18 @@
               </v-list-item>
             </router-link>
 
+            <router-link to="/events">
+              <v-list-item link>
+                <v-list-item-icon>
+                  <v-icon>local_offer</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>Events</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </router-link>
+
           </v-list>
           <v-spacer></v-spacer>
           <v-list-item-avatar>

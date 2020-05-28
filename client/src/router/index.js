@@ -10,6 +10,7 @@ import Todo from '@/views/Todo'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Calendar from '@/views/Calendar'
+import Events from '@/views/Events'
 
 Vue.use(VueRouter)
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/todo',
     name: 'Todo',
     component: Todo
+  },
+  {
+    path: '/events',
+    name: 'Events',
+    component: Events
   },
   {
     path: '/login',
