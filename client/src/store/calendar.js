@@ -12,6 +12,9 @@ export default ({
   mutations: {
     SET_EVENTS (state, events) {
       state.events = events
+    },
+    ADD_EVENT (state, event) {
+      state.events.push(event)
     }
   },
   actions: {
@@ -21,6 +24,11 @@ export default ({
       }).catch(err => {
         console.log(err)
       })
+    },
+    addEvent ({ commit }, payload) {
+      axios.post('http://localhost:3000/events/add', payload).then(result => {
+        commit('ADD_EVENT', result.data.event)
+      }).catch(err => console.log(err))
     }
   }
 })

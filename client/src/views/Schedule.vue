@@ -16,25 +16,22 @@
       <TimePicker v-on:pickTime="pickEndTime($event)"/>
       <v-btn class="primary" type="submit">Add</v-btn>
     </v-form>
-    <div v-for="el in schedule" :key="el._id" class="mt-8">
-      <p class="caption-1">{{ el._id }}</p>
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="subject in el.subjectDetails" :key="subject.subjectId">
-              <td>
-                <router-link :to="'subject/' + subject.subjectId">{{ subject.title}}</router-link>
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-    </div>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="el in schedule" :key="el._id">
+            <td>
+              <router-link :to="'subject/' + el.subject"> {{ el.title }} </router-link>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </v-container>
 </template>
 
@@ -59,7 +56,8 @@ export default {
       startTime: null,
       endTime: null,
       selectedClass: null,
-      schedule: null
+      schedule: null,
+      daysOfWeek: null
     }
   },
   methods: {
@@ -72,7 +70,7 @@ export default {
           startTime: this.startTime,
           endTime: this.endTime,
           subject: this.selectedClass._id,
-          daysOfWeek: null
+          daysOfWeek: this.daysOfWeek
         })
       } catch (error) {
         console.log(error)
@@ -80,8 +78,8 @@ export default {
     },
     async getSchedule () {
       try {
-        const schedule = await axios.get('http://localhost:3000/events/getByDate')
-        this.schedule = schedule.data
+        const schedule = await axios.get('http://localhost:3000/events')
+        this.schedule = schedule.data.filter(el => el.subject)
       } catch (error) {
         console.log(error)
       }
