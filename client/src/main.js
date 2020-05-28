@@ -12,5 +12,8 @@ new Vue({
   router,
   store,
   vuetify,
+  created () {
+    this.$store.dispatch('fetchSubjects')
+  },
   render: h => h(App)
 }).$mount('#app')
