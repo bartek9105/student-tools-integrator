@@ -33,9 +33,18 @@ exports.getSubject = async (req, res) => {
     }
 }
 
-exports.updateSubject = async (req, res) => {
+exports.updateRequirements = async (req, res) => {
     try {
         const updatedSubject = await Subject.updateOne({_id: req.params.id}, {$push: {requirements: req.body.requirement}})
+        res.send(updatedSubject)
+    } catch (error) {
+        console.log(subjects)
+    }
+}
+
+exports.updateNotes = async (req, res) => {
+    try {
+        const updatedSubject = await Subject.updateOne({_id: req.params.id}, {$push: {notes: req.body.note}})
         res.send(updatedSubject)
     } catch (error) {
         console.log(subjects)

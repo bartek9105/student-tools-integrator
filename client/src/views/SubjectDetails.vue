@@ -59,6 +59,8 @@
         </div>
       </v-col>
     </v-row>
+    <Editor v-model="note"/>
+    <v-btn @click="addNote">Add note</v-btn>
   </v-container>
 </template>
 
@@ -66,18 +68,21 @@
 import axios from 'axios'
 
 import ChartRadial from '@/components/ChartRadial'
+import Editor from '@/components/Editor'
 
 export default {
   name: 'SubjectDetails',
   components: {
-    ChartRadial
+    ChartRadial,
+    Editor
   },
   data () {
     return {
       subjectDetails: [],
       requirements: '',
       file: null,
-      uploadedFiles: []
+      uploadedFiles: [],
+      note: null
     }
   },
   methods: {
@@ -87,10 +92,19 @@ export default {
     },
     async addRequirement () {
       try {
-        await axios.patch(`http://localhost:3000/subjects/${this.$route.params.id}/update`, {
+        await axios.patch(`http://localhost:3000/subjects/${this.$route.params.id}/updateRequirements`, {
           requirement: this.requirements
         })
         this.subjectDetails[0].requirements.push(this.requirements)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async addNote () {
+      try {
+        await axios.patch(`http://localhost:3000/subjects/${this.$route.params.id}/updateNotes`, {
+          note: this.note
+        })
       } catch (error) {
         console.log(error)
       }
