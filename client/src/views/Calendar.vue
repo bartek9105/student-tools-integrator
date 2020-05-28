@@ -8,7 +8,7 @@
       defaultView="dayGridMonth"
       :plugins="calendarPlugins"
       :header="header"
-      :events="events"
+      :events="getEvents"
       :eventColor="eventColor"
       :eventTextColor="eventTextColor"
       :height="700"
@@ -117,8 +117,8 @@
           <div class="d-flex align-center">
             <v-icon class="mr-4">date_range</v-icon>
             <p class="mb-0 subtitle-1">
-              <span class="font-weight-bold">From: </span> {{ currentEvent.start.substr(0, 10) }}
-              <span class="font-weight-bold">To: </span> {{ currentEvent.end.substr(0, 10) }}
+              <span class="font-weight-bold">From: </span> {{ currentEvent.start }}
+              <span class="font-weight-bold">To: </span> {{ currentEvent.end }}
             </p>
           </div>
           <div class="d-flex align-center mt-4">
@@ -179,7 +179,6 @@ export default {
         daysOfWeek: null,
         details: null
       },
-      events: [],
       dialog: false,
       days: [
         {
@@ -220,42 +219,29 @@ export default {
     }
   },
   methods: {
-    async addEvent () {
-      try {
-        const newEvent = await axios.post('http://localhost:3000/events/add', {
-          title: this.eventDetails.title,
-          start: this.eventDetails.start,
-          end: this.eventDetails.end,
-          startTime: this.eventDetails.startTime,
-          endTime: this.eventDetails.endTime,
-          startRecurence: this.eventDetails.startRecur,
-          endRecurence: this.eventDetails.endRecur,
-          daysOfWeek: this.eventDetails.daysOfWeek,
-          details: this.eventDetails.details
-        })
-        this.events.push(newEvent.data.event)
-        this.dialog = false
-        this.eventDetails = {
-          title: '',
-          start: null,
-          end: null,
-          startTime: null,
-          endTime: null,
-          startRecur: null,
-          endRecur: null,
-          daysOfWeek: null,
-          details: null
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    async getEvents () {
-      try {
-        const events = await axios.get('http://localhost:3000/events')
-        this.events = events.data
-      } catch (error) {
-        console.log(error)
+    addEvent () {
+      this.$store.dispatch('addEvent', {
+        title: this.eventDetails.title,
+        start: this.eventDetails.start,
+        end: this.eventDetails.end,
+        startTime: this.eventDetails.startTime,
+        endTime: this.eventDetails.endTime,
+        startRecurence: this.eventDetails.startRecur,
+        endRecurence: this.eventDetails.endRecur,
+        daysOfWeek: this.eventDetails.daysOfWeek,
+        details: this.eventDetails.details
+      })
+      this.dialog = false
+      this.eventDetails = {
+        title: '',
+        start: null,
+        end: null,
+        startTime: null,
+        endTime: null,
+        startRecur: null,
+        endRecur: null,
+        daysOfWeek: null,
+        details: null
       }
     },
     async deleteEvent (id) {
@@ -272,9 +258,9 @@ export default {
       this.currentEvent = {
         id: arg.event.extendedProps._id,
         title: arg.event.title,
-        start: arg.event.start.toString(),
-        end: arg.event.end.toString(),
-        details: arg.event.extendedProps.details.toString()
+        start: arg.event.start,
+        end: arg.event.end,
+        details: arg.event.extendedProps.details
       }
       console.log(arg.event)
     },
@@ -301,10 +287,18 @@ export default {
     },
     cleanCurrentEvent () {
       this.currentEvent = null
+    },
+    fetchEvents () {
+      this.$store.dispatch('getEvents')
+    }
+  },
+  computed: {
+    getEvents () {
+      return this.$store.getters.eventsGetter
     }
   },
   mounted () {
-    this.getEvents()
+    this.fetchEvents()
   }
 }
 
