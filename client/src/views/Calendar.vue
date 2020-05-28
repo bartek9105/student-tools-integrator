@@ -9,96 +9,11 @@
       :plugins="calendarPlugins"
       :header="header"
       :events="getEvents"
-      :eventColor="eventColor"
       :eventTextColor="eventTextColor"
       :height="700"
       @eventClick="eventInfo"
     />
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      hide-overlay
-      transition="dialog-bottom-transition"
-      scrollable
-    >
-      <template>
-        <v-card>
-          <v-toolbar flat color="primary" dark>
-            <v-icon class="mr-4" @click="dialog = false">close</v-icon>
-            <v-toolbar-title>Create new event</v-toolbar-title>
-          </v-toolbar>
-          <v-tabs>
-            <v-tab>
-              Create event
-            </v-tab>
-            <v-tab>
-              Create recurring event
-            </v-tab>
-            <v-tab-item>
-              <v-card flat>
-                <v-card-text>
-                  <v-container>
-                    <v-form @submit.prevent="addEvent">
-                      <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
-                      <v-text-field v-model="eventDetails.details" type="text" label="Event details (optional)"></v-text-field>
-                      <DatePicker v-on:pickDate="pickStart($event)"/>
-                      <DatePicker v-on:pickDate="pickEnd($event)"/>
-                      <div class="d-flex justify-space-between my-2">
-                        <div>
-                          Start time
-                          <TimePicker v-on:pickTime="pickStartTime($event)"/>
-                        </div>
-                        <div>
-                          End time
-                          <TimePicker v-on:pickTime="pickEndTime($event)"/>
-                        </div>
-                      </div>
-                      <v-btn type="submit" color="primary" class="mr-4">
-                        Create event
-                      </v-btn>
-                    </v-form>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-tab-item>
-            <v-tab-item>
-              <v-card flat>
-                <v-card-text>
-                  <v-container>
-                    <v-form @submit.prevent="addEvent">
-                      <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
-                      <DatePicker v-on:pickDate="pickStartDate($event)"/>
-                      <DatePicker v-on:pickDate="pickEndDate($event)"/>
-                      <div class="d-flex justify-space-between my-2">
-                        <div>
-                          Start time
-                          <TimePicker v-on:pickTime="pickStartTime($event)"/>
-                        </div>
-                        <div>
-                          End time
-                          <TimePicker v-on:pickTime="pickEndTime($event)"/>
-                        </div>
-                      </div>
-                      <v-select
-                        :items="days"
-                        item-text="dayName"
-                        item-value="id"
-                        v-model="eventDetails.daysOfWeek"
-                        label="Repeat every"
-                        solo
-                      ></v-select>
-                      <v-btn type="submit" color="primary" class="mr-4">
-                        Create event
-                      </v-btn>
-                    </v-form>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-tab-item>
-          </v-tabs>
-        </v-card>
-      </template>
-    </v-dialog>
+    <AddEventDialog v-model="dialog"/>
     <!-- Event dialog -->
     <div class="text-center">
       <v-dialog
@@ -144,9 +59,8 @@
 
 import axios from 'axios'
 
-import DatePicker from '@/components/DatePicker'
-import TimePicker from '@/components/TimePicker'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import AddEventDialog from '@/components/AddEventDialog'
 
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -156,9 +70,8 @@ export default {
   name: 'Calendar',
   components: {
     FullCalendar,
-    DatePicker,
-    TimePicker,
-    Breadcrumbs
+    Breadcrumbs,
+    AddEventDialog
   },
   data () {
     return {
@@ -168,82 +81,13 @@ export default {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      eventDetails: {
-        title: '',
-        start: null,
-        end: null,
-        startTime: null,
-        endTime: null,
-        startRecur: null,
-        endRecur: null,
-        daysOfWeek: null,
-        details: null
-      },
-      dialog: false,
-      days: [
-        {
-          id: 0,
-          dayName: 'Sunday'
-        },
-        {
-          id: 1,
-          dayName: 'Monday'
-        },
-        {
-          id: 2,
-          dayName: 'Tuesday'
-        },
-        {
-          id: 3,
-          dayName: 'Wednesday'
-        },
-        {
-          id: 4,
-          dayName: 'Thursday'
-        },
-        {
-          id: 5,
-          dayName: 'Friday'
-        },
-        {
-          id: 6,
-          dayName: 'Saturday'
-        }
-      ],
-      eventColor: '',
       eventTextColor: '#fff',
-      menuStartTime: false,
-      menuEndTime: false,
       eventDialog: false,
-      currentEvent: null
+      currentEvent: null,
+      dialog: false
     }
   },
   methods: {
-    addEvent () {
-      this.$store.dispatch('addEvent', {
-        title: this.eventDetails.title,
-        start: this.eventDetails.start,
-        end: this.eventDetails.end,
-        startTime: this.eventDetails.startTime,
-        endTime: this.eventDetails.endTime,
-        startRecurence: this.eventDetails.startRecur,
-        endRecurence: this.eventDetails.endRecur,
-        daysOfWeek: this.eventDetails.daysOfWeek,
-        details: this.eventDetails.details
-      })
-      this.dialog = false
-      this.eventDetails = {
-        title: '',
-        start: null,
-        end: null,
-        startTime: null,
-        endTime: null,
-        startRecur: null,
-        endRecur: null,
-        daysOfWeek: null,
-        details: null
-      }
-    },
     async deleteEvent (id) {
       try {
         await axios.delete(`http://localhost:3000/events/delete/${id}`)
@@ -262,28 +106,6 @@ export default {
         end: arg.event.end,
         details: arg.event.extendedProps.details
       }
-      console.log(arg.event)
-    },
-    pickStartDate (start) {
-      this.eventDetails.startRecur = start
-    },
-    pickEndDate (end) {
-      this.eventDetails.endRecur = end
-    },
-    pickStart (start) {
-      this.eventDetails.start = start
-    },
-    pickEnd (end) {
-      this.eventDetails.end = end
-    },
-    pickStartTime (startTime) {
-      this.eventDetails.startTime = startTime
-    },
-    pickEndTime (endTime) {
-      this.eventDetails.endTime = endTime
-    },
-    changeColor (color) {
-      this.eventColor = color
     },
     cleanCurrentEvent () {
       this.currentEvent = null
