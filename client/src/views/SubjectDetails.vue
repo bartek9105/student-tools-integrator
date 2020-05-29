@@ -3,21 +3,34 @@
     <p class="headline">{{ subjectDetails[0].name }}</p>
     <v-row class="justify-space-between">
       <v-col cols="12" md="4">
-        <p>Requirements</p>
-        <v-text-field
-            v-model="requirements"
-            label="Requirements"
-            required
-        ></v-text-field>
-        <v-btn small color="primary" @click="addRequirement">Add</v-btn>
+        <p class="title">Requirements</p>
+        <div class="d-flex justify-space-between align-center">
+          <v-text-field
+              v-model="requirements"
+              label="Requirements"
+              required
+              class="mr-4"
+          ></v-text-field>
+          <v-btn color="primary" @click="addRequirement">Add</v-btn>
+        </div>
         <v-list-item v-for="(requirement, index) in subjectDetails[0].requirements" :key="index">
           <v-list-item-content>
-              <v-list-item-title>{{ requirement }}</v-list-item-title>
+            <v-list-item-title>{{ requirement }}</v-list-item-title>
+            <v-list-item-subtitle>dummy</v-list-item-subtitle>
           </v-list-item-content>
+
+          <v-list-item-action class="d-flex flex-row">
+            <v-btn icon>
+              <v-icon color="grey lighten-1">create</v-icon>
+            </v-btn>
+            <v-btn icon>
+              <v-icon color="grey lighten-1">clear</v-icon>
+            </v-btn>
+          </v-list-item-action>
         </v-list-item>
       </v-col>
       <v-col cols="12" md="4">
-        <p>Attached files</p>
+        <p class="title">Attached files</p>
         <template>
           <div class="d-flex justify-space-between">
             <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
@@ -54,13 +67,40 @@
       </v-col>
       <v-col cols="12" md="4">
         <div class="d-flex flex-column align-center">
-          <p>Passing class progress</p>
+          <p class="title">Passing class progress</p>
           <ChartRadial/>
         </div>
       </v-col>
     </v-row>
-    <Editor v-model="note"/>
-    <v-btn @click="addNote">Add note</v-btn>
+    <v-row>
+      <v-col cols="12" sm="12">
+        <Editor v-on:editNote="editNote($event)"/>
+        <v-btn @click="addNote" class="primary mt-4">Add note</v-btn>
+      </v-col>
+    </v-row>
+    <p class="mt-8 title">Notes</p>
+    <v-row>
+      <v-col cols="12" md="2" v-for="(note, index) in subjectDetails[0].notes" :key="index">
+        <v-card
+          class="mx-auto overflow-hidden"
+          max-width="344"
+          height="150"
+        >
+          <v-card-text>
+            <div class="text--primary text-limit" v-html="note">
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              text
+              color="primary accent-4"
+            >
+              See more
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -86,6 +126,9 @@ export default {
     }
   },
   methods: {
+    editNote (note) {
+      this.note = note
+    },
     async getSubjectDetails () {
       const res = await axios.get(`http://localhost:3000/subjects/${this.$route.params.id}`)
       this.subjectDetails.push(res.data)
@@ -161,5 +204,13 @@ export default {
 </script>
 
 <style>
-
+  .text-limit {
+    display: block;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    white-space: nowrap;
+    max-height: 3.6em;
+    line-height: 1.8em;
+  }
 </style>
