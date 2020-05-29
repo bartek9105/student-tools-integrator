@@ -14,7 +14,12 @@ const examSchema = new mongoose.Schema({
     room: {
         type: String
     },
-    color: String
+    color: String,
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 })
 
 module.exports = mongoose.model('Exam', examSchema)

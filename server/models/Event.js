@@ -41,6 +41,11 @@ const eventSchema = new mongoose.Schema({
     subject: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subject'
+    },
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 })
 

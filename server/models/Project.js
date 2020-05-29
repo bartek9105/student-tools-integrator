@@ -5,7 +5,12 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    color: String
+    color: String,
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 })
 
 module.exports = mongoose.model('Project', projectSchema)
