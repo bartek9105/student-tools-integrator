@@ -12,7 +12,12 @@ const subjectSchema = new mongoose.Schema({
     requirements: [{
         name: String,
         progress: Number
-    }]
+    }],
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 })
 
 module.exports = mongoose.model('Subject', subjectSchema)
