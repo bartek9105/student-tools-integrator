@@ -12,9 +12,9 @@ export default {
   components: {
     apexchart: VueApexCharts
   },
+  props: ['labels', 'series'],
   data () {
     return {
-      series: [44, 55, 67, 83],
       chartOptions: {
         chart: {
           height: 350,
@@ -39,7 +39,7 @@ export default {
             }
           }
         },
-        labels: ['Apples', 'Oranges', 'Bananas', 'Berries']
+        labels: this.labels
       }
     }
   }
