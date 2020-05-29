@@ -1,5 +1,18 @@
 <template>
   <v-container>
+    <v-dialog v-model="editReqDialog" max-width="500">
+      <v-card>
+        <v-container>
+          <v-form @submit.prevent>
+            <v-text-field type="text" label="Name" v-if="currentReqs" v-model="currentReqs.name"></v-text-field>
+            <v-text-field type="number" label="Progress" v-if="currentReqs" v-model="currentReqs.progress"></v-text-field>
+            <v-btn type="submit" color="primary" class="mr-4" @click="editRequirements(currentReqs._id)" @click.stop="editReqDialog = false">
+              Update
+            </v-btn>
+          </v-form>
+        </v-container>
+      </v-card>
+    </v-dialog>
     <p class="headline">{{ subjectDetails[0].name }}</p>
     <v-row class="justify-space-between">
       <v-col cols="12" md="4">
@@ -15,16 +28,24 @@
         </div>
         <v-list-item v-for="(requirement, index) in subjectDetails[0].requirements" :key="index">
           <v-list-item-content>
-            <v-list-item-title>{{ requirement }}</v-list-item-title>
-            <v-list-item-subtitle>dummy</v-list-item-subtitle>
+            <v-list-item-title>{{ requirement.name }}</v-list-item-title>
+              <v-progress-circular
+              :rotate="360"
+              :size="50"
+              :width="10"
+              :value="requirement.progress"
+              color="teal"
+            >
+              {{ requirement.progress }}
+            </v-progress-circular>
           </v-list-item-content>
 
           <v-list-item-action class="d-flex flex-row">
             <v-btn icon>
-              <v-icon color="grey lighten-1">create</v-icon>
+              <v-icon color="grey lighten-1" @click="updateReqDialog(requirement)">create</v-icon>
             </v-btn>
             <v-btn icon>
-              <v-icon color="grey lighten-1">clear</v-icon>
+              <v-icon color="grey lighten-1" @click="deleteRequirement(subjectDetails[0]._id, requirement._id)">clear</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -68,7 +89,7 @@
       <v-col cols="12" md="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
-          <ChartRadial/>
+          <ChartRadial :labels="getReqsNames" :series="getReqsProgress"/>
         </div>
       </v-col>
     </v-row>
@@ -120,12 +141,36 @@ export default {
     return {
       subjectDetails: [],
       requirements: '',
+      progress: 0,
       file: null,
       uploadedFiles: [],
-      note: null
+      note: null,
+      editReqDialog: false,
+      currentReqs: {}
     }
   },
   methods: {
+    async editRequirements (id) {
+      try {
+        await axios.patch(`http://localhost:3000/subjects/${id}/editRequirements`, {
+          requirement: this.currentReqs.name,
+          progress: this.currentReqs.progress
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    updateReqDialog (requirement) {
+      this.currentReqs = requirement
+      this.editReqDialog = true
+    },
+    async deleteRequirement (subjectId, reqId) {
+      try {
+        await axios.patch(`http://localhost:3000/subjects/${subjectId}/deleteRequirement/${reqId}`)
+      } catch (error) {
+        console.log(error)
+      }
+    },
     editNote (note) {
       this.note = note
     },
@@ -136,7 +181,8 @@ export default {
     async addRequirement () {
       try {
         await axios.patch(`http://localhost:3000/subjects/${this.$route.params.id}/updateRequirements`, {
-          requirement: this.requirements
+          requirement: this.requirements,
+          progress: this.progress
         })
         this.subjectDetails[0].requirements.push(this.requirements)
       } catch (error) {
@@ -191,6 +237,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    }
+  },
+  computed: {
+    getReqsNames () {
+      return this.subjectDetails[0].requirements.map(el => el.name)
+    },
+    getReqsProgress () {
+      return this.subjectDetails[0].requirements.map(el => el.progress)
     }
   },
   mounted () {

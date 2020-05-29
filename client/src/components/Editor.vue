@@ -3,10 +3,6 @@
     ref="myQuillEditor"
     v-model="note"
     @input="editNote"
-    :options="editorOption"
-    @blur="onEditorBlur($event)"
-    @focus="onEditorFocus($event)"
-    @ready="onEditorReady($event)"
   />
 </template>
 
@@ -30,19 +26,6 @@ export default {
   methods: {
     editNote () {
       this.$emit('editNote', this.note)
-    },
-    onEditorBlur (quill) {
-      console.log('editor blur!', quill)
-    },
-    onEditorFocus (quill) {
-      console.log('editor focus!', quill)
-    },
-    onEditorReady (quill) {
-      console.log('editor ready!', quill)
-    },
-    onEditorChange ({ quill, html, text }) {
-      console.log('editor change!', quill, html, text)
-      this.content = html
     }
   },
   computed: {

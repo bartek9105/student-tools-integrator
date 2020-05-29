@@ -61,14 +61,7 @@
             <router-link to="/todo">
               <v-list-item link>
                 <v-list-item-icon>
-                    <v-badge
-                      v-if="taskCount > 0"
-                      color="green"
-                      :content="taskCount"
-                    >
-                      <v-icon>list</v-icon>
-                    </v-badge>
-                    <v-icon v-else>list</v-icon>
+                    <v-icon>list</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
@@ -142,14 +135,6 @@
                 notifications
               </v-icon>
             </template>
-            <v-list>
-              <v-list-item
-                v-for="(item, index) in items"
-                :key="index"
-              >
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
           </v-menu>
 
         </v-app-bar>

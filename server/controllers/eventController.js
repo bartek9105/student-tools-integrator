@@ -9,22 +9,6 @@ exports.getEvents = async (req, res) => {
     }
 }
 
-exports.getByDate = async (req, res) => {
-    try {
-        const results = await Event.aggregate([
-            {$group: {_id: '$start', subjectDetails: {$push: {
-                title: '$title',
-                subjectId: '$subject',
-                startTime: '$startTime',
-                endTime: '$endTime'
-            }}}}
-        ])
-        res.send(results)
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 exports.addEvent = async (req, res) => {
     try {
         const event = new Event({
