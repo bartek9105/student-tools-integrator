@@ -13,6 +13,10 @@ const subjectSchema = new mongoose.Schema({
         name: String,
         progress: Number
     }],
+    teacher: {
+        type: String,
+        required: false
+    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

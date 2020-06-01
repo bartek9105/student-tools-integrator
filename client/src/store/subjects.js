@@ -33,8 +33,8 @@ export default ({
         commit('SET_SUBJECTS', res.data)
       }).catch(err => console.log(err))
     },
-    addSubject ({ commit }, subjectName) {
-      Api().post('subjects/add', subjectName).then(result => {
+    addSubject ({ commit }, subject) {
+      Api().post('subjects/add', subject).then(result => {
         commit('ADD_SUBJECT', result.data.subject)
       }).catch(err => console.log(err))
     },

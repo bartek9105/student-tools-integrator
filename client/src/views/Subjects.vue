@@ -5,6 +5,7 @@
         <v-container>
           <v-form @submit.prevent>
             <v-text-field type="text" label="Subject name" v-model="subjectName"></v-text-field>
+            <v-text-field type="text" label="Teacher" v-model="teacherName"></v-text-field>
             <v-btn type="submit" color="primary" class="mr-4" @click="addSubject" @click.stop="dialogSubject = false">
               Create subject
             </v-btn>
@@ -17,18 +18,6 @@
         <div class="d-flex justify-space-between">
           <Breadcrumbs/>
           <div>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-icon class="mr-2" v-on="on" @click="displayList = true">reorder</v-icon>
-              </template>
-              <span>Display list</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-icon v-on="on" @click="displayList = false">view_module</v-icon>
-              </template>
-              <span>Display grid</span>
-            </v-tooltip>
             <v-btn color="primary ml-4" v-if="getSubjects.length > 0" @click="dialogSubject = true">
               <v-icon class="mr-2">add</v-icon>
               Add subject
@@ -53,54 +42,8 @@
           label="Search"
           filled
         ></v-text-field>
-        <v-simple-table v-if="displayList">
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">Name</th>
-              </tr>
-              <tr>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="subject in getSubjects" :key="subject._id">
-                <td class="d-flex justify-space-between align-center" color="red">
-                  <div>
-                    <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
-                      {{ subject.name }}
-                    </router-link>
-                    <div class="d-flex align-center" v-else>
-                      <v-text-field
-                        v-model="editName"
-                        label="Edit name"
-                        class="mr-2"
-                        small
-                        required
-                      ></v-text-field>
-                      <v-btn color="primary" @click="updateSubject(subject._id)">Save</v-btn>
-                    </div>
-                  </div>
-                  <div>
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-icon class="mr-2" @click="editing = subject._id" v-on="on">create</v-icon>
-                      </template>
-                      <span>Edit subject name</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-icon v-on="on" @click="deleteSubject(subject._id)">delete</v-icon>
-                      </template>
-                      <span>Delete subject</span>
-                    </v-tooltip>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-        <v-row v-else>
-          <v-col cols="12" md="4" v-for="subject in getSubjects" :key="subject._id">
+        <v-row>
+          <v-col cols="12" md="4" v-for="subject in subjectsFilter" :key="subject._id">
             <v-card
               class="mx-auto"
               max-width="500"
@@ -151,6 +94,7 @@ export default {
     return {
       dialogSubject: false,
       subjectName: '',
+      teacherName: '',
       editing: null,
       editName: '',
       search: '',
@@ -160,7 +104,8 @@ export default {
   methods: {
     addSubject () {
       this.$store.dispatch('addSubject', {
-        name: this.subjectName
+        name: this.subjectName,
+        teacher: this.teacherName
       }).then(() => {
         this.subjectName = ''
         this.$store.dispatch('showSnackbar', {
@@ -222,13 +167,11 @@ export default {
     }
   },
   computed: {
-    /*
     subjectsFilter () {
-      return this.subjects.filter(subject => {
+      return this.getSubjects.filter(subject => {
         return subject.name.toLowerCase().match(this.search)
       })
     },
-    */
     getSubjects () {
       return this.$store.getters.getSubjects
     }
