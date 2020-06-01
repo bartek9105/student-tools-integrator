@@ -140,7 +140,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="exam in exams" :key="exam._id">
+          <tr v-for="exam in getExams" :key="exam._id">
             <td class="border" :style="{'border-left-color': exam.color}">
               <router-link :to="'/subject/' + exam.subject._id">{{ exam.subject.name }}</router-link>
             </td>
@@ -197,44 +197,34 @@ export default {
       room: '',
       duration: '',
       colorPicker: false,
-      exams: [],
       editedExam: null,
       currentExam: null
     }
   },
   methods: {
-    async addExam () {
-      try {
-        await axios.post('http://localhost:3000/exams/add', {
-          subject: this.selectedClass,
-          date: this.date,
-          duration: this.duration,
-          room: this.room,
-          color: this.color
-        })
+    addExam () {
+      this.$store.dispatch('addExam', {
+        subject: this.selectedClass,
+        date: this.date,
+        duration: this.duration,
+        room: this.room,
+        color: this.color
+      }).then(() => {
         this.dialogNewExam = false
         this.selectedClass = ''
         this.date = ''
         this.duration = ''
         this.room = ''
         this.color = ''
-        this.getExams()
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
           text: 'Exam added'
         })
-      } catch (error) {
-        console.log(error)
-      }
+      }).catch(err => console.log(err))
     },
-    async getExams () {
-      try {
-        const exams = await axios.get('http://localhost:3000/exams')
-        this.exams = exams.data
-      } catch (error) {
-        console.log(error)
-      }
+    fetchExams () {
+      this.$store.dispatch('fetchExams')
     },
     async editExam (id) {
       try {
@@ -259,18 +249,8 @@ export default {
       this.currentExam = exam
       this.dialogUpdateExam = true
     },
-    async deleteExam (id) {
-      try {
-        await axios.delete(`http://localhost:3000/exams/${id}/delete`)
-        this.getExams()
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'Exam deleted'
-        })
-      } catch (error) {
-        console.log(error)
-      }
+    deleteExam (examId) {
+      this.$store.dispatch('deleteExam', examId)
     },
     changeColor (color) {
       this.color = color
@@ -282,10 +262,13 @@ export default {
   computed: {
     getSubjects () {
       return this.$store.getters.getSubjects
+    },
+    getExams () {
+      return this.$store.getters.getExams
     }
   },
   mounted () {
-    this.getExams()
+    this.fetchExams()
   }
 }
 </script>

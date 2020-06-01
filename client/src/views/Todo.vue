@@ -229,22 +229,19 @@ export default {
     fetchTasks () {
       this.$store.dispatch('fetchTasks')
     },
-    async addTask () {
-      await axios.post('http://localhost:3000/tasks/add', {
+    addTask () {
+      this.$store.dispatch('addTask', {
         name: this.taskName,
         project: this.selectedProject,
         dueDate: this.date
-      })
-      this.fetchTasks()
-      this.taskName = ''
+      }).then(() => {
+        this.taskName = ''
+        this.selectedProject = ''
+        this.date = ''
+      }).catch(err => console.log(err))
     },
-    async deleteTask (id) {
-      try {
-        await axios.delete(`http://localhost:3000/tasks/${id}/delete`)
-        this.fetchTasks()
-      } catch (error) {
-        console.log(error)
-      }
+    deleteTask (taskId) {
+      this.$store.dispatch('deleteTask', taskId)
     },
     async editTask (id) {
       try {
