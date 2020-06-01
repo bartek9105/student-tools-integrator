@@ -5,6 +5,7 @@ import notifications from './notifications'
 import calendar from './calendar'
 import tasks from './tasks'
 import subjects from './subjects'
+import exams from './exams'
 
 Vue.use(Vuex)
 
@@ -50,6 +51,7 @@ export default new Vuex.Store({
     notifications,
     calendar,
     tasks,
-    subjects
+    subjects,
+    exams
   }
 })
