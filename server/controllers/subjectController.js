@@ -7,7 +7,8 @@ exports.addSubject = async (req, res) => {
             requirements: {
                 name: req.body.reqName,
                 progress: req.body.progress
-            }
+            },
+            creator: req.userId
         })
         const savedSubject = await newSubject.save()
         res.send({
@@ -55,7 +56,9 @@ exports.deleteRequirement = async (req, res) => {
 
 exports.getSubjects = async (req, res) => {
     try {
-        const subjects = await Subject.find().populate('exams', 'name')
+        const subjects = await Subject.find({
+            creator: req.userId
+        }).populate('exams', 'name')
         res.send(subjects)       
     } catch (error) {
         console.log(error)

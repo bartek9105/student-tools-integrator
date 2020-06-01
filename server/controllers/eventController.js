@@ -2,7 +2,9 @@ const Event = require('../models/Event')
 
 exports.getEvents = async (req, res) => {
     try {
-        const events = await Event.find()
+        const events = await Event.find({
+            creator: req.userId
+        })
         res.send(events)
     } catch (error) {
         console.log(error)
@@ -21,7 +23,8 @@ exports.addEvent = async (req, res) => {
             endRecur: req.body.endRecurence,
             daysOfWeek: req.body.daysOfWeek,
             details: req.body.details,
-            subject: req.body.subject
+            subject: req.body.subject,
+            creator: req.userId
         })
         const savedEvent = await event.save()
         res.send({

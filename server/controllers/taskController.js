@@ -2,7 +2,9 @@ const Task = require('../models/Task')
 
 exports.getTasks = async (req, res) => {
     try {
-        const tasks = await Task.find()
+        const tasks = await Task.find({
+            creator: req.userId
+        })
         res.send(tasks)
     } catch (error) {
         console.log(error)
@@ -14,7 +16,8 @@ exports.addTask = async (req, res) => {
         const newTask = await new Task({
             name: req.body.name,
             project: req.body.project,
-            dueDate: req.body.dueDate
+            dueDate: req.body.dueDate,
+            creator: req.userId
         })
         const savedTask = await newTask.save()
         res.send(savedTask)        
