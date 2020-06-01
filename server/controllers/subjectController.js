@@ -8,6 +8,7 @@ exports.addSubject = async (req, res) => {
                 name: req.body.reqName,
                 progress: req.body.progress
             },
+            teacher: req.body.teacher,
             creator: req.userId
         })
         const savedSubject = await newSubject.save()
