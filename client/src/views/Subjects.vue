@@ -47,13 +47,12 @@
             <v-card
               class="mx-auto"
               max-width="500"
-              outlined
               style="box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03);"
             >
               <v-list-item three-line>
                 <v-list-item-content>
                   <div class="overline mb-4"></div>
-                  <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id">
+                  <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id" class="router">
                     <v-list-item-title class="headline mb-1">{{ subject.name }}</v-list-item-title>
                   </router-link>
                   <div v-else>
@@ -185,5 +184,8 @@ export default {
 <style>
   .shadow {
     box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03) !important;
+  }
+  .router {
+    color: rgba(0, 0, 0, 0.87) !important;
   }
 </style>
