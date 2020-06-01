@@ -71,7 +71,7 @@
 
               <v-list-item-content>
                 <v-list-item-title>{{ file.filename }}</v-list-item-title>
-                <v-list-item-subtitle>dummy</v-list-item-subtitle>
+                <v-list-item-subtitle>File</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action class="d-flex flex-row">

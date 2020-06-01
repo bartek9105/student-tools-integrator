@@ -1,4 +1,4 @@
-import axios from 'axios'
+import Api from '../services/Api'
 
 export default ({
   state: {
@@ -19,14 +19,14 @@ export default ({
   },
   actions: {
     getEvents ({ commit }) {
-      return axios.get('http://localhost:3000/events').then(events => {
+      return Api.get('events').then(events => {
         commit('SET_EVENTS', events.data)
       }).catch(err => {
         console.log(err)
       })
     },
     addEvent ({ commit }, payload) {
-      axios.post('http://localhost:3000/events/add', payload).then(result => {
+      Api.post('events/add', payload).then(result => {
         commit('ADD_EVENT', result.data.event)
       }).catch(err => console.log(err))
     }

@@ -24,6 +24,12 @@ const examRoutes = require('./routes/exam')
 
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+  )
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   next();
 });
 
