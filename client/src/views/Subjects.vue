@@ -52,26 +52,42 @@
               <v-list-item three-line>
                 <v-list-item-content>
                   <div class="overline mb-4"></div>
-                  <router-link :to="'/subject/' + subject._id" v-if="editing !== subject._id" class="router">
-                    <v-list-item-title class="headline mb-1">{{ subject.name }}</v-list-item-title>
-                  </router-link>
-                  <div v-else>
-                    <v-text-field
-                      v-model="editName"
-                      label="Edit name"
-                      class="mr-2"
-                      small
-                      required
-                    ></v-text-field>
-                    <v-btn text @click="updateSubject(subject._id)">Save</v-btn>
+                  <div class="d-flex justify-space-between">
+                    <router-link :to="'/subject/' + subject._id">
+                      <v-list-item-title class="title mb-1">
+                        {{ subject.name }}
+                      </v-list-item-title>
+                    </router-link>
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on }">
+                        <v-icon
+                          color="primary"
+                          dark
+                          v-on="on"
+                        >
+                          more_vert
+                        </v-icon>
+                      </template>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-title>
+                            <v-btn text @click="editing = subject._id">Edit</v-btn>
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item>
+                          <v-list-item-title>
+                            <v-btn text @click="deleteSubject(subject._id)">Delete</v-btn>
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </div>
+                  <div class="d-flex align-center caption mt-8">
+                    <v-icon class="mr-2">person</v-icon> Teacher: {{ subject.teacher }}
+                    <v-icon class="mr-2 ml-2">note</v-icon> Requirements: {{ subject.requirements.length }}
                   </div>
                 </v-list-item-content>
               </v-list-item>
-
-              <v-card-actions>
-                <v-btn text @click="editing = subject._id">Edit</v-btn>
-                <v-btn text @click="deleteSubject(subject._id)">Delete</v-btn>
-              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
