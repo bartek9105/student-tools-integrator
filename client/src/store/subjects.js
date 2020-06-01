@@ -1,4 +1,4 @@
-import axios from 'axios'
+import Api from '../services/Api'
 
 export default ({
   state: {
@@ -19,12 +19,12 @@ export default ({
   },
   actions: {
     fetchSubjects ({ commit }) {
-      return axios.get('http://localhost:3000/subjects').then(res => {
+      return Api().get('subjects').then(res => {
         commit('SET_SUBJECTS', res.data)
       }).catch(err => console.log(err))
     },
     addSubject ({ commit }, payload) {
-      axios.post('http://localhost:3000/subjects/add', payload).then(result => {
+      Api().post('subjects/add', payload).then(result => {
         commit('ADD_SUBJECT', result.data.subject)
       }).catch(err => console.log(err))
     }
