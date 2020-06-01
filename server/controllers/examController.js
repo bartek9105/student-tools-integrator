@@ -2,7 +2,9 @@ const Exam = require('../models/Exam')
 
 exports.getExams = async (req, res) => {
     try {
-        const exams = await Exam.find().populate('subject', 'name')
+        const exams = await Exam.find({
+            creator: req.userId
+        }).populate('subject', 'name')
         res.send(exams)
     } catch (error) {
         console.log(error);
@@ -16,7 +18,8 @@ exports.addExam = async (req, res) => {
             date: req.body.date,
             duration: req.body.duration,
             room: req.body.room,
-            color: req.body.color
+            color: req.body.color,
+            creator: req.userId
         })
         const savedExam = await newExam.save()
         res.send(savedExam)

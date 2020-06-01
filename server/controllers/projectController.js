@@ -2,7 +2,9 @@ const Project = require('../models/Project')
 
 exports.getProjects = async (req, res) => {
     try {
-        const projects = await Project.find()
+        const projects = await Project.find({
+            creator: req.userId
+        })
         res.send(projects)
     } catch (error) {
         console.log(error)
@@ -13,7 +15,8 @@ exports.addProject = async (req, res) => {
     try {
         const newProject = new Project({
             name: req.body.name,
-            color: req.body.color
+            color: req.body.color,
+            creator: req.userId
         })
         const savedProject = await newProject.save()
         res.send(savedProject)        
