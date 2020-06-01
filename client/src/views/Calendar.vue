@@ -57,8 +57,6 @@
 
 <script>
 
-import axios from 'axios'
-
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AddEventDialog from '@/components/AddEventDialog'
 
@@ -88,14 +86,11 @@ export default {
     }
   },
   methods: {
-    async deleteEvent (id) {
-      try {
-        await axios.delete(`http://localhost:3000/events/delete/${id}`)
-        this.getEvents()
+    deleteEvent (id) {
+      this.$store.dispatch('deleteEvent', id).then(() => {
+        this.fetchEvents()
         this.eventDialog = false
-      } catch (error) {
-        console.log(error)
-      }
+      }).catch(err => console.log(err))
     },
     eventInfo (arg) {
       this.eventDialog = true

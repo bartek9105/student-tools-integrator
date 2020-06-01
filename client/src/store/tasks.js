@@ -1,4 +1,4 @@
-import axios from 'axios'
+import Api from '../services/Api'
 
 export default ({
   state: {
@@ -16,7 +16,7 @@ export default ({
   },
   actions: {
     fetchTasks ({ commit }) {
-      return axios.get('http://localhost:3000/tasks')
+      return Api().get('tasks')
         .then(result => {
           commit('SET_TASKS', result.data)
         })
