@@ -2,17 +2,16 @@ const express = require('express')
 const router = express.Router()
 
 const subjectController = require('../controllers/subjectController')
-const isAuth = require('../policies/isAuth')
 
-router.post('/add', isAuth, subjectController.addSubject)
-router.patch('/:id/updateRequirements', isAuth, subjectController.updateRequirements)
-router.patch('/:id/deleteRequirement/:reqId', isAuth, subjectController.deleteRequirement)
-router.patch('/:id/editRequirements', isAuth, subjectController.editRequirements)
+router.post('/add', subjectController.addSubject)
+router.patch('/:id/updateRequirements', subjectController.updateRequirements)
+router.patch('/:id/deleteRequirement/:reqId', subjectController.deleteRequirement)
+router.patch('/:id/editRequirements', subjectController.editRequirements)
 
-router.get('/', isAuth, subjectController.getSubjects)
-router.get('/:id', isAuth, subjectController.getSubject)
-router.patch('/:id/updateNotes', isAuth, subjectController.updateNotes)
-router.patch('/:id/edit', isAuth, subjectController.editSubject)
-router.delete('/:id/delete', isAuth, subjectController.deleteSubject)
+router.get('/', subjectController.getSubjects)
+router.get('/:id', subjectController.getSubject)
+router.patch('/:id/updateNotes', subjectController.updateNotes)
+router.patch('/:id/edit', subjectController.editSubject)
+router.delete('/:id/delete', subjectController.deleteSubject)
 
 module.exports = router
