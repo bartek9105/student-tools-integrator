@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex justify-items-center">
+  <div class="container">
     <v-row>
       <v-col cols="12" md="3">
         <v-form class="text-center">
@@ -63,7 +63,4 @@ export default {
 </script>
 
 <style lang="scss">
-  .container {
-    height: 100vh;
-  }
 </style>

@@ -6,14 +6,14 @@
           <v-form @submit.prevent>
             <v-text-field type="text" label="Name" v-if="currentReqs" v-model="currentReqs.name"></v-text-field>
             <v-text-field type="number" label="Progress" v-if="currentReqs" v-model="currentReqs.progress"></v-text-field>
-            <v-btn type="submit" color="primary" class="mr-4" @click="editRequirements(currentReqs._id)" @click.stop="editReqDialog = false">
+            <v-btn type="submit" color="primary" class="mr-4" @click="editRequirement(currentReqs._id)" @click.stop="editReqDialog = false">
               Update
             </v-btn>
           </v-form>
         </v-container>
       </v-card>
     </v-dialog>
-    <p class="headline">{{ subjectDetails[0].name }}</p>
+    <p class="headline">{{ getSubjectDetails.name }}</p>
     <v-row class="justify-space-between">
       <v-col cols="12" md="4">
         <p class="title">Requirements</p>
@@ -26,7 +26,7 @@
           ></v-text-field>
           <v-btn color="primary" @click="addRequirement">Add</v-btn>
         </div>
-        <v-list-item v-for="(requirement, index) in subjectDetails[0].requirements" :key="index">
+        <v-list-item v-for="(requirement, index) in getSubjectDetails.requirements" :key="index">
           <v-list-item-content>
             <v-list-item-title>{{ requirement.name }}</v-list-item-title>
               <v-progress-circular
@@ -45,7 +45,7 @@
               <v-icon color="grey lighten-1" @click="updateReqDialog(requirement)">create</v-icon>
             </v-btn>
             <v-btn icon>
-              <v-icon color="grey lighten-1" @click="deleteRequirement(subjectDetails[0]._id, requirement._id)">clear</v-icon>
+              <v-icon color="grey lighten-1" @click="deleteRequirement(getSubjectDetails._id, requirement._id)">clear</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -89,7 +89,7 @@
       <v-col cols="12" md="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
-          <ChartRadial :labels="getReqsNames" :series="getReqsProgress"/>
+          <!--<ChartRadial :labels="getReqsNames" :series="getReqsProgress"/>-->
         </div>
       </v-col>
     </v-row>
@@ -100,8 +100,9 @@
       </v-col>
     </v-row>
     <p class="mt-8 title">Notes</p>
+    <!--
     <v-row>
-      <v-col cols="12" md="2" v-for="(note, index) in subjectDetails[0].notes" :key="index">
+      <v-col cols="12" md="2" v-for="(note, index) in subjectDetails.notes" :key="index">
         <v-card
           class="mx-auto overflow-hidden"
           max-width="344"
@@ -122,19 +123,20 @@
         </v-card>
       </v-col>
     </v-row>
+    -->
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
 
-import ChartRadial from '@/components/ChartRadial'
+// import ChartRadial from '@/components/ChartRadial'
 import Editor from '@/components/Editor'
 
 export default {
   name: 'SubjectDetails',
   components: {
-    ChartRadial,
+    // ChartRadial,
     Editor
   },
   data () {
@@ -150,44 +152,35 @@ export default {
     }
   },
   methods: {
-    async editRequirements (id) {
-      try {
-        await axios.patch(`http://localhost:3000/subjects/${id}/editRequirements`, {
-          requirement: this.currentReqs.name,
-          progress: this.currentReqs.progress
-        })
-      } catch (error) {
-        console.log(error)
-      }
+    editRequirement (reqId) {
+      this.$store.dispatch('editRequirement', {
+        reqId: reqId,
+        requirement: this.currentReqs.name,
+        progress: this.currentReqs.progress
+      })
     },
     updateReqDialog (requirement) {
       this.currentReqs = requirement
       this.editReqDialog = true
     },
-    async deleteRequirement (subjectId, reqId) {
-      try {
-        await axios.patch(`http://localhost:3000/subjects/${subjectId}/deleteRequirement/${reqId}`)
-      } catch (error) {
-        console.log(error)
-      }
+    deleteRequirement (subjectId, reqId) {
+      this.$store.dispatch('deleteRequirement', {
+        subjectId: subjectId,
+        reqId: reqId
+      })
     },
     editNote (note) {
       this.note = note
     },
-    async getSubjectDetails () {
-      const res = await axios.get(`http://localhost:3000/subjects/${this.$route.params.id}`)
-      this.subjectDetails.push(res.data)
+    fetchSubjectDetails () {
+      this.$store.dispatch('fetchSubjectDetails', this.$route.params.id)
     },
-    async addRequirement () {
-      try {
-        await axios.patch(`http://localhost:3000/subjects/${this.$route.params.id}/updateRequirements`, {
-          requirement: this.requirements,
-          progress: this.progress
-        })
-        this.subjectDetails[0].requirements.push(this.requirements)
-      } catch (error) {
-        console.log(error)
-      }
+    addRequirement () {
+      this.$store.dispatch('addRequirement', {
+        requirement: this.requirements,
+        progress: this.progress,
+        subjectId: this.$route.params.id
+      })
     },
     async addNote () {
       try {
@@ -240,6 +233,9 @@ export default {
     }
   },
   computed: {
+    getSubjectDetails () {
+      return this.$store.getters.getSubjectDetails
+    },
     getReqsNames () {
       return this.subjectDetails[0].requirements.map(el => el.name)
     },
@@ -248,7 +244,7 @@ export default {
     }
   },
   mounted () {
-    this.getSubjectDetails()
+    this.fetchSubjectDetails()
     this.getUploadedFiles()
   },
   updated () {
