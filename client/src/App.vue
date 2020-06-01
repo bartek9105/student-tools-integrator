@@ -4,6 +4,7 @@
       <v-app id="inspire">
         <Snackbar />
         <v-navigation-drawer
+          v-if="!$route.meta.hideNav"
           v-model="drawer"
           app
           clipped
@@ -108,6 +109,7 @@
         </v-navigation-drawer>
 
         <v-app-bar
+          v-if="!$route.meta.hideNav"
           app
           clipped-left
           dense
