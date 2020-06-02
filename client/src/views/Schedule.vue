@@ -5,19 +5,19 @@
       <v-btn class="primary" @click="dialog = true">Add</v-btn>
     </div>
     <AddScheduleDialog v-model="dialog"/>
-    <v-simple-table>
+    <v-simple-table class="elevation-1">
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left">
+            <th class="text-left table-header">
               <v-icon class="mr-2">class</v-icon>
               Class
             </th>
-            <th class="text-left">
+            <th class="text-left table-header">
               <v-icon class="mr-2">calendar_today</v-icon>
               Day
             </th>
-            <th class="text-left">
+            <th class="text-left table-header">
               <v-icon class="mr-2">schedule</v-icon>
               Time
             </th>
@@ -95,5 +95,12 @@ export default {
 </script>
 
 <style>
-
+  td:not(:first-child) {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .table-header {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+  }
 </style>
