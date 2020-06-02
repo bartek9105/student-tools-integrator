@@ -9,9 +9,18 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">Day</th>
-            <th class="text-left">Reccuring</th>
+            <th class="text-left">
+              <v-icon class="mr-2">class</v-icon>
+              Class
+            </th>
+            <th class="text-left">
+              <v-icon class="mr-2">calendar_today</v-icon>
+              Day
+            </th>
+            <th class="text-left">
+              <v-icon class="mr-2">schedule</v-icon>
+              Time
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -19,11 +28,16 @@
             <td>
               <router-link :to="'subject/' + event.subject"> {{ event.title }} </router-link>
             </td>
-            <td>
-              {{ days[new Date(event.start).getDay()] }} ({{ event.start }})
-            </td>
             <td v-if="event.daysOfWeek">
-              Every {{ days[event.daysOfWeek] }}
+              <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
+              ({{ event.startRecur}} - {{ event.endRecur }})
+            </td>
+            <td v-else>
+              <span class="font-weight-medium">{{ days[new Date(event.start).getDay()] }} </span>
+              ({{ event.start }})
+            </td>
+            <td>
+              {{ event.startTime }} - {{ event.endTime }}
             </td>
           </tr>
         </tbody>
