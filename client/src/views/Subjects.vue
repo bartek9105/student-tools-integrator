@@ -38,7 +38,7 @@
     </v-dialog>
     <v-row>
       <v-col cols="12">
-        <div class="d-flex justify-space-between">
+        <div class="d-flex justify-space-between align-center">
           <Breadcrumbs/>
           <div>
             <v-btn color="primary ml-4" v-if="getSubjects.length > 0" @click="dialogSubject = true">
