@@ -6,6 +6,7 @@
           <v-form @submit.prevent>
             <v-text-field type="text" label="Subject name" v-model="subjectName"></v-text-field>
             <v-text-field type="text" label="Teacher" v-model="teacherName"></v-text-field>
+            <v-text-field type="text" label="Description" v-model="description"></v-text-field>
             <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
             <div class="d-flex justify-space-between align-center">
               <v-btn type="submit" color="primary" class="mr-4" @click="addSubject" @click.stop="dialogSubject = false">
@@ -41,18 +42,14 @@
     </v-container>
     <v-form v-else>
       <v-container>
-        <v-text-field
-          v-model="search"
-          label="Search"
-          filled
-        ></v-text-field>
+        <v-text-field v-model="search" label="Search" filled></v-text-field>
         <v-row>
           <v-col cols="12" md="4" v-for="subject in subjectsFilter" :key="subject._id">
             <v-card
               class="mx-auto"
               max-width="500"
               outlined
-              style="box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03); border-left: 3px solid;"
+              style="box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03); border-left: 4px solid;"
               :style="{'border-left-color':subject.color}"
             >
               <v-list-item three-line>
@@ -66,11 +63,7 @@
                     </router-link>
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
-                        <v-icon
-                          color="primary"
-                          dark
-                          v-on="on"
-                        >
+                        <v-icon color="primary" dark v-on="on">
                           more_vert
                         </v-icon>
                       </template>
@@ -88,7 +81,7 @@
                       </v-list>
                     </v-menu>
                   </div>
-                  <p class="caption mt-2">Lorem ipsum dolor, sit amet consectetur adipisicing.</p>
+                  <p class="caption mt-2">{{ subject.description }}</p>
                   <div class="d-flex align-center caption mt-8">
                     <v-icon class="mr-2">person</v-icon> Teacher: {{ subject.teacher }}
                     <v-icon class="mr-2 ml-2">note</v-icon> Requirements: {{ subject.requirements.length }}
@@ -124,7 +117,8 @@ export default {
       search: '',
       displayList: false,
       borderColor: null,
-      colorPicker: false
+      colorPicker: false,
+      description: null
     }
   },
   methods: {
@@ -132,11 +126,13 @@ export default {
       this.$store.dispatch('addSubject', {
         name: this.subjectName,
         teacher: this.teacherName,
-        color: this.borderColor
+        color: this.borderColor,
+        description: this.description
       }).then(() => {
         this.subjectName = ''
         this.teacherName = ''
         this.borderColor = ''
+        this.description = ''
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
