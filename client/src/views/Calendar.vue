@@ -124,4 +124,23 @@ export default {
 <style lang="scss">
   @import '~@fullcalendar/core/main.css';
   @import '~@fullcalendar/daygrid/main.css';
+  .fc-button {
+    display: flex;
+    align-items: center;
+    .fc-icon {
+      vertical-align: baseline;
+    }
+  }
+  .fc-left {
+    display: flex;
+  }
+
+  @media screen and (max-width: 560px) {
+    .fc-toolbar {
+      flex-direction: column;
+    }
+    .fc-center {
+      margin: 5px 0;
+    }
+  }
 </style>
