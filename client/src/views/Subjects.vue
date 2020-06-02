@@ -18,6 +18,24 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogEditSubject" max-width="500">
+      <v-card>
+        <v-container>
+          <v-form @submit.prevent>
+            <v-text-field type="text" label="Subject name" v-if="currentSubject" v-model="currentSubject.name"></v-text-field>
+            <v-text-field type="text" label="Teacher" v-if="currentSubject" v-model="currentSubject.teacher"></v-text-field>
+            <v-text-field type="text" label="Description" v-if="currentSubject" v-model="currentSubject.description"></v-text-field>
+            <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
+            <div class="d-flex justify-space-between align-center">
+              <v-btn type="submit" color="primary" class="mr-4" @click="editSubject(currentSubject._id)" @click.stop="dialogEditSubject = false">
+                Edit subject
+              </v-btn>
+              <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
+            </div>
+          </v-form>
+        </v-container>
+      </v-card>
+    </v-dialog>
     <v-row>
       <v-col cols="12">
         <div class="d-flex justify-space-between">
@@ -70,7 +88,7 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-title>
-                            <v-btn text @click="editing = subject._id">Edit</v-btn>
+                            <v-btn text @click="updateSubjectDialog(subject)">Edit</v-btn>
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item>
@@ -110,6 +128,7 @@ export default {
   data () {
     return {
       dialogSubject: false,
+      dialogEditSubject: false,
       subjectName: '',
       teacherName: '',
       editing: null,
@@ -118,7 +137,8 @@ export default {
       displayList: false,
       borderColor: null,
       colorPicker: false,
-      description: null
+      description: null,
+      currentSubject: null
     }
   },
   methods: {
@@ -147,30 +167,27 @@ export default {
         })
       })
     },
+    updateSubjectDialog (currentSubject) {
+      this.dialogEditSubject = true
+      this.currentSubject = currentSubject
+    },
     fetchSubjects () {
       this.$store.dispatch('fetchSubjects')
     },
-    async updateSubject (id) {
-      try {
-        axios.patch(`http://localhost:3000/subjects/${id}/edit`, {
-          name: this.editName
-        })
-        this.editing = null
-        this.editName = ''
-        this.fetchSubjects()
+    editSubject (id) {
+      this.$store.dispatch('editSubject', this.currentSubject).then(() => {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
           text: 'Subject name updated'
         })
-      } catch (error) {
-        console.log(error)
+      }).catch(err => {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'error',
-          text: error
+          text: err
         })
-      }
+      })
     },
     async deleteSubject (id) {
       try {

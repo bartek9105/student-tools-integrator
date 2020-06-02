@@ -62,6 +62,14 @@ export default ({
       Api().patch(`subjects/${payload.subjectId}/deleteRequirement/${payload.reqId}`).then(() => {
         dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
+    },
+    editSubject ({ commit }, subject) {
+      Api().patch(`subjects/${subject._id}/edit`, {
+        name: subject.name,
+        teacher: subject.teacher,
+        color: subject.color,
+        description: subject.description
+      }).then(() => console.log('edited subject')).catch(err => console.log(err))
     }
   }
 })
