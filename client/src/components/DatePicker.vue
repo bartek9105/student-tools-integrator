@@ -11,7 +11,7 @@
     <template v-slot:activator="{ on }">
         <v-text-field
         v-model="date"
-        label="Due date"
+        label="Pick date"
         prepend-icon="event"
         readonly
         v-on="on"
