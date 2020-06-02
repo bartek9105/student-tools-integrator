@@ -115,7 +115,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
 
@@ -189,23 +188,20 @@ export default {
         })
       })
     },
-    async deleteSubject (id) {
-      try {
-        axios.delete(`http://localhost:3000/subjects/${id}/delete`)
+    async deleteSubject (subjectId) {
+      this.$store.dispatch('deleteSubject', subjectId).then(() => {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
           text: 'Subject deleted'
         })
-        this.fetchSubjects()
-      } catch (error) {
-        console.log(error)
+      }).catch(err => {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'error',
-          text: error
+          text: err
         })
-      }
+      })
     },
     changeColor (color) {
       this.borderColor = color

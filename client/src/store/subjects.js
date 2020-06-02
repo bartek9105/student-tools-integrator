@@ -33,15 +33,28 @@ export default ({
         commit('SET_SUBJECTS', res.data)
       }).catch(err => console.log(err))
     },
+    fetchSubjectDetails ({ commit }, subjectId) {
+      Api().get(`subjects/${subjectId}`).then(res => {
+        commit('SET_SUBJECT_DETAILS', res.data).catch(err => console.log(err))
+      })
+    },
     addSubject ({ commit }, subject) {
       Api().post('subjects/add', subject).then(result => {
         commit('ADD_SUBJECT', result.data.subject)
       }).catch(err => console.log(err))
     },
-    fetchSubjectDetails ({ commit }, subjectId) {
-      Api().get(`subjects/${subjectId}`).then(res => {
-        commit('SET_SUBJECT_DETAILS', res.data).catch(err => console.log(err))
-      })
+    editSubject ({ commit }, subject) {
+      Api().patch(`subjects/${subject._id}/edit`, {
+        name: subject.name,
+        teacher: subject.teacher,
+        color: subject.color,
+        description: subject.description
+      }).then(() => console.log('edited subject')).catch(err => console.log(err))
+    },
+    deleteSubject ({ commit, dispatch }, subjectId) {
+      Api().delete(`subjects/${subjectId}/delete`).then(() => {
+        dispatch('fetchSubjects')
+      }).catch(err => console.log(err))
     },
     addRequirement ({ commit }, payload) {
       Api().patch(`subjects/${payload.subjectId}/updateRequirements`, {
@@ -62,14 +75,6 @@ export default ({
       Api().patch(`subjects/${payload.subjectId}/deleteRequirement/${payload.reqId}`).then(() => {
         dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
-    },
-    editSubject ({ commit }, subject) {
-      Api().patch(`subjects/${subject._id}/edit`, {
-        name: subject.name,
-        teacher: subject.teacher,
-        color: subject.color,
-        description: subject.description
-      }).then(() => console.log('edited subject')).catch(err => console.log(err))
     }
   }
 })
