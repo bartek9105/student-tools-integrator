@@ -21,6 +21,10 @@ const subjectSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    description: {
+        type: String,
+        required: false
+    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
