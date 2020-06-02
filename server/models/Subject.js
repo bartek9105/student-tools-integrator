@@ -17,6 +17,10 @@ const subjectSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    color: {
+        type: String,
+        required: false
+    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
