@@ -95,7 +95,12 @@ exports.deleteSubject = async (req, res) => {
 
 exports.editSubject = async (req, res) => {
     try {
-        const editedSubject = await Subject.findByIdAndUpdate({ _id: req.params.id }, { name: req.body.name })
+        const editedSubject = await Subject.findByIdAndUpdate({ _id: req.params.id }, { 
+            name: req.body.name, 
+            teacher: req.body.teacher,
+            color: req.body.name,
+            description: req.body.description,
+        })
         res.send(editedSubject)
     } catch (error) {
         console.log(subjects)
