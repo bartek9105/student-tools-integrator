@@ -66,7 +66,6 @@
             <v-card
               class="mx-auto"
               max-width="500"
-              outlined
               style="box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03); border-left: 4px solid;"
               :style="{'border-left-color':subject.color}"
             >
