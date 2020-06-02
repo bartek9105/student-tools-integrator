@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center">
+    <div class="d-flex justify-space-between align-center mb-4">
       <Breadcrumbs/>
       <v-btn class="primary" @click="dialog = true">Add</v-btn>
     </div>
@@ -9,15 +9,15 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left table-header">
+            <th class="text-left table-header font-weight-black">
               <v-icon class="mr-2">class</v-icon>
               Class
             </th>
-            <th class="text-left table-header">
+            <th class="text-left table-header font-weight-black">
               <v-icon class="mr-2">calendar_today</v-icon>
               Day
             </th>
-            <th class="text-left table-header">
+            <th class="text-left table-header font-weight-black">
               <v-icon class="mr-2">schedule</v-icon>
               Time
             </th>
@@ -96,11 +96,11 @@ export default {
 
 <style>
   td:not(:first-child) {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 25px;
+    padding-bottom: 25px;
   }
   .table-header {
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumbs class="pl-2 headline">{{ this.$route.name }}</v-breadcrumbs>
+      <v-breadcrumbs class="pl-2 title route-title">{{ this.$route.name }}</v-breadcrumbs>
     </div>
 </template>
 
@@ -12,5 +12,7 @@ export default {
 </script>
 
 <style>
-
+  .route-title {
+    text-transform: uppercase;
+  }
 </style>
