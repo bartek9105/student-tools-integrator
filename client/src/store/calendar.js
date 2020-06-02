@@ -25,13 +25,14 @@ export default ({
         console.log(err)
       })
     },
-    addEvent ({ commit }, payload) {
-      Api().post('events/add', payload).then(result => {
-        commit('ADD_EVENT', result.data.event)
+    addEvent ({ commit, dispatch }, payload) {
+      console.log(payload)
+      Api().post('events/add', payload).then(() => {
+        dispatch('getEvents')
       }).catch(err => console.log(err))
     },
     deleteEvent ({ commit }, id) {
-      Api().delete(`events/delete/${id}`).then(() => console.log('deleted')).catch(err => console.log(err))
+      Api().delete(`events/delete/${id}`).then().catch(err => console.log(err))
     }
   }
 })

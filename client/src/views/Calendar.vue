@@ -6,7 +6,7 @@
     </div>
     <FullCalendar
       defaultView="dayGridMonth"
-      :plugins="calendarPlugins"
+      :plugins="plugins"
       :header="header"
       :events="getEvents"
       :eventTextColor="eventTextColor"
@@ -73,7 +73,7 @@ export default {
   },
   data () {
     return {
-      calendarPlugins: [dayGridPlugin, timeGridPlugin],
+      plugins: [dayGridPlugin, timeGridPlugin],
       header: {
         left: 'today, prev,next',
         center: 'title',
@@ -124,6 +124,7 @@ export default {
 <style lang="scss">
   @import '~@fullcalendar/core/main.css';
   @import '~@fullcalendar/daygrid/main.css';
+  @import '~@fullcalendar/timegrid/main.css';
   .fc-button {
     display: flex;
     align-items: center;
