@@ -129,6 +129,7 @@
         <v-text-field
           label="Search tasks"
           filled
+          v-model="search"
         ></v-text-field>
         <div class="d-flex justify-space-between align-center mb-4">
           <span>Tasks</span>
@@ -150,7 +151,7 @@
                   </tr>
               </thead>
               <tbody>
-                  <tr class="mt-2" v-for="task in getTasks" :key="task._id">
+                  <tr class="mt-2" v-for="task in filterTasks" :key="task._id">
                   <div v-if="editedTask == task._id" >
                       <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
                       <v-btn @click="editTask(task._id)">Save</v-btn>
@@ -218,11 +219,12 @@ export default {
       projects: [],
       projectName: '',
       taskName: '',
-      selectedProject: '',
+      selectedProject: null,
       editedProject: null,
       colorPicker: false,
       color: '',
-      date: ''
+      date: '',
+      search: ''
     }
   },
   methods: {
@@ -305,6 +307,11 @@ export default {
     }
   },
   computed: {
+    filterTasks () {
+      return this.getTasks.filter(tasks => {
+        return tasks.name.toLowerCase().match(this.search)
+      })
+    },
     getTasks () {
       return this.$store.getters.getTasks
     }
