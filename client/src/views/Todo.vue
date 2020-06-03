@@ -85,19 +85,17 @@
           max-width="400"
           tile
         >
-        <v-text-field
-          label="Search projects"
-          filled
-        ></v-text-field>
-        <div class="d-flex mb-4" @click="dialogProject = true">
-          <v-icon class="mr-2">add</v-icon>
+        <div class="d-flex align-center mb-4" @click="dialogProject = true">
+          <v-btn icon>
+            <v-icon>add</v-icon>
+          </v-btn>
           <span class="body-2">Add project</span>
         </div>
         <div v-if="projects.length == 0" class="text-center">
           <p>No projects added</p>
         </div>
         <div class="mb-4" v-else v-for="project in projects" :key="project._id">
-          <div @click="getTasksByProject(project._id)" class="d-flex justify-space-between">
+          <div class="d-flex justify-space-between">
             <div v-if="editedProject == project._id">
               <v-text-field
                 label="Edit project name"
@@ -109,7 +107,7 @@
               <v-icon :color="project.color" class="mr-4">
                 fiber_manual_record
               </v-icon>
-              <span class="caption">{{ project.name }}</span>
+              <span class="caption" @click="projectId = project._id">{{ project.name }}</span>
             </div>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
@@ -154,6 +152,7 @@
             <template v-slot:default>
               <thead>
                   <tr>
+                    <th class="text-left">Complete</th>
                     <th class="text-left">Name</th>
                     <th class="text-left">Due date</th>
                     <th class="text-left">Priority</th>
@@ -162,6 +161,11 @@
               </thead>
               <tbody>
                   <tr class="mt-2" v-for="task in filterTasks" :key="task._id">
+                    <td>
+                      <v-btn icon class="check-icon" @click="deleteTask(task._id)">
+                        <v-icon>check_circle_outline</v-icon>
+                      </v-btn>
+                    </td>
                     <div v-if="editedTask == task._id" >
                       <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
                       <v-btn @click="editTask(task._id)">Save</v-btn>
@@ -186,38 +190,30 @@
                       -
                     </td>
                     <td>
-                        <v-menu offset-y>
+                      <v-menu offset-y>
                         <template v-slot:activator="{ on }">
-                            <v-icon v-on="on">
-                            more_vert
-                            </v-icon>
+                          <v-icon v-on="on">
+                          more_vert
+                          </v-icon>
                         </template>
                         <v-list>
-                            <v-list-item>
+                          <v-list-item>
                             <v-list-item-title class="body-2" @click="editedTask = task._id">
                                 <v-icon class="mr-2">create</v-icon> Edit
                             </v-list-item-title>
-                            </v-list-item>
-                            <v-list-item>
+                          </v-list-item>
+                          <v-list-item>
                             <v-list-item-title class="body-2" @click="deleteTask(task._id)">
                                 <v-icon class="mr-2">delete</v-icon> Delete
                             </v-list-item-title>
-                            </v-list-item>
+                          </v-list-item>
                         </v-list>
-                        </v-menu>
+                      </v-menu>
                     </td>
                   </tr>
               </tbody>
             </template>
         </v-simple-table>
-      </v-col>
-    </v-row>
-    <!--Chart-->
-    <v-row>
-      <v-col cols="12" md="12" class="mt-8">
-        <v-container>
-          <Chart/>
-        </v-container>
       </v-col>
     </v-row>
   </v-container>
@@ -226,14 +222,12 @@
 <script>
 import axios from 'axios'
 import Breadcrumbs from '@/components/Breadcrumbs'
-import Chart from '@/components/Chart'
 import ColorPicker from '@/components/ColorPicker'
 
 export default {
   name: 'Todo',
   components: {
     Breadcrumbs,
-    Chart,
     ColorPicker
   },
   data () {
@@ -266,7 +260,8 @@ export default {
           color: 'green'
         }
       ],
-      selectedPriority: null
+      selectedPriority: null,
+      projectId: null
     }
   },
   methods: {
@@ -319,12 +314,6 @@ export default {
         console.log(error)
       }
     },
-    /*
-    async getTasksByProject (id) {
-      const filteredTasks = await axios.get(`http://localhost:3000/tasks/${id}`)
-      // this.tasks = filteredTasks.data
-    },
-    */
     async deleteProject (id) {
       try {
         await axios.delete(`http://localhost:3000/projects/${id}/delete`)
@@ -352,7 +341,10 @@ export default {
   computed: {
     filterTasks () {
       return this.getTasks.filter(tasks => {
-        return tasks.name.toLowerCase().match(this.search)
+        if (this.projectId === null) {
+          return tasks.name.toLowerCase().match(this.search)
+        }
+        return tasks.name.toLowerCase().match(this.search) && tasks.project === this.projectId
       })
     },
     getTasks () {
@@ -367,5 +359,8 @@ export default {
 </script>
 
 <style>
-
+  .check-icon::before,
+  .check-icon:hover {
+    color: green;
+  }
 </style>
