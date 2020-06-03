@@ -38,6 +38,15 @@
               solo
               v-model="selectedProject"
             ></v-select>
+            <v-select
+              :items="priorities"
+              label="Select priority"
+              item-text="name"
+              item-value="color"
+              return-object
+              solo
+              v-model="selectedPriority"
+            ></v-select>
             <v-menu
               ref="menu"
               v-model="menu"
@@ -147,38 +156,56 @@
                   <tr>
                     <th class="text-left">Name</th>
                     <th class="text-left">Due date</th>
+                    <th class="text-left">Priority</th>
                     <th class="text-left">Action</th>
                   </tr>
               </thead>
               <tbody>
                   <tr class="mt-2" v-for="task in filterTasks" :key="task._id">
-                  <div v-if="editedTask == task._id" >
+                    <div v-if="editedTask == task._id" >
                       <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
                       <v-btn @click="editTask(task._id)">Save</v-btn>
-                  </div>
-                  <td v-else>{{ task.name }}</td>
-                  <td>{{ task.dueDate }}</td>
-                  <td>
-                      <v-menu offset-y>
-                      <template v-slot:activator="{ on }">
-                          <v-icon v-on="on">
-                          more_vert
-                          </v-icon>
-                      </template>
-                      <v-list>
-                          <v-list-item>
-                          <v-list-item-title class="body-2" @click="editedTask = task._id">
-                              <v-icon class="mr-2">create</v-icon> Edit
-                          </v-list-item-title>
-                          </v-list-item>
-                          <v-list-item>
-                          <v-list-item-title class="body-2" @click="deleteTask(task._id)">
-                              <v-icon class="mr-2">delete</v-icon> Delete
-                          </v-list-item-title>
-                          </v-list-item>
-                      </v-list>
-                      </v-menu>
-                  </td>
+                    </div>
+                    <td v-else>{{ task.name }}</td>
+                    <td v-if="task.dueDate">{{ task.dueDate }}</td>
+                    <td v-else>-</td>
+                    <td v-if="task.priority">
+                      <v-chip
+                        class="ma-2"
+                        :color="task.priority.color"
+                        text-color="white"
+                        small
+                      >
+                        <v-avatar left>
+                          <v-icon>flag</v-icon>
+                        </v-avatar>
+                        {{ task.priority.name }}
+                      </v-chip>
+                    </td>
+                    <td v-else>
+                      -
+                    </td>
+                    <td>
+                        <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            more_vert
+                            </v-icon>
+                        </template>
+                        <v-list>
+                            <v-list-item>
+                            <v-list-item-title class="body-2" @click="editedTask = task._id">
+                                <v-icon class="mr-2">create</v-icon> Edit
+                            </v-list-item-title>
+                            </v-list-item>
+                            <v-list-item>
+                            <v-list-item-title class="body-2" @click="deleteTask(task._id)">
+                                <v-icon class="mr-2">delete</v-icon> Delete
+                            </v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                        </v-menu>
+                    </td>
                   </tr>
               </tbody>
             </template>
@@ -224,7 +251,22 @@ export default {
       colorPicker: false,
       color: '',
       date: '',
-      search: ''
+      search: '',
+      priorities: [
+        {
+          name: 'Priority 1',
+          color: 'red'
+        },
+        {
+          name: 'Priority 2',
+          color: 'orange'
+        },
+        {
+          name: 'Priority 3',
+          color: 'green'
+        }
+      ],
+      selectedPriority: null
     }
   },
   methods: {
@@ -235,7 +277,8 @@ export default {
       this.$store.dispatch('addTask', {
         name: this.taskName,
         project: this.selectedProject,
-        dueDate: this.date
+        dueDate: this.date,
+        priority: this.selectedPriority
       }).then(() => {
         this.taskName = ''
         this.selectedProject = ''

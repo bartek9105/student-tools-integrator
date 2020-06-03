@@ -16,6 +16,7 @@ exports.addTask = async (req, res) => {
         const newTask = await new Task({
             name: req.body.name,
             project: req.body.project,
+            priority: req.body.priority,
             dueDate: req.body.dueDate,
             creator: req.userId
         })
