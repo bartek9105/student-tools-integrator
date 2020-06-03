@@ -30,8 +30,10 @@ export default ({
         commit('ADD_TASK', res.data).catch(err => console.log(err))
       })
     },
-    deleteTask ({ commit }, taskId) {
-      Api().get(`tasks/${taskId}/delete`).then(() => console.log('deleted')).catch(err => console.log(err))
+    deleteTask ({ commit, dispatch }, taskId) {
+      Api().delete(`tasks/${taskId}/delete`).then(() => {
+        dispatch('fetchTasks')
+      }).catch(err => console.log(err))
     }
   }
 })

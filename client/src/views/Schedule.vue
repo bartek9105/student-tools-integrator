@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   td:not(:first-child) {
     padding-top: 25px;
     padding-bottom: 25px;

@@ -17,12 +17,13 @@ const taskSchema = new mongoose.Schema({
     },
     project: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project'
+        ref: 'Project',
+        required: false
     },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
     }
 })
 
