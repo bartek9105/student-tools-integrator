@@ -13,10 +13,10 @@
         <v-container>
           <v-form @submit.prevent>
             <div class="d-flex">
-              <v-text-field type="text" label="Project name" v-model="projectName"></v-text-field>
+              <v-text-field type="text" label="Project name" v-model="project.projectName"></v-text-field>
               <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
             </div>
-            <ColorPicker class="mb-8 ml-0" v-if="colorPicker" v-model="color" v-on:changeColor="changeColor($event)"/>
+            <ColorPicker class="mb-8 ml-0" v-if="colorPicker" v-model="project.color" v-on:changeColor="changeColor($event)"/>
             <v-btn type="submit" color="primary" class="mr-4" @click="addProject" @click.stop="dialogProject = false">
               Create project
             </v-btn>
@@ -31,7 +31,7 @@
           <v-form @submit.prevent>
             <v-text-field type="text" label="Task" v-model="taskName"></v-text-field>
             <v-select
-              :items="projects"
+              :items="getProjects"
               label="Select project"
               item-text="name"
               item-value="_id"
@@ -78,6 +78,64 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <!-- Edit task dialog -->
+    <v-dialog v-model="dialogEditTask" max-width="500">
+      <v-card>
+        <v-container>
+          <v-form @submit.prevent>
+            <v-text-field type="text" label="Task" v-if="currentTask" v-model="currentTask.name"></v-text-field>
+            <v-select
+              :items="getProjects"
+              label="Select project"
+              item-text="name"
+              item-value="_id"
+              solo
+              v-if="currentTask"
+              v-model="currentTask.project"
+            ></v-select>
+            <v-select
+              :items="priorities"
+              label="Select priority"
+              item-text="name"
+              item-value="color"
+              return-object
+              solo
+              v-if="currentTask"
+              v-model="currentTask.priority.name"
+            ></v-select>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="date"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-if="currentTask"
+                v-model="currentTask.dueDate"
+                label="Due date"
+                prepend-icon="event"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-if="currentTask" v-model="currentTask.dueDate" no-title scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+            </v-date-picker>
+            </v-menu>
+            <v-btn type="submit" color="primary" class="mr-4" @click="addTask" @click.stop="dialogEditTask = false">
+              Edit task
+            </v-btn>
+          </v-form>
+        </v-container>
+      </v-card>
+    </v-dialog>
+
     <v-row>
       <v-col cols="12" sm="12" md="3">
         <v-card
@@ -91,10 +149,10 @@
           </v-btn>
           <span class="body-2">Add project</span>
         </div>
-        <div v-if="projects.length == 0" class="text-center">
+        <div v-if="getProjects.length == 0" class="text-center">
           <p>No projects added</p>
         </div>
-        <div class="mb-4" v-else v-for="project in projects" :key="project._id">
+        <div class="mb-4" v-else v-for="project in getProjects" :key="project._id">
           <div class="d-flex justify-space-between">
             <div v-if="editedProject == project._id">
               <v-text-field
@@ -139,14 +197,17 @@
           v-model="search"
         ></v-text-field>
         <div class="d-flex justify-space-between align-center mb-4">
-          <span>Tasks</span>
+          <div class="d-flex align-center">
+            <span class="mr-4">Tasks</span>
+            <span class="caption display-all" @click="projectId = null">Display all tasks</span>
+          </div>
           <v-btn class="primary" @click="dialogTask = true">
             <v-icon class="mr-2">add</v-icon>
               Add task
           </v-btn>
         </div>
-        <div class="text-center pt-4" v-if="getTasks.length == 0">
-          <p class="headline">No tasks left!</p>
+        <div class="text-center pt-4" v-if="filterTasks.length == 0">
+          <p class="headline">No tasks</p>
         </div>
         <v-simple-table class="mb-8 pt-4 elevation-1 rounded" v-else>
             <template v-slot:default>
@@ -166,11 +227,7 @@
                         <v-icon>check_circle_outline</v-icon>
                       </v-btn>
                     </td>
-                    <div v-if="editedTask == task._id" >
-                      <v-text-field type="text" label="Edit task name" v-model="taskName"></v-text-field>
-                      <v-btn @click="editTask(task._id)">Save</v-btn>
-                    </div>
-                    <td v-else>{{ task.name }}</td>
+                    <td>{{ task.name }}</td>
                     <td v-if="task.dueDate">{{ task.dueDate }}</td>
                     <td v-else>-</td>
                     <td v-if="task.priority">
@@ -198,8 +255,8 @@
                         </template>
                         <v-list>
                           <v-list-item>
-                            <v-list-item-title class="body-2" @click="editedTask = task._id">
-                                <v-icon class="mr-2">create</v-icon> Edit
+                            <v-list-item-title class="body-2" @click="updateEditTaskDialog(task)">
+                              <v-icon class="mr-2">create</v-icon> Edit
                             </v-list-item-title>
                           </v-list-item>
                           <v-list-item>
@@ -232,18 +289,15 @@ export default {
   },
   data () {
     return {
-      editedTask: null,
       dialogTask: false,
+      dialogEditTask: false,
       dialogProject: false,
       picker: new Date().toISOString().substr(0, 10),
       menu: false,
-      projects: [],
-      projectName: '',
       taskName: '',
       selectedProject: null,
       editedProject: null,
       colorPicker: false,
-      color: '',
       date: '',
       search: '',
       priorities: [
@@ -261,7 +315,12 @@ export default {
         }
       ],
       selectedPriority: null,
-      projectId: null
+      projectId: null,
+      project: {
+        projectName: null,
+        color: null
+      },
+      currentTask: null
     }
   },
   methods: {
@@ -275,9 +334,10 @@ export default {
         dueDate: this.date,
         priority: this.selectedPriority
       }).then(() => {
-        this.taskName = ''
-        this.selectedProject = ''
-        this.date = ''
+        this.taskName = null
+        this.selectedProject = null
+        this.date = null
+        this.selectedPriority = null
       }).catch(err => console.log(err))
     },
     deleteTask (taskId) {
@@ -289,38 +349,26 @@ export default {
           name: this.taskName
         })
         this.fetchTasks()
-        this.editedTask = null
         this.taskName = ''
       } catch (error) {
         console.log(error)
       }
     },
-    async getProjects () {
-      try {
-        const projects = await axios.get('http://localhost:3000/projects')
-        this.projects = projects.data
-      } catch (error) {
-        console.log(error)
-      }
+    fetchProjects () {
+      this.$store.dispatch('fetchProjects')
     },
-    async addProject () {
-      try {
-        const newProject = await axios.post('http://localhost:3000/projects/add', {
-          name: this.projectName,
-          color: this.color
-        })
-        this.projects.push(newProject.data)
-      } catch (error) {
-        console.log(error)
-      }
+    addProject () {
+      this.$store.dispatch('addProject', this.project).then(() => {
+        this.project.projectName = null
+        this.project.color = null
+      })
     },
-    async deleteProject (id) {
-      try {
-        await axios.delete(`http://localhost:3000/projects/${id}/delete`)
-        this.getProjects()
-      } catch (error) {
-        console.log(error)
-      }
+    deleteProject (projectId) {
+      this.$store.dispatch('deleteProject', projectId)
+    },
+    updateEditTaskDialog (task) {
+      this.currentTask = task
+      this.dialogEditTask = true
     },
     async editProject (id) {
       try {
@@ -335,7 +383,7 @@ export default {
       }
     },
     changeColor (color) {
-      this.color = color
+      this.project.color = color
     }
   },
   computed: {
@@ -349,11 +397,14 @@ export default {
     },
     getTasks () {
       return this.$store.getters.getTasks
+    },
+    getProjects () {
+      return this.$store.getters.getProjects
     }
   },
   mounted () {
-    this.getProjects()
     this.fetchTasks()
+    this.fetchProjects()
   }
 }
 </script>
@@ -362,5 +413,8 @@ export default {
   .check-icon::before,
   .check-icon:hover {
     color: green;
+  }
+  .display-all:hover {
+    cursor: pointer
   }
 </style>
