@@ -37,6 +37,16 @@ export default ({
         commit('ADD_TASK', res.data).catch(err => console.log(err))
       })
     },
+    editTask ({ commit, dispatch }, task) {
+      Api().patch(`tasks/${task._id}/edit`, {
+        name: task.name,
+        project: task.project,
+        priority: task.priority,
+        dueDate: task.dueDate
+      }).then(() => {
+        dispatch('fetchTasks')
+      }).catch(err => console.log(err))
+    },
     deleteTask ({ commit, dispatch }, taskId) {
       Api().delete(`tasks/${taskId}/delete`).then(() => {
         dispatch('fetchTasks')
@@ -50,6 +60,14 @@ export default ({
     addProject ({ commit, dispatch }, project) {
       Api().post('projects/add', {
         name: project.projectName,
+        color: project.color
+      }).then(() => {
+        dispatch('fetchProjects')
+      }).catch(err => console.log(err))
+    },
+    editProject ({ commit, dispatch }, project) {
+      Api().patch(`projects/${project._id}/edit`, {
+        name: project.name,
         color: project.color
       }).then(() => {
         dispatch('fetchProjects')

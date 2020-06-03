@@ -27,7 +27,10 @@ exports.addProject = async (req, res) => {
 
 exports.editProject = async (req, res) => {
     try {
-        await Project.findByIdAndUpdate({ _id: req.params.id }, { name: req.body.name })
+        await Project.findByIdAndUpdate({ _id: req.params.id }, { 
+            name: req.body.name,
+            color: req.body.color 
+        })
         res.send('Updated')
     } catch (error) {
         console.log(error)
