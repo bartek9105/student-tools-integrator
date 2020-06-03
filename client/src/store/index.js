@@ -4,6 +4,7 @@ import axios from 'axios'
 import notifications from './notifications'
 import calendar from './calendar'
 import tasks from './tasks'
+import projects from './projects'
 import subjects from './subjects'
 import exams from './exams'
 
@@ -51,6 +52,7 @@ export default new Vuex.Store({
     notifications,
     calendar,
     tasks,
+    projects,
     subjects,
     exams
   }

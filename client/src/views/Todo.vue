@@ -379,7 +379,6 @@ export default {
     },
     changeColor (color) {
       this.project.color = color
-      this.currentProject.color = color
     }
   },
   computed: {
