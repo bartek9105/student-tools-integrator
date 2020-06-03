@@ -24,6 +24,23 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <!-- Edit project dialog -->
+    <v-dialog v-model="dialogEditProject" max-width="500">
+      <v-card>
+        <v-container>
+          <v-form @submit.prevent>
+            <div class="d-flex">
+              <v-text-field type="text" label="Project name" v-if="currentProject" v-model="currentProject.name"></v-text-field>
+              <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
+            </div>
+            <ColorPicker class="mb-8 ml-0" v-if="colorPicker" v-model="currentProject.color" v-on:changeColor="changeColor($event)"/>
+            <v-btn type="submit" color="primary" class="mr-4" @click="editProject(currentProject)" @click.stop="dialogEditProject = false">
+              Edit project
+            </v-btn>
+          </v-form>
+        </v-container>
+      </v-card>
+    </v-dialog>
     <!-- Add task dialog -->
     <v-dialog v-model="dialogTask" max-width="500">
       <v-card>
@@ -101,7 +118,7 @@
               return-object
               solo
               v-if="currentTask"
-              v-model="currentTask.priority.name"
+              v-model="currentTask.priority"
             ></v-select>
             <v-menu
               ref="menu"
@@ -128,14 +145,13 @@
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <v-btn type="submit" color="primary" class="mr-4" @click="addTask" @click.stop="dialogEditTask = false">
+            <v-btn type="submit" color="primary" class="mr-4" @click="editTask(currentTask)" @click.stop="dialogEditTask = false">
               Edit task
             </v-btn>
           </v-form>
         </v-container>
       </v-card>
     </v-dialog>
-
     <v-row>
       <v-col cols="12" sm="12" md="3">
         <v-card
@@ -154,14 +170,7 @@
         </div>
         <div class="mb-4" v-else v-for="project in getProjects" :key="project._id">
           <div class="d-flex justify-space-between">
-            <div v-if="editedProject == project._id">
-              <v-text-field
-                label="Edit project name"
-                v-model="projectName"
-              ></v-text-field>
-              <v-btn @click="editProject(project._id)">Save</v-btn>
-            </div>
-            <div v-else>
+            <div>
               <v-icon :color="project.color" class="mr-4">
                 fiber_manual_record
               </v-icon>
@@ -175,7 +184,7 @@
               </template>
               <v-list>
                 <v-list-item>
-                  <v-list-item-title class="body-2" @click="editedProject = project._id">
+                  <v-list-item-title class="body-2" @click="updateEditProjectDialog(project)">
                     <v-icon class="mr-2">create</v-icon> Edit
                   </v-list-item-title>
                 </v-list-item>
@@ -277,7 +286,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
 
@@ -291,12 +299,11 @@ export default {
     return {
       dialogTask: false,
       dialogEditTask: false,
+      dialogEditProject: false,
       dialogProject: false,
-      picker: new Date().toISOString().substr(0, 10),
       menu: false,
       taskName: '',
       selectedProject: null,
-      editedProject: null,
       colorPicker: false,
       date: '',
       search: '',
@@ -320,7 +327,8 @@ export default {
         projectName: null,
         color: null
       },
-      currentTask: null
+      currentTask: null,
+      currentProject: null
     }
   },
   methods: {
@@ -340,19 +348,11 @@ export default {
         this.selectedPriority = null
       }).catch(err => console.log(err))
     },
+    editTask (currentTask) {
+      this.$store.dispatch('editTask', currentTask)
+    },
     deleteTask (taskId) {
       this.$store.dispatch('deleteTask', taskId)
-    },
-    async editTask (id) {
-      try {
-        await axios.patch(`http://localhost:3000/tasks/${id}/edit`, {
-          name: this.taskName
-        })
-        this.fetchTasks()
-        this.taskName = ''
-      } catch (error) {
-        console.log(error)
-      }
     },
     fetchProjects () {
       this.$store.dispatch('fetchProjects')
@@ -363,6 +363,9 @@ export default {
         this.project.color = null
       })
     },
+    editProject (currentProject) {
+      this.$store.dispatch('editProject', currentProject)
+    },
     deleteProject (projectId) {
       this.$store.dispatch('deleteProject', projectId)
     },
@@ -370,20 +373,13 @@ export default {
       this.currentTask = task
       this.dialogEditTask = true
     },
-    async editProject (id) {
-      try {
-        await axios.patch(`http://localhost:3000/projects/${id}/edit`, {
-          name: this.projectName
-        })
-        this.editedProject = null
-        this.projectName = ''
-        this.getProjects()
-      } catch (error) {
-        console.log(error)
-      }
+    updateEditProjectDialog (project) {
+      this.dialogEditProject = true
+      this.currentProject = project
     },
     changeColor (color) {
       this.project.color = color
+      this.currentProject.color = color
     }
   },
   computed: {

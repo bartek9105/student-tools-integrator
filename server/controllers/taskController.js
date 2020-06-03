@@ -29,7 +29,12 @@ exports.addTask = async (req, res) => {
 
 exports.editTask = async (req, res) => {
     try {
-        const updatedTask = await Task.findByIdAndUpdate({ _id: req.params.id }, { name: req.body.name })
+        const updatedTask = await Task.findByIdAndUpdate({ _id: req.params.id }, {  
+            name: req.body.name,
+            project: req.body.project,
+            priority: req.body.priority,
+            dueDate: req.body.dueDate
+        })
         res.send(updatedTask)
     } catch (error) {
         console.log(error)        
@@ -42,14 +47,5 @@ exports.deleteTask = async (req, res) => {
         res.send(deletedTask)
     } catch (error) {
         console.log(error)        
-    }
-}
-
-exports.getTasksByProject = async (req, res) => {
-    try {
-        const tasks = await Task.find({ project: req.params.id })
-        res.send(tasks)
-    } catch (error) {
-        console.log(error)
     }
 }
