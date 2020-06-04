@@ -29,29 +29,32 @@
         <p class="title text-center mt-4" v-if="getSubjectDetails.requirements.length == 0">
           No requirements added
         </p>
-        <v-list-item v-else v-for="(requirement, index) in getSubjectDetails.requirements" :key="index">
-          <v-list-item-content>
-            <v-list-item-title>{{ requirement.name }}</v-list-item-title>
+        <v-card v-else>
+          <v-list-item v-for="(requirement, index) in getSubjectDetails.requirements" :key="index" class="d-flex justify-space-between align-center">
+            <v-list-item-content class="d-flex align-center">
               <v-progress-circular
-              :rotate="360"
-              :size="50"
-              :width="10"
-              :value="requirement.progress"
-              color="teal"
-            >
-              {{ requirement.progress }}
-            </v-progress-circular>
-          </v-list-item-content>
+                :rotate="360"
+                :size="30"
+                :width="2"
+                :value="requirement.progress"
+                color="teal"
+                class="flex-none mr-4"
+              >
+                {{ requirement.progress }}
+              </v-progress-circular>
+              <v-list-item-title class="flex-none">{{ requirement.name }}</v-list-item-title>
+            </v-list-item-content>
 
-          <v-list-item-action class="d-flex flex-row">
-            <v-btn icon>
-              <v-icon color="grey lighten-1" @click="updateReqDialog(requirement)">create</v-icon>
-            </v-btn>
-            <v-btn icon>
-              <v-icon color="grey lighten-1" @click="deleteRequirement(getSubjectDetails._id, requirement._id)">clear</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
+            <v-list-item-action class="d-flex flex-row">
+              <v-btn icon>
+                <v-icon color="grey lighten-1" @click="updateReqDialog(requirement)">create</v-icon>
+              </v-btn>
+              <v-btn icon>
+                <v-icon color="grey lighten-1" @click="deleteRequirement(getSubjectDetails._id, requirement._id)">clear</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-card>
       </v-col>
       <v-col cols="12" md="4">
         <p class="title">Attached files</p>
@@ -288,5 +291,8 @@ export default {
     white-space: nowrap;
     max-height: 3.6em;
     line-height: 1.8em;
+  }
+  .flex-none {
+    flex: none;
   }
 </style>
