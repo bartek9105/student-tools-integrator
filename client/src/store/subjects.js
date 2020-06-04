@@ -35,8 +35,8 @@ export default ({
     },
     fetchSubjectDetails ({ commit }, subjectId) {
       Api().get(`subjects/${subjectId}`).then(res => {
-        commit('SET_SUBJECT_DETAILS', res.data).catch(err => console.log(err))
-      })
+        commit('SET_SUBJECT_DETAILS', res.data)
+      }).catch(err => console.log(err))
     },
     addSubject ({ commit }, subject) {
       Api().post('subjects/add', subject).then(result => {

@@ -34,7 +34,7 @@
             <v-list-item-content class="d-flex align-center">
               <v-progress-circular
                 :rotate="360"
-                :size="30"
+                :size="40"
                 :width="2"
                 :value="requirement.progress"
                 color="teal"
@@ -64,7 +64,7 @@
             <v-btn class="primary" @click="submitFile">Send</v-btn>
           </div>
         </template>
-        <v-divider class="mt-4"></v-divider>
+        <v-divider class="mt-4 mb-4"></v-divider>
         <p class="title text-center mt-4" v-if="uploadedFiles.length == 0">
           No files added
         </p>
@@ -98,7 +98,7 @@
       <v-col cols="12" md="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
-          <!--<ChartRadial :labels="getReqsNames" :series="getReqsProgress"/>-->
+          <ChartRadial :labels="getLabels" :series="getSeries"/>
         </div>
       </v-col>
     </v-row>
@@ -139,18 +139,17 @@
 <script>
 import axios from 'axios'
 
-// import ChartRadial from '@/components/ChartRadial'
+import ChartRadial from '@/components/ChartRadial'
 import Editor from '@/components/Editor'
 
 export default {
   name: 'SubjectDetails',
   components: {
-    // ChartRadial,
+    ChartRadial,
     Editor
   },
   data () {
     return {
-      subjectDetails: [],
       requirements: '',
       progress: 0,
       file: null,
@@ -265,11 +264,12 @@ export default {
     getSubjectDetails () {
       return this.$store.getters.getSubjectDetails
     },
-    getReqsNames () {
-      return this.subjectDetails[0].requirements.map(el => el.name)
+    getLabels () {
+      return this.getSubjectDetails.requirements.map(el => el.name)
     },
-    getReqsProgress () {
-      return this.subjectDetails[0].requirements.map(el => el.progress)
+    getSeries () {
+      const series = this.getSubjectDetails.requirements.map(el => el.progress)
+      return series.map(el => parseInt(el))
     }
   },
   mounted () {

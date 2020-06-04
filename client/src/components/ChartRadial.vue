@@ -32,8 +32,9 @@ export default {
               total: {
                 show: true,
                 label: 'Total',
-                formatter: function (w) {
-                  return 249
+                formatter: () => {
+                  const avg = this.series.reduce((a, b) => a + b)
+                  return avg / this.labels.length
                 }
               }
             }

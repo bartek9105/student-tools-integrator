@@ -34,7 +34,7 @@
         <tbody>
           <tr v-for="event in getSchedule" :key="event._id">
             <td>
-              <router-link :to="'subject/' + event.subject"> {{ event.title }} </router-link>
+              <router-link :to="'subject/' + event.subject._id"> {{ event.title }} </router-link>
             </td>
             <td v-if="event.daysOfWeek">
               <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
