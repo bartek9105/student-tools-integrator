@@ -1,49 +1,37 @@
 <template>
-  <v-row>
-    <v-col cols=12 md=6 class="px-0 py-0">
-      <div class="hero-container">
-        <div class="hero"></div>
-        <div class="text">
-          <p class="display-1 white--text">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, corporis. Fugit minus consectetur impedit? Rem?
-          </p>
-        </div>
-      </div>
-    </v-col>
-    <v-col cols=12 md=6 class="d-flex align-center justify-center">
-      <v-form>
-        <v-container>
-          <v-row class="flex-column align-center">
-            <v-col
-              cols="12"
-              md="12"
-            >
-              <div class="d-flex justify-center">
-                <v-icon color="blue">toll</v-icon>
-              </div>
-              <v-text-field
-                v-model="email"
-                label="E-mail"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="password"
-                label="Password"
-                type="password"
-                required
-              ></v-text-field>
-            </v-col>
-            <p>Already registered?
+  <div class="container d-flex align-center" style="height: 100vh;">
+    <v-row class="justify-center">
+      <v-col cols="12" md="4">
+        <div class="auth-form-container elevation-3">
+          <div style="background-color: #1565C0;" class="white--text py-8 px-4 text-center">
+            <p class="mb-0">Student Tools Integrator</p>
+          </div>
+          <v-form class="text-center px-8 py-8">
+            <div class="d-flex justify-center">
+              <v-icon color="blue">toll</v-icon>
+            </div>
+            <v-text-field
+              v-model="email"
+              label="E-mail"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="password"
+              label="Password"
+              type="password"
+              required
+            ></v-text-field>
+            <p class="mt-4 mb-4">Already have an account?
               <router-link to="login">
-                Login
+                Sign in
               </router-link>
             </p>
             <v-btn color="primary" @click="signUp">Register</v-btn>
-          </v-row>
-        </v-container>
-      </v-form>
-    </v-col>
-  </v-row>
+          </v-form>
+        </div>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -80,19 +68,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
-  .hero-container {
-    position: relative;
-    .hero {
-      background-image: url('../assets/hero.jpg');
-      height: 100vh;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-    .text {
-      position: absolute;
-      top: 50%;
-    }
+<style lang="scss" scoped>
+@media screen and (min-width: 960px) {
+  .container {
+    padding: 0;
   }
+}
+.auth-form-container {
+  background-color: #fff;
+}
 </style>
