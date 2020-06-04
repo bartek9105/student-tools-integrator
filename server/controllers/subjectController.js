@@ -98,7 +98,7 @@ exports.editSubject = async (req, res) => {
         const editedSubject = await Subject.findByIdAndUpdate({ _id: req.params.id }, { 
             name: req.body.name, 
             teacher: req.body.teacher,
-            color: req.body.name,
+            color: req.body.color,
             description: req.body.description,
         })
         res.send(editedSubject)

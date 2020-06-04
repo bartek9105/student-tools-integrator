@@ -25,7 +25,7 @@
             <v-text-field type="text" label="Subject name" v-if="currentSubject" v-model="currentSubject.name"></v-text-field>
             <v-text-field type="text" label="Teacher" v-if="currentSubject" v-model="currentSubject.teacher"></v-text-field>
             <v-text-field type="text" label="Description" v-if="currentSubject" v-model="currentSubject.description"></v-text-field>
-            <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
+            <ColorPicker v-if="colorPicker" v-on:changeColor="changeSubjectColor($event)"/>
             <div class="d-flex justify-space-between align-center">
               <v-btn type="submit" color="primary" class="mr-4" @click="editSubject(currentSubject._id)" @click.stop="dialogEditSubject = false">
                 Edit subject
@@ -204,6 +204,9 @@ export default {
     },
     changeColor (color) {
       this.borderColor = color
+    },
+    changeSubjectColor (color) {
+      this.currentSubject.color = color
     }
   },
   computed: {

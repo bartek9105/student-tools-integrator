@@ -33,7 +33,7 @@
               <v-text-field type="text" label="Project name" v-if="currentProject" v-model="currentProject.name"></v-text-field>
               <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
             </div>
-            <ColorPicker class="mb-8 ml-0" v-if="colorPicker" v-model="currentProject.color" v-on:changeColor="changeColor($event)"/>
+            <ColorPicker class="mb-8 ml-0" v-if="colorPicker" v-model="currentProject.color" v-on:changeColor="changeProjectColor($event)"/>
             <v-btn type="submit" color="primary" class="mr-4" @click="editProject(currentProject)" @click.stop="dialogEditProject = false">
               Edit project
             </v-btn>
@@ -414,6 +414,9 @@ export default {
     },
     changeColor (color) {
       this.project.color = color
+    },
+    changeProjectColor (color) {
+      this.currentProject.color = color
     }
   },
   computed: {
