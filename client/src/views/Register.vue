@@ -6,9 +6,10 @@
           <div style="background-color: #1565C0;" class="white--text py-8 px-4 text-center">
             <p class="mb-0">Student Tools Integrator</p>
           </div>
-          <v-form class="text-center px-8 py-8">
-            <div class="d-flex justify-center">
-              <v-icon color="blue">toll</v-icon>
+          <v-form class="text-center px-8 py-8" @submit.prevent="signUp">
+            <div class="d-flex justify-center flex-column">
+              <v-icon color="blue" class="mb-4">toll</v-icon>
+              Register
             </div>
             <v-text-field
               v-model="email"
@@ -26,7 +27,7 @@
                 Sign in
               </router-link>
             </p>
-            <v-btn color="primary" @click="signUp">Register</v-btn>
+            <v-btn color="primary" type="submit">Register</v-btn>
           </v-form>
         </div>
       </v-col>
