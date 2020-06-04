@@ -203,7 +203,7 @@ export default {
         subjectId: this.$route.params.id
       }).then(() => {
         this.requirements = null
-        this.progress = null
+        this.progress = 0
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
