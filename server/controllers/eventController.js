@@ -4,7 +4,7 @@ exports.getEvents = async (req, res) => {
     try {
         const events = await Event.find({
             creator: req.userId
-        })
+        }).populate('subject', 'teacher')
         res.send(events)
     } catch (error) {
         console.log(error)
@@ -24,6 +24,7 @@ exports.addEvent = async (req, res) => {
             daysOfWeek: req.body.daysOfWeek,
             details: req.body.details,
             subject: req.body.subject,
+            room: req.body.room,
             creator: req.userId
         })
         const savedEvent = await event.save()

@@ -21,6 +21,14 @@
               <v-icon class="mr-2">schedule</v-icon>
               Time
             </th>
+            <th class="text-left table-header font-weight-black">
+              <v-icon class="mr-2">person</v-icon>
+              Teacher
+            </th>
+            <th class="text-left table-header font-weight-black">
+              <v-icon class="mr-2">person</v-icon>
+              Room
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -38,6 +46,12 @@
             </td>
             <td>
               {{ event.startTime }} - {{ event.endTime }}
+            </td>
+            <td>
+              {{ event.subject.teacher }}
+            </td>
+            <td>
+              {{ event.room }}
             </td>
           </tr>
         </tbody>

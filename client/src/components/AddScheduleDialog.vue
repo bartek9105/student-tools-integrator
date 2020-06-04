@@ -32,7 +32,6 @@
                         <v-icon class="mr-2">add</v-icon><span>Add new class</span>
                       </div>
                       <DatePicker v-on:pickDate="pickStart($event)"/>
-                      <DatePicker v-on:pickDate="pickEnd($event)"/>
                       <div class="d-flex justify-space-between my-2">
                         <div>
                           Start time
@@ -43,6 +42,7 @@
                           <TimePicker v-on:pickTime="pickEndTime($event)"/>
                         </div>
                       </div>
+                      <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
                       <v-btn type="submit" color="primary" class="mr-4">
                         Create event
                       </v-btn>
@@ -72,11 +72,11 @@
                       <div class="d-flex justify-space-between my-2">
                         <div>
                             Start time
-                            <TimePicker v-on:pickTime="pickStartTime($event)"/>
+                            <TimePicker v-on:pickTime="pickStartTimeRecur($event)"/>
                         </div>
                         <div>
                             End time
-                            <TimePicker v-on:pickTime="pickEndTime($event)"/>
+                            <TimePicker v-on:pickTime="pickEndTimeRecur($event)"/>
                         </div>
                       </div>
                       <v-select
@@ -87,6 +87,7 @@
                         label="Repeat every"
                         solo
                       ></v-select>
+                      <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
                       <v-btn type="submit" color="primary" class="mr-4">
                         Create event
                       </v-btn>
@@ -123,13 +124,15 @@ export default {
       eventDetails: {
         title: '',
         start: null,
-        end: null,
         startTime: null,
         endTime: null,
+        startTimeRecur: null,
+        endTimeRecur: null,
         startRecur: null,
         endRecur: null,
         daysOfWeek: null,
-        selectedClass: null
+        selectedClass: null,
+        room: null
       },
       dialogSubject: false,
       subjectName: null,
@@ -174,25 +177,25 @@ export default {
     addEvent () {
       this.$store.dispatch('addEvent', {
         title: this.eventDetails.selectedClass.name,
-        start: this.eventDetails.start,
-        end: this.eventDetails.end,
-        startTime: this.eventDetails.startTime,
-        endTime: this.eventDetails.endTime,
+        start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
+        startTime: this.eventDetails.startTimeRecur,
+        endTime: this.eventDetails.endTimeRecur,
         subject: this.eventDetails.selectedClass._id,
         daysOfWeek: this.eventDetails.daysOfWeek,
         startRecurence: this.eventDetails.startRecur,
-        endRecurence: this.eventDetails.endRecur
+        endRecurence: this.eventDetails.endRecur,
+        room: this.eventDetails.room
       })
       this.closeDialog()
       this.eventDetails = {
         title: '',
         start: null,
-        end: null,
         startTime: null,
         endTime: null,
         startRecur: null,
         endRecur: null,
-        daysOfWeek: null
+        daysOfWeek: null,
+        room: null
       }
     },
     addSubject () {
@@ -215,14 +218,17 @@ export default {
     pickStart (start) {
       this.eventDetails.start = start
     },
-    pickEnd (end) {
-      this.eventDetails.end = end
-    },
     pickStartTime (startTime) {
       this.eventDetails.startTime = startTime
     },
     pickEndTime (endTime) {
       this.eventDetails.endTime = endTime
+    },
+    pickStartTimeRecur (startTime) {
+      this.eventDetails.startTimeRecur = startTime
+    },
+    pickEndTimeRecur (endTime) {
+      this.eventDetails.endTimeRecur = endTime
     },
     closeDialog () {
       this.$emit('input')
