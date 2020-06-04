@@ -38,6 +38,10 @@ const eventSchema = new mongoose.Schema({
         required: false,
         type: String
     },
+    room: {
+        required: false,
+        type: String
+    },
     subject: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subject'
