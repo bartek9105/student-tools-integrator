@@ -250,7 +250,13 @@ export default {
       this.dialogUpdateExam = true
     },
     deleteExam (examId) {
-      this.$store.dispatch('deleteExam', examId)
+      this.$store.dispatch('deleteExam', examId).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Exam deleted'
+        })
+      })
     },
     changeColor (color) {
       this.color = color

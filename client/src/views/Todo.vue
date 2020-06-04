@@ -346,13 +346,30 @@ export default {
         this.selectedProject = null
         this.date = null
         this.selectedPriority = null
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'New task added'
+        })
       }).catch(err => console.log(err))
     },
     editTask (currentTask) {
-      this.$store.dispatch('editTask', currentTask)
+      this.$store.dispatch('editTask', currentTask).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Task updated'
+        })
+      })
     },
     deleteTask (taskId) {
-      this.$store.dispatch('deleteTask', taskId)
+      this.$store.dispatch('deleteTask', taskId).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Task deleted'
+        })
+      })
     },
     fetchProjects () {
       this.$store.dispatch('fetchProjects')
@@ -361,13 +378,31 @@ export default {
       this.$store.dispatch('addProject', this.project).then(() => {
         this.project.projectName = null
         this.project.color = null
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'New project created'
+        })
       })
     },
     editProject (currentProject) {
-      this.$store.dispatch('editProject', currentProject)
+      this.$store.dispatch('editProject', currentProject).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Project edited'
+        })
+      })
     },
     deleteProject (projectId) {
-      this.$store.dispatch('deleteProject', projectId)
+      this.$store.dispatch('deleteProject', projectId).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Project deleted'
+        })
+      })
     },
     updateEditTaskDialog (task) {
       this.currentTask = task

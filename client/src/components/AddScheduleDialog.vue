@@ -198,6 +198,12 @@ export default {
     addSubject () {
       this.$store.dispatch('addSubject', {
         name: this.subjectName
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'New class scheduled'
+        })
       })
     },
     pickStartDate (start) {

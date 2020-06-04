@@ -177,7 +177,7 @@ export default {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
-          text: 'Subject name updated'
+          text: 'Subject updated'
         })
       }).catch(err => {
         this.$store.dispatch('showSnackbar', {

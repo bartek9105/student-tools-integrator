@@ -90,6 +90,11 @@ export default {
       this.$store.dispatch('deleteEvent', id).then(() => {
         this.fetchEvents()
         this.eventDialog = false
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Event deleted'
+        })
       }).catch(err => console.log(err))
     },
     eventInfo (arg) {
