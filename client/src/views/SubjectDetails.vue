@@ -26,7 +26,10 @@
           ></v-text-field>
           <v-btn color="primary" @click="addRequirement">Add</v-btn>
         </div>
-        <v-list-item v-for="(requirement, index) in getSubjectDetails.requirements" :key="index">
+        <p class="title text-center mt-4" v-if="getSubjectDetails.requirements.length == 0">
+          No requirements added
+        </p>
+        <v-list-item v-else v-for="(requirement, index) in getSubjectDetails.requirements" :key="index">
           <v-list-item-content>
             <v-list-item-title>{{ requirement.name }}</v-list-item-title>
               <v-progress-circular
@@ -59,7 +62,10 @@
           </div>
         </template>
         <v-divider class="mt-4"></v-divider>
-        <v-card class="elevation-0">
+        <p class="title text-center mt-4" v-if="uploadedFiles.length == 0">
+          No files added
+        </p>
+        <v-card v-else lass="elevation-0">
           <v-list two-line subheader>
             <v-list-item
               v-for="file in uploadedFiles"
