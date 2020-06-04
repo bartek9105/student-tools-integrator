@@ -152,19 +152,25 @@ export default {
         endRecurence: this.eventDetails.endRecur,
         daysOfWeek: this.eventDetails.daysOfWeek,
         details: this.eventDetails.details
+      }).then(() => {
+        this.closeDialog()
+        this.eventDetails = {
+          title: '',
+          start: null,
+          end: null,
+          startTime: null,
+          endTime: null,
+          startRecur: null,
+          endRecur: null,
+          daysOfWeek: null,
+          details: null
+        }
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'New event created'
+        })
       })
-      this.closeDialog()
-      this.eventDetails = {
-        title: '',
-        start: null,
-        end: null,
-        startTime: null,
-        endTime: null,
-        startRecur: null,
-        endRecur: null,
-        daysOfWeek: null,
-        details: null
-      }
     },
     pickStartDate (start) {
       this.eventDetails.startRecur = start

@@ -26,7 +26,6 @@ export default ({
       })
     },
     addEvent ({ commit, dispatch }, payload) {
-      console.log(payload)
       Api().post('events/add', payload).then(() => {
         dispatch('getEvents')
       }).catch(err => console.log(err))
