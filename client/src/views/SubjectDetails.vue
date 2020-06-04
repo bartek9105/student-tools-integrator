@@ -157,6 +157,12 @@ export default {
         reqId: reqId,
         requirement: this.currentReqs.name,
         progress: this.currentReqs.progress
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Requirement updated'
+        })
       })
     },
     updateReqDialog (requirement) {
@@ -167,6 +173,12 @@ export default {
       this.$store.dispatch('deleteRequirement', {
         subjectId: subjectId,
         reqId: reqId
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Requirement deleted'
+        })
       })
     },
     editNote (note) {
@@ -183,6 +195,11 @@ export default {
       }).then(() => {
         this.requirements = null
         this.progress = null
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Requirement added'
+        })
       })
     },
     async addNote () {
