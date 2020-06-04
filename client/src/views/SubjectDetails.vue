@@ -180,6 +180,9 @@ export default {
         requirement: this.requirements,
         progress: this.progress,
         subjectId: this.$route.params.id
+      }).then(() => {
+        this.requirements = null
+        this.progress = null
       })
     },
     async addNote () {
