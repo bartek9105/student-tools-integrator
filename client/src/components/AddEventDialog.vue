@@ -23,7 +23,6 @@
                     <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
                     <v-text-field v-model="eventDetails.details" type="text" label="Event details (optional)"></v-text-field>
                     <DatePicker v-on:pickDate="pickStart($event)"/>
-                    <DatePicker v-on:pickDate="pickEnd($event)"/>
                     <div class="d-flex justify-space-between my-2">
                       <div>
                         Start time
@@ -92,7 +91,6 @@ export default {
       eventDetails: {
         title: '',
         start: null,
-        end: null,
         startTime: null,
         endTime: null,
         startTimeRecur: null,
@@ -145,7 +143,6 @@ export default {
       this.$store.dispatch('addEvent', {
         title: this.eventDetails.title,
         start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
-        end: this.eventDetails.end + `T${this.eventDetails.endTime}`,
         startTime: this.eventDetails.startTimeRecur,
         endTime: this.eventDetails.endTimeRecur,
         startRecurence: this.eventDetails.startRecur,
@@ -157,7 +154,6 @@ export default {
         this.eventDetails = {
           title: '',
           start: null,
-          end: null,
           startTime: null,
           endTime: null,
           startRecur: null,
@@ -180,9 +176,6 @@ export default {
     },
     pickStart (start) {
       this.eventDetails.start = start
-    },
-    pickEnd (end) {
-      this.eventDetails.end = end
     },
     pickStartTime (startTime) {
       this.eventDetails.startTime = startTime
