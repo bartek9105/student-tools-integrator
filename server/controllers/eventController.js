@@ -4,7 +4,7 @@ exports.getEvents = async (req, res) => {
     try {
         const events = await Event.find({
             creator: req.userId
-        }).populate('subject', 'teacher')
+        }).populate('subject', ['name', 'teacher'])
         res.send(events)
     } catch (error) {
         console.log(error)
@@ -25,6 +25,7 @@ exports.addEvent = async (req, res) => {
             details: req.body.details,
             subject: req.body.subject,
             room: req.body.room,
+            exam: req.body.exam,
             creator: req.userId
         })
         const savedEvent = await event.save()
@@ -38,7 +39,23 @@ exports.addEvent = async (req, res) => {
 
 exports.editEvent = async (req, res) => {
     try {
-        const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, { details: req.body.details })
+        const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, { 
+        
+        })
+        res.send(editedEvent)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.editExamEvent = async (req, res) => {
+    try {
+        const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, {
+            title: req.body.title,
+            start: req.body.start,
+            subject: req.body.subject,
+            room: req.body.room
+        })
         res.send(editedEvent)
     } catch (error) {
         console.log(error)

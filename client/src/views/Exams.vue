@@ -16,6 +16,7 @@
         <v-container>
           <v-form @submit.prevent>
             <v-select
+              return-object
               :items="getSubjects"
               label="Select class"
               item-text="name"
@@ -23,7 +24,6 @@
               solo
               v-model="selectedClass"
             ></v-select>
-            <v-text-field type="text" label="Duration (minutes)" v-model="duration"></v-text-field>
             <v-text-field type="text" label="Room" v-model="room"></v-text-field>
             <v-menu
               ref="menu"
@@ -49,6 +49,7 @@
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
+            <TimePicker v-on:pickTime="pickTime($event)"/>
             <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
             <div class="d-flex justify-space-between align-center">
               <v-btn type="submit" color="primary" class="mr-4" @click="addExam" @click.stop="dialogTask = false">
@@ -65,15 +66,15 @@
         <v-container>
           <v-form @submit.prevent>
             <v-select
+              return-object
               :items="getSubjects"
               label="Select class"
               item-text="name"
               item-value="_id"
               solo
               v-if="currentExam"
-              v-model="currentExam.subject.name"
+              v-model="currentExam.subject"
             ></v-select>
-            <v-text-field type="text" label="Duration (minutes)" v-if="currentExam" v-model="currentExam.duration"></v-text-field>
             <v-text-field type="text" label="Room" v-if="currentExam" v-model="currentExam.room"></v-text-field>
             <v-menu
               ref="menu"
@@ -86,22 +87,23 @@
             >
             <template v-slot:activator="{ on }">
               <v-text-field
-                v-model="date"
+                v-model="currentExam.start"
                 label="Date"
                 prepend-icon="event"
                 readonly
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-if="currentExam" v-model="currentExam.date" no-title scrollable>
+            <v-date-picker v-if="currentExam" v-model="currentExam.start" no-title scrollable>
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
+            <TimePicker v-on:pickTime="updateTime($event)"/>
             <ColorPicker v-if="colorPicker" v-on:changeColor="updateColor($event)"/>
             <div class="d-flex justify-space-between align-center">
-              <v-btn type="submit" color="primary" class="mr-4" @click="editExam(currentExam._id)" @click.stop="dialogTask = false">
+              <v-btn type="submit" color="primary" class="mr-4" @click="editExam(currentExam)" @click.stop="dialogTask = false">
                 Update exam
               </v-btn>
               <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
@@ -123,10 +125,6 @@
               Date
             </th>
             <th class="text-left">
-              <v-icon class="mr-2">schedule</v-icon>
-              Duration
-            </th>
-            <th class="text-left">
               <v-icon class="mr-2">person</v-icon>
               Teacher
             </th>
@@ -142,11 +140,12 @@
         <tbody>
           <tr v-for="exam in getExams" :key="exam._id">
             <td class="border" :style="{'border-left-color': exam.color}">
-              <router-link :to="'/subject/' + exam.subject._id">{{ exam.subject.name }}</router-link>
+              <router-link :to="'/subject/' + exam.subject._id">
+                {{ exam.subject.name }}
+              </router-link>
             </td>
-            <td>{{ exam.date }}</td>
-            <td>{{ exam.duration }} minutes</td>
-            <td>Person</td>
+            <td>{{ exam.start }}</td>
+            <td>{{ exam.subject.teacher }}</td>
             <td>{{ exam.room }}</td>
             <td>
               <v-menu offset-y>
@@ -175,16 +174,17 @@
 </template>
 
 <script>
-import axios from 'axios'
 
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
+import TimePicker from '@/components/TimePicker'
 
 export default {
   name: 'Exams',
   components: {
     Breadcrumbs,
-    ColorPicker
+    ColorPicker,
+    TimePicker
   },
   data () {
     return {
@@ -192,10 +192,10 @@ export default {
       dialogNewExam: false,
       dialogUpdateExam: false,
       selectedClass: '',
+      startTime: null,
       date: '',
       menu: false,
       room: '',
-      duration: '',
       colorPicker: false,
       editedExam: null,
       currentExam: null
@@ -203,54 +203,47 @@ export default {
   },
   methods: {
     addExam () {
-      this.$store.dispatch('addExam', {
-        subject: this.selectedClass,
-        date: this.date,
-        duration: this.duration,
+      this.$store.dispatch('addEvent', {
+        title: this.selectedClass.name + ' exam',
+        start: this.date + `T${this.startTime}`,
+        daysOfWeek: null,
+        subject: this.selectedClass._id,
         room: this.room,
-        color: this.color
+        color: this.color,
+        exam: true
       }).then(() => {
+        this.selectedClass = null
+        this.date = null
+        this.startTime = null
+        this.room = null
+        this.color = null
         this.dialogNewExam = false
-        this.selectedClass = ''
-        this.date = ''
-        this.duration = ''
-        this.room = ''
-        this.color = ''
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
-          text: 'Exam added'
+          text: 'New class scheduled'
         })
-      }).catch(err => console.log(err))
+      })
+    },
+    editExam (exam) {
+      this.$store.dispatch('editExamEvent', exam).then(() => {
+        this.dialogUpdateExam = false
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Exam scheduled'
+        })
+      })
     },
     fetchExams () {
-      this.$store.dispatch('fetchExams')
-    },
-    async editExam (id) {
-      try {
-        await axios.patch(`http://localhost:3000/exams/${id}/edit`, {
-          date: this.currentExam.date,
-          duration: this.currentExam.duration,
-          room: this.currentExam.room,
-          color: this.currentExam.color
-        })
-        this.dialogUpdateExam = false
-        this.getExams()
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'Exam details updated'
-        })
-      } catch (error) {
-        console.log(error)
-      }
+      this.$store.dispatch('getEvents')
     },
     updateEditDialog (exam) {
       this.currentExam = exam
       this.dialogUpdateExam = true
     },
     deleteExam (examId) {
-      this.$store.dispatch('deleteExam', examId).then(() => {
+      this.$store.dispatch('deleteEvent', examId).then(() => {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
@@ -263,6 +256,12 @@ export default {
     },
     updateColor (color) {
       this.currentExam.color = color
+    },
+    updateTime (time) {
+      this.currentExam.startTime = time
+    },
+    pickTime (time) {
+      this.startTime = time
     }
   },
   computed: {
@@ -270,7 +269,7 @@ export default {
       return this.$store.getters.getSubjects
     },
     getExams () {
-      return this.$store.getters.getExams
+      return this.$store.getters.eventsGetter.filter(el => el.exam)
     }
   },
   mounted () {
