@@ -56,12 +56,12 @@ export default ({
         dispatch('fetchSubjects')
       }).catch(err => console.log(err))
     },
-    addRequirement ({ commit }, payload) {
+    addRequirement ({ commit, dispatch }, payload) {
       Api().patch(`subjects/${payload.subjectId}/updateRequirements`, {
         requirement: payload.requirement,
         progress: payload.progress
-      }).then(res => {
-        commit('ADD_REQUIREMENT', res)
+      }).then(() => {
+        dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
     },
     editRequirement ({ commit }, payload) {
