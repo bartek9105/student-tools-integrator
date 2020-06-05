@@ -8,6 +8,7 @@ router.get('/', eventController.getEvents)
 router.post('/add', eventController.addEvent)
 router.patch('/edit/:id', eventController.editEvent)
 router.patch('/exam/edit/:id', eventController.editExamEvent)
+router.patch('/schedule/edit/:id', eventController.editScheduleEvent)
 router.delete('/delete/:id', eventController.deleteEvent)
 
 module.exports = router

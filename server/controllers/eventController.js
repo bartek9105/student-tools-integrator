@@ -62,6 +62,20 @@ exports.editExamEvent = async (req, res) => {
     }
 }
 
+exports.editScheduleEvent = async (req, res) => {
+    try {
+        const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, {
+            title: req.body.title,
+            start: req.body.start,
+            subject: req.body.subject,
+            room: req.body.room
+        })
+        res.send(editedEvent)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 exports.deleteEvent = async (req, res) => {
     try {
         await Event.findByIdAndRemove({ _id: req.params.id })

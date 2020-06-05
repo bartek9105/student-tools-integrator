@@ -13,44 +13,7 @@
             <v-toolbar-title>Create new class event</v-toolbar-title>
           </v-toolbar>
           <v-tabs>
-            <v-tab>Create one time class</v-tab>
             <v-tab>Create recurring class</v-tab>
-            <v-tab-item>
-              <v-card flat>
-                <v-card-text>
-                  <v-container>
-                    <v-form @submit.prevent="addEvent">
-                      <v-select
-                        return-object
-                        :items="getSubjects"
-                        label="Select class"
-                        item-text="name"
-                        solo
-                        v-model="eventDetails.selectedClass"
-                      ></v-select>
-                      <div @click="dialogSubject = true">
-                        <v-icon class="mr-2">add</v-icon><span>Add new class</span>
-                      </div>
-                      <DatePicker v-on:pickDate="pickStart($event)"/>
-                      <div class="d-flex justify-space-between my-2">
-                        <div>
-                          Start time
-                          <TimePicker v-on:pickTime="pickStartTime($event)"/>
-                        </div>
-                        <div>
-                          End time
-                          <TimePicker v-on:pickTime="pickEndTime($event)"/>
-                        </div>
-                      </div>
-                      <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
-                      <v-btn type="submit" color="primary" class="mr-4">
-                        Create event
-                      </v-btn>
-                    </v-form>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-tab-item>
             <v-tab-item>
               <v-card flat>
                 <v-card-text>
