@@ -41,10 +41,14 @@
         <div class="d-flex justify-space-between align-center">
           <Breadcrumbs/>
           <div>
-            <v-btn color="primary ml-4" v-if="getSubjects.length > 0" @click="dialogSubject = true">
-              <v-icon class="mr-2">add</v-icon>
-              Add subject
-            </v-btn>
+            <v-tooltip left>
+              <template v-slot:activator="{ on }">
+                <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogSubject = true">
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+              </template>
+              <span>Add new subject</span>
+            </v-tooltip>
           </div>
         </div>
       </v-col>
@@ -62,18 +66,18 @@
       <v-container>
         <v-text-field v-model="search" label="Search" filled></v-text-field>
         <v-row>
-          <v-col cols="12" md="4" v-for="subject in subjectsFilter" :key="subject._id">
+          <v-col cols="12" sm="12" md="6" lg="4" v-for="subject in subjectsFilter" :key="subject._id">
             <v-card
-              class="mx-auto"
+              class="mx-auto elevation-2"
               max-width="500"
-              style="box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03); border-left: 4px solid;"
+              style="border-left: 4px solid;"
               :style="{'border-left-color':subject.color}"
             >
               <v-list-item three-line>
                 <v-list-item-content>
                   <div class="overline mb-4"></div>
                   <div class="d-flex justify-space-between">
-                    <router-link :to="'/subject/' + subject._id" class="router">
+                    <router-link :to="'/subject/' + subject._id">
                       <v-list-item-title class="subtitle-1 mb-1">
                         {{ subject.name }}
                       </v-list-item-title>
@@ -98,10 +102,15 @@
                       </v-list>
                     </v-menu>
                   </div>
-                  <p class="caption mt-2">{{ subject.description }}</p>
-                  <div class="d-flex align-center caption mt-8">
-                    <v-icon class="mr-2">person</v-icon> Teacher: {{ subject.teacher }}
-                    <v-icon class="mr-2 ml-2">note</v-icon> Requirements: {{ subject.requirements.length }}
+                  <p class="caption mt-2 text-limit" v-if="subject.description">{{ subject.description }}</p>
+                  <p v-else class="caption mt-2 text-limit">No description</p>
+                  <div class="caption mt-4">
+                    <div class="mb-2">
+                      <v-icon class="mr-2">person</v-icon> Teacher: {{ subject.teacher }}
+                    </div>
+                    <div>
+                      <v-icon class="mr-2">note</v-icon> Requirements: {{ subject.requirements.length }}
+                    </div>
                   </div>
                 </v-list-item-content>
               </v-list-item>
@@ -229,7 +238,11 @@ export default {
   .shadow {
     box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03) !important;
   }
-  .router {
-    color: rgba(0, 0, 0, 0.87) !important;
+  .text-limit {
+    display: inline-block;
+    width: 10px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
   }
 </style>
