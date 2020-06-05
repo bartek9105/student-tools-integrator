@@ -14,6 +14,8 @@ new Vue({
   vuetify,
   created () {
     this.$store.dispatch('fetchSubjects')
+    this.$store.dispatch('fetchTasks')
+    this.$store.dispatch('getEvents')
   },
   render: h => h(App)
 }).$mount('#app')

@@ -1,18 +1,39 @@
 <template>
   <v-container>
-    <div class="d-flex align-center mb-3">
-        <h3 class="mr-2">Your tasks for today</h3>
+    <div class="d-flex align-center mb-8">
+        <h3 class="mr-2">Tasks due today</h3>
+        <router-link to="/todo">Go to todo list view</router-link>
     </div>
-    <v-simple-table>
+    <div v-if="getTodaysTasks == 0">
+      <p>No tasks for today</p>
+    </div>
+    <v-simple-table v-else>
       <template v-slot:default>
         <thead>
           <tr>
             <th class="text-left">Task</th>
+            <th class="text-left">Priority</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="task in getTodaysTasks" :key="task._id">
             <td>{{ task.name }}</td>
+            <td v-if="task.priority">
+              <v-chip
+                class="ma-2"
+                :color="task.priority.color"
+                text-color="white"
+                small
+              >
+                <v-avatar left>
+                  <v-icon>flag</v-icon>
+                </v-avatar>
+                {{ task.priority.name }}
+              </v-chip>
+            </td>
+            <td v-else>
+              -
+            </td>
           </tr>
         </tbody>
       </template>

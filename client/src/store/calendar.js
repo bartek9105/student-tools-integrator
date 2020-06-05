@@ -7,6 +7,14 @@ export default ({
   getters: {
     eventsGetter (state) {
       return state.events
+    },
+    upcomingEventsGetter (state) {
+      const today = new Date()
+      return state.events.filter(el => {
+        if (el.start) {
+          return new Date(el.start.substr(0, 10)) >= today
+        }
+      })
     }
   },
   mutations: {
