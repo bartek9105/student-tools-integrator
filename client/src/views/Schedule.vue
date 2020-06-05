@@ -259,10 +259,16 @@
             </td>
             <td v-else>
               <span class="font-weight-medium">{{ days[new Date(event.start).getDay()] }} </span>
-              ({{ event.start.toString().substr(0, 10) }})
+              <span v-if="event.start">({{ event.start.toString().substr(0, 10) }})</span>
             </td>
             <td>
-              {{ event.start.toString().substr(11,15) }} - {{ event.end.toString().substr(11,15) }}
+              <span v-if="event.start">
+              {{ event.start.toString().substr(11,15) }}
+              </span>
+               -
+              <span v-if="event.end">
+              {{ event.end.toString().substr(11,15) }}
+              </span>
             </td>
             <td>
               {{ event.subject.teacher }}

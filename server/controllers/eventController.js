@@ -68,8 +68,8 @@ exports.editRecurringScheduleEvent = async (req, res) => {
             title: req.body.title,
             subject: req.body.subject,
             room: req.body.room,
-            startRecur: req.body.startRecurence,
-            endRecur: req.body.endRecurence,
+            startRecur: req.body.startRecur,
+            endRecur: req.body.endRecur,
             daysOfWeek: req.body.daysOfWeek
         })
         res.send(editedEvent)

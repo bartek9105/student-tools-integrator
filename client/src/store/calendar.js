@@ -67,13 +67,14 @@ export default ({
       })
     },
     editRecurringScheduleEvent ({ commit, dispatch }, event) {
+      console.log(event.startRecurence, event.endRecurence)
       Api().patch(`events/scheduleRecurring/edit/${event.eventId}`, {
         title: event.title,
         subject: event.subject,
         room: event.room,
         startRecur: event.startRecurence,
         endRecur: event.endRecurence,
-        daysOfWeek: event.daysOfweek
+        daysOfWeek: event.daysOfWeek
       }).then(() => {
         dispatch('getEvents')
       }).catch(err => console.log(err))
