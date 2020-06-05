@@ -234,10 +234,7 @@ export default {
 }
 </script>
 
-<style>
-  .shadow {
-    box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03) !important;
-  }
+<style scoped>
   .text-limit {
     display: inline-block;
     width: 10px;
