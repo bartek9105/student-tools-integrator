@@ -15,7 +15,7 @@
     </v-dialog>
     <p class="headline">{{ getSubjectDetails.name }}</p>
     <v-row class="justify-space-between">
-      <v-col cols="12" md="4">
+      <v-col cols="12" sm="12" md="6" lg="4">
         <p class="title">Requirements</p>
         <div class="d-flex justify-space-between align-center">
           <v-text-field
@@ -37,7 +37,7 @@
                 :size="40"
                 :width="2"
                 :value="requirement.progress"
-                color="teal"
+                color="green"
                 class="flex-none mr-4"
               >
                 {{ requirement.progress }}
@@ -56,7 +56,7 @@
           </v-list-item>
         </v-card>
       </v-col>
-      <v-col cols="12" md="4">
+      <v-col cols="12" sm="12" md="6" lg="4">
         <p class="title">Attached files</p>
         <template>
           <div class="d-flex justify-space-between">
@@ -95,7 +95,7 @@
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="12" md="4">
+      <v-col cols="12" sm="12" md="6" lg="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
           <ChartRadial :labels="getLabels" :series="getSeries"/>
@@ -107,6 +107,8 @@
         <quill-editor
           ref="myQuillEditor"
           v-model="note.content"
+          style="background-color:#fff;"
+          class="elevation-1"
         />
         <div v-if="editMode" class="mt-4">
           <v-btn @click="editNote" class="primary mr-4">Edit note</v-btn>
@@ -117,7 +119,7 @@
     </v-row>
     <p class="mt-8 title">Notes</p>
     <v-row>
-      <v-col cols="12" md="2" v-for="(note, index) in getSubjectDetails.notes" :key="index">
+      <v-col cols="12" xs="12" sm="6" lg="3" v-for="(note, index) in getSubjectDetails.notes" :key="index">
         <v-card
           class="mx-auto overflow-hidden"
           max-width="344"
