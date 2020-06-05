@@ -95,7 +95,7 @@
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="6" lg="4">
+      <v-col cols="12" sm="12" md="12" lg="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
           <ChartRadial :labels="getLabels" :series="getSeries"/>
@@ -226,16 +226,23 @@ export default {
       })
     },
     editRequirement (reqId) {
-      this.$store.dispatch('editRequirement', {
-        reqId: reqId,
-        requirement: this.currentReqs.name,
-        progress: this.currentReqs.progress
-      }).then(() => {
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'Requirement updated'
+      if (this.currentReqs.name !== null) {
+        this.$store.dispatch('editRequirement', {
+          reqId: reqId,
+          requirement: this.currentReqs.name,
+          progress: this.currentReqs.progress
+        }).then(() => {
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'Requirement updated'
+          })
         })
+      }
+      this.$store.dispatch('showSnackbar', {
+        snackbar: true,
+        color: 'error',
+        text: 'Requirement name cannot be empty'
       })
     },
     updateReqDialog (requirement) {
@@ -258,18 +265,25 @@ export default {
       this.$store.dispatch('fetchSubjectDetails', this.$route.params.id)
     },
     addRequirement () {
-      this.$store.dispatch('addRequirement', {
-        requirement: this.requirements,
-        progress: this.progress,
-        subjectId: this.$route.params.id
-      }).then(() => {
-        this.requirements = null
-        this.progress = 0
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'Requirement added'
+      if (this.requirements !== '') {
+        this.$store.dispatch('addRequirement', {
+          requirement: this.requirements,
+          progress: this.progress,
+          subjectId: this.$route.params.id
+        }).then(() => {
+          this.requirements = null
+          this.progress = 0
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'Requirement added'
+          })
         })
+      }
+      this.$store.dispatch('showSnackbar', {
+        snackbar: true,
+        color: 'error',
+        text: 'Requirement name cannot be empty'
       })
     },
     addNote () {

@@ -13,10 +13,12 @@ exports.addSubject = async (req, res) => {
             description: req.body.description,
             creator: req.userId
         })
-        const savedSubject = await newSubject.save()
-        res.send({
-            subject: savedSubject
-        })
+        if (req.body.name !== '') {
+            const savedSubject = await newSubject.save()
+            res.send({
+                subject: savedSubject
+            })
+        }
     } catch (error) {
         console.log(error);
     }
