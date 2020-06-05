@@ -75,6 +75,13 @@ export default ({
       Api().patch(`subjects/${payload.subjectId}/deleteRequirement/${payload.reqId}`).then(() => {
         dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
+    },
+    addNote ({ commit, dispatch }, payload) {
+      Api().patch(`subjects/${payload.subjectId}/updateNotes`, {
+        note: payload.note
+      }).then(() => {
+        dispatch('fetchSubjectDetails', payload.subjectId)
+      }).catch(err => console.log(err))
     }
   }
 })

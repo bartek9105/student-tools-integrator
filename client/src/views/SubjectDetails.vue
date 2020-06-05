@@ -109,9 +109,8 @@
       </v-col>
     </v-row>
     <p class="mt-8 title">Notes</p>
-    <!--
     <v-row>
-      <v-col cols="12" md="2" v-for="(note, index) in subjectDetails.notes" :key="index">
+      <v-col cols="12" md="2" v-for="(note, index) in getSubjectDetails.notes" :key="index">
         <v-card
           class="mx-auto overflow-hidden"
           max-width="344"
@@ -132,7 +131,6 @@
         </v-card>
       </v-col>
     </v-row>
-    -->
   </v-container>
 </template>
 
@@ -210,14 +208,11 @@ export default {
         })
       })
     },
-    async addNote () {
-      try {
-        await axios.patch(`http://localhost:3000/subjects/${this.$route.params.id}/updateNotes`, {
-          note: this.note
-        })
-      } catch (error) {
-        console.log(error)
-      }
+    addNote () {
+      this.$store.dispatch('addNote', {
+        note: this.note,
+        subjectId: this.$route.params.id
+      })
     },
     fileUpload () {
       this.file = this.$refs.file.files[0]
