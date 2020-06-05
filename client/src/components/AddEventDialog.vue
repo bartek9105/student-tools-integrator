@@ -19,7 +19,7 @@
             <v-card flat>
               <v-card-text>
                 <v-container>
-                  <v-form @submit.prevent="addEvent">
+                  <v-form @submit.prevent="addSingleEvent">
                     <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
                     <v-text-field v-model="eventDetails.details" type="text" label="Event details (optional)"></v-text-field>
                     <DatePicker v-on:pickDate="pickStart($event)"/>
@@ -46,7 +46,7 @@
             <v-card flat>
               <v-card-text>
                 <v-container>
-                  <v-form @submit.prevent="addEvent">
+                  <v-form @submit.prevent="addRecurringEvent">
                     <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
                     <DatePicker v-on:pickDate="pickStartDateRecur($event)"/>
                     <DatePicker v-on:pickDate="pickEndDateRecur($event)"/>
@@ -141,18 +141,14 @@ export default {
     TimePicker
   },
   methods: {
-    addEvent () {
+    addSingleEvent () {
       if (this.eventDetails.startTime !== null && this.eventDetails.endTime !== null && this.eventDetails.start !== null && this.eventDetails.end !== null && this.eventDetails.title !== null) {
         this.$store.dispatch('addEvent', {
           title: this.eventDetails.title,
           start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
           end: this.eventDetails.end + `T${this.eventDetails.endTime}`,
-          startTime: this.eventDetails.startTimeRecur,
-          endTime: this.eventDetails.endTimeRecur,
-          startRecurence: this.eventDetails.startRecur,
-          endRecurence: this.eventDetails.endRecur,
-          daysOfWeek: this.eventDetails.daysOfWeek,
-          details: this.eventDetails.details
+          details: this.eventDetails.details,
+          daysOfWeek: null
         }).then(() => {
           this.closeDialog()
           this.eventDetails = {
@@ -161,9 +157,39 @@ export default {
             end: null,
             startTime: null,
             endTime: null,
-            startRecur: null,
-            endRecur: null,
-            daysOfWeek: null,
+            details: null
+          }
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New event created'
+          })
+        })
+      }
+      this.$store.dispatch('showSnackbar', {
+        snackbar: true,
+        color: 'error',
+        text: 'Fill in all fields'
+      })
+    },
+    addRecurringEvent () {
+      if (this.eventDetails.title !== null && this.eventDetails.startRecur !== null && this.eventDetails.endRecur !== null) {
+        this.$store.dispatch('addEvent', {
+          title: this.eventDetails.title,
+          startRecurence: this.eventDetails.startRecur,
+          endRecurence: this.eventDetails.endRecur,
+          startTime: this.eventDetails.startTimeRecur,
+          endTime: this.eventDetails.endTimeRecur,
+          details: this.eventDetails.details,
+          daysOfWeek: this.eventDetails.daysOfWeek
+        }).then(() => {
+          this.closeDialog()
+          this.eventDetails = {
+            title: null,
+            start: null,
+            end: null,
+            startTime: null,
+            endTime: null,
             details: null
           }
           this.$store.dispatch('showSnackbar', {
