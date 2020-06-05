@@ -46,36 +46,70 @@
               <v-btn text color="primary" @click="$refs.dateMenu.save(dateMenu)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <div class="d-flex justify-space-between my-2">
-              <div>
-                Start time
-                <v-menu
-                ref="timeMenu"
-                v-model="timeMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="timeMenu"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-                >
-                <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="eventDetails.startTime"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                </template>
-                <v-time-picker
-                    v-if="timeMenu"
-                    v-model="eventDetails.startTime"
-                    full-width
-                    @click:minute="$refs.timeMenu.save(timeMenu)"
-                ></v-time-picker>
-                </v-menu>
+            <div class="d-flex justify-space-between">
+              <div class="d-flex justify-space-between my-2">
+                <div>
+                  Start time
+                  <v-menu
+                  ref="timeMenu1"
+                  v-model="timeMenu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="timeMenu1"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                  >
+                  <template v-slot:activator="{ on }">
+                      <v-text-field
+                      v-model="eventDetails.startTime"
+                      label="Pick time"
+                      prepend-icon="access_time"
+                      readonly
+                      v-on="on"
+                      ></v-text-field>
+                  </template>
+                  <v-time-picker
+                      v-if="timeMenu1"
+                      v-model="eventDetails.startTime"
+                      full-width
+                      @click:minute="$refs.timeMenu1.save(timeMenu1)"
+                  ></v-time-picker>
+                  </v-menu>
+                </div>
+              </div>
+              <div class="d-flex justify-space-between my-2">
+                <div>
+                  End time
+                  <v-menu
+                  ref="timeMenu2"
+                  v-model="timeMenu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="timeMenu2"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                  >
+                  <template v-slot:activator="{ on }">
+                      <v-text-field
+                      v-model="eventDetails.endTime"
+                      label="Pick time"
+                      prepend-icon="access_time"
+                      readonly
+                      v-on="on"
+                      ></v-text-field>
+                  </template>
+                  <v-time-picker
+                      v-if="timeMenu2"
+                      v-model="eventDetails.endTime"
+                      full-width
+                      @click:minute="$refs.timeMenu2.save(timeMenu2)"
+                  ></v-time-picker>
+                  </v-menu>
+                </div>
               </div>
             </div>
             <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
@@ -206,7 +240,7 @@
               Teacher
             </th>
             <th class="text-left table-header font-weight-black">
-              <v-icon class="mr-2">person</v-icon>
+              <v-icon class="mr-2">room</v-icon>
               Room
             </th>
             <th class="text-left table-header font-weight-black">
@@ -225,10 +259,10 @@
             </td>
             <td v-else>
               <span class="font-weight-medium">{{ days[new Date(event.start).getDay()] }} </span>
-              ({{ event.start }})
+              ({{ event.start.toString().substr(0, 10) }})
             </td>
             <td>
-              {{ event.startTime }} - {{ event.endTime }}
+              {{ event.start.toString().substr(11,15) }} - {{ event.end.toString().substr(11,15) }}
             </td>
             <td>
               {{ event.subject.teacher }}
@@ -308,6 +342,8 @@ export default {
           dayName: 'Saturday'
         }
       ],
+      timeMenu1: false,
+      timeMenu2: false,
       timeMenu: false,
       dateMenu: false,
       timeMenuRec: false,
@@ -357,6 +393,7 @@ export default {
         eventId: this.eventDetails.eventId,
         title: this.eventDetails.selectedClass.name,
         start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
+        end: this.eventDetails.start + `T${this.eventDetails.endTime}`,
         subject: this.eventDetails.selectedClass._id,
         room: this.eventDetails.room
       }).then(() => {
@@ -382,6 +419,7 @@ export default {
       this.$store.dispatch('addEvent', {
         title: this.eventDetails.selectedClass.name,
         start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
+        end: this.eventDetails.start + `T${this.eventDetails.endTime}`,
         subject: this.eventDetails.selectedClass._id,
         room: this.eventDetails.room,
         daysOfWeek: null

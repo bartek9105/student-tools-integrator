@@ -57,6 +57,7 @@ export default ({
       Api().patch(`events/schedule/edit/${exam.eventId}`, {
         title: exam.title,
         start: exam.start,
+        end: exam.end,
         subject: exam.subject,
         room: exam.room
       }).then(() => {
