@@ -82,6 +82,17 @@ export default ({
       }).then(() => {
         dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
+    },
+    deleteNote ({ commit, dispatch }, payload) {
+      Api().patch(`subjects/${payload.subjectId}/deleteNote/${payload.noteId}`).then(() => {
+        dispatch('fetchSubjectDetails', payload.subjectId)
+      }).catch(err => console.log(err))
+    },
+    editNote ({ commit }, payload) {
+      Api().patch(`subjects/${payload.noteId}/editNote`, {
+        note: payload.note
+      }).then(() => {
+      }).catch(err => console.log(err))
     }
   }
 })

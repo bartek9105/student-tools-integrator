@@ -104,8 +104,15 @@
     </v-row>
     <v-row>
       <v-col cols="12" sm="12">
-        <Editor v-on:editNote="editNote($event)"/>
-        <v-btn @click="addNote" class="primary mt-4">Add note</v-btn>
+        <quill-editor
+          ref="myQuillEditor"
+          v-model="note.content"
+        />
+        <div v-if="editMode" class="mt-4">
+          <v-btn @click="editNote" class="primary mr-4">Edit note</v-btn>
+          <v-btn @click="editMode = false">Cancel</v-btn>
+        </div>
+        <v-btn v-else @click="addNote" class="primary mt-4">Add note</v-btn>
       </v-col>
     </v-row>
     <p class="mt-8 title">Notes</p>
@@ -116,10 +123,31 @@
           max-width="344"
           height="150"
         >
-          <v-card-text>
-            <div class="text--primary text-limit" v-html="note">
-            </div>
-          </v-card-text>
+          <div class="d-flex justify-space-between">
+            <v-card-text>
+              <div class="text--primary text-limit" v-html="note.content">
+              </div>
+            </v-card-text>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-icon color="primary" dark v-on="on">
+                  more_vert
+                </v-icon>
+              </template>
+              <v-list>
+                <v-list-item>
+                  <v-list-item-title>
+                    <v-btn text @click="editNoteMode(note)">Edit</v-btn>
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title>
+                    <v-btn text @click="deleteNote(note._id)">Delete</v-btn>
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
           <v-card-actions>
             <v-btn
               text
@@ -135,16 +163,19 @@
 </template>
 
 <script>
-import axios from 'axios'
 
+import axios from 'axios'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 import ChartRadial from '@/components/ChartRadial'
-import Editor from '@/components/Editor'
+import { quillEditor } from 'vue-quill-editor'
 
 export default {
   name: 'SubjectDetails',
   components: {
     ChartRadial,
-    Editor
+    quillEditor
   },
   data () {
     return {
@@ -152,12 +183,35 @@ export default {
       progress: 0,
       file: null,
       uploadedFiles: [],
-      note: null,
+      note: {
+        content: null,
+        _id: null
+      },
       editReqDialog: false,
-      currentReqs: {}
+      currentReqs: {},
+      editMode: false
     }
   },
   methods: {
+    editNote () {
+      this.$store.dispatch('editNote', {
+        note: this.note.content,
+        noteId: this.note._id
+      }).then(() => {
+        this.editMode = false
+        this.note.content = null
+      })
+    },
+    editNoteMode (note) {
+      this.note = note
+      this.editMode = true
+    },
+    deleteNote (noteId) {
+      this.$store.dispatch('deleteNote', {
+        noteId: noteId,
+        subjectId: this.$route.params.id
+      })
+    },
     editRequirement (reqId) {
       this.$store.dispatch('editRequirement', {
         reqId: reqId,
@@ -187,9 +241,6 @@ export default {
         })
       })
     },
-    editNote (note) {
-      this.note = note
-    },
     fetchSubjectDetails () {
       this.$store.dispatch('fetchSubjectDetails', this.$route.params.id)
     },
@@ -210,8 +261,10 @@ export default {
     },
     addNote () {
       this.$store.dispatch('addNote', {
-        note: this.note,
+        note: this.note.content,
         subjectId: this.$route.params.id
+      }).then(() => {
+        this.note.content = null
       })
     },
     fileUpload () {
@@ -265,6 +318,9 @@ export default {
     getSeries () {
       const series = this.getSubjectDetails.requirements.map(el => el.progress)
       return series.map(el => parseInt(el))
+    },
+    editor () {
+      return this.$refs.myQuillEditor.quill
     }
   },
   mounted () {
@@ -277,7 +333,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .text-limit {
     display: block;
     text-overflow: ellipsis;

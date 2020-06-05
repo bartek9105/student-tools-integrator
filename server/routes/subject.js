@@ -10,7 +10,11 @@ router.patch('/:id/editRequirements', subjectController.editRequirements)
 
 router.get('/', subjectController.getSubjects)
 router.get('/:id', subjectController.getSubject)
+
 router.patch('/:id/updateNotes', subjectController.updateNotes)
+router.patch('/:id/editNote', subjectController.editNote)
+router.patch('/:id/deleteNote/:noteId', subjectController.deleteNote)
+
 router.patch('/:id/edit', subjectController.editSubject)
 router.delete('/:id/delete', subjectController.deleteSubject)
 

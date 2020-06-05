@@ -36,6 +36,19 @@ exports.updateRequirements = async (req, res) => {
     }
 }
 
+exports.updateNotes = async (req, res) => {
+    try {
+        const updatedSubject = await Subject.updateOne({_id: req.params.id}, {$push: {
+            notes: {
+                "content": req.body.note
+            }
+        }})
+        res.send(updatedSubject)
+    } catch (error) {
+        console.log(subjects)
+    }
+}
+
 exports.editRequirements = async (req, res) => {
     try {
         await Subject.updateOne({'requirements._id': req.params.id}, {'$set': {
@@ -48,9 +61,29 @@ exports.editRequirements = async (req, res) => {
     }
 }
 
+exports.editNote = async (req, res) => {
+    try {
+        await Subject.updateOne({'notes._id': req.params.id}, {'$set': {
+            'notes.$.content': req.body.note
+        }})    
+        res.send('updated')
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 exports.deleteRequirement = async (req, res) => {
     try {
         const updated = await Subject.updateOne({ _id: req.params.id }, { "$pull": { "requirements": { "_id": req.params.reqId } } })
+        res.send(updated)       
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.deleteNote = async (req, res) => {
+    try {
+        const updated = await Subject.updateOne({ _id: req.params.id }, { "$pull": { "notes": { "_id": req.params.noteId } } })
         res.send(updated)       
     } catch (error) {
         console.log(error)
@@ -72,15 +105,6 @@ exports.getSubject = async (req, res) => {
         res.send(subjects)       
     } catch (error) {
         console.log(subjects) 
-    }
-}
-
-exports.updateNotes = async (req, res) => {
-    try {
-        const updatedSubject = await Subject.updateOne({_id: req.params.id}, {$push: {notes: req.body.note}})
-        res.send(updatedSubject)
-    } catch (error) {
-        console.log(subjects)
     }
 }
 
