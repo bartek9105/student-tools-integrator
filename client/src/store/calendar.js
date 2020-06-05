@@ -44,6 +44,19 @@ export default ({
       }).then(() => {
         dispatch('getEvents')
       }).catch(err => console.log(err))
+    },
+    editScheduleEvent ({ commit, dispatch }, exam) {
+      console.log(exam.title)
+      Api().patch(`events/schedule/edit/${exam.eventId}`, {
+        title: exam.title,
+        start: exam.start,
+        subject: exam.subject,
+        room: exam.room
+      }).then(() => {
+        dispatch('getEvents')
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 })
