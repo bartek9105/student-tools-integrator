@@ -23,6 +23,7 @@
                     <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
                     <v-text-field v-model="eventDetails.details" type="text" label="Event details (optional)"></v-text-field>
                     <DatePicker v-on:pickDate="pickStart($event)"/>
+                    <DatePicker v-on:pickDate="pickEnd($event)"/>
                     <div class="d-flex justify-space-between my-2">
                       <div>
                         Start time
@@ -47,8 +48,8 @@
                 <v-container>
                   <v-form @submit.prevent="addEvent">
                     <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
-                    <DatePicker v-on:pickDate="pickStartDate($event)"/>
-                    <DatePicker v-on:pickDate="pickEndDate($event)"/>
+                    <DatePicker v-on:pickDate="pickStartDateRecur($event)"/>
+                    <DatePicker v-on:pickDate="pickEndDateRecur($event)"/>
                     <div class="d-flex justify-space-between my-2">
                       <div>
                         Start time
@@ -89,8 +90,9 @@ export default {
   data () {
     return {
       eventDetails: {
-        title: '',
+        title: null,
         start: null,
+        end: null,
         startTime: null,
         endTime: null,
         startTimeRecur: null,
@@ -140,42 +142,54 @@ export default {
   },
   methods: {
     addEvent () {
-      this.$store.dispatch('addEvent', {
-        title: this.eventDetails.title,
-        start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
-        startTime: this.eventDetails.startTimeRecur,
-        endTime: this.eventDetails.endTimeRecur,
-        startRecurence: this.eventDetails.startRecur,
-        endRecurence: this.eventDetails.endRecur,
-        daysOfWeek: this.eventDetails.daysOfWeek,
-        details: this.eventDetails.details
-      }).then(() => {
-        this.closeDialog()
-        this.eventDetails = {
-          title: '',
-          start: null,
-          startTime: null,
-          endTime: null,
-          startRecur: null,
-          endRecur: null,
-          daysOfWeek: null,
-          details: null
-        }
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'New event created'
+      if (this.eventDetails.startTime !== null && this.eventDetails.endTime !== null && this.eventDetails.start !== null && this.eventDetails.end !== null && this.eventDetails.title !== null) {
+        this.$store.dispatch('addEvent', {
+          title: this.eventDetails.title,
+          start: this.eventDetails.start + `T${this.eventDetails.startTime}`,
+          end: this.eventDetails.end + `T${this.eventDetails.endTime}`,
+          startTime: this.eventDetails.startTimeRecur,
+          endTime: this.eventDetails.endTimeRecur,
+          startRecurence: this.eventDetails.startRecur,
+          endRecurence: this.eventDetails.endRecur,
+          daysOfWeek: this.eventDetails.daysOfWeek,
+          details: this.eventDetails.details
+        }).then(() => {
+          this.closeDialog()
+          this.eventDetails = {
+            title: null,
+            start: null,
+            end: null,
+            startTime: null,
+            endTime: null,
+            startRecur: null,
+            endRecur: null,
+            daysOfWeek: null,
+            details: null
+          }
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New event created'
+          })
         })
+      }
+      this.$store.dispatch('showSnackbar', {
+        snackbar: true,
+        color: 'error',
+        text: 'Fill in all fields'
       })
     },
-    pickStartDate (start) {
+    pickStartDateRecur (start) {
       this.eventDetails.startRecur = start
     },
-    pickEndDate (end) {
+    pickEndDateRecur (end) {
       this.eventDetails.endRecur = end
     },
     pickStart (start) {
       this.eventDetails.start = start
+    },
+    pickEnd (end) {
+      this.eventDetails.end = end
     },
     pickStartTime (startTime) {
       this.eventDetails.startTime = startTime
