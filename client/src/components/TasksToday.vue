@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <div class="d-flex align-center mb-8">
-        <h3 class="mr-2">Tasks due today</h3>
+    <div class="d-flex flex-column mb-4">
+        <h3 class="mr-2 mb-4">Tasks due today</h3>
         <router-link to="/todo">Go to todo list view</router-link>
     </div>
     <div v-if="getTodaysTasks == 0">
       <p>No tasks for today</p>
     </div>
-    <v-simple-table v-else>
+    <v-simple-table v-else class="elevation-2">
       <template v-slot:default>
         <thead>
           <tr>
