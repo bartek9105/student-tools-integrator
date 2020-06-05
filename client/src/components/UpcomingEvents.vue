@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <div class="d-flex align-center mb-8">
-      <h3 class="mr-4">Upcoming events</h3>
+    <div class="d-flex flex-column mb-4">
+      <h3 class="mr-4 mb-4">Upcoming events</h3>
       <router-link to="/calendar">Go to calendar view</router-link>
     </div>
-    <div v-if="getEvents == 0">
+    <div v-if="getUpcomingEvents == 0">
       <p>No upcoming events</p>
     </div>
-    <v-simple-table v-else>
+    <v-simple-table v-else class="elevation-2">
       <template v-slot:default>
         <thead>
           <tr>
