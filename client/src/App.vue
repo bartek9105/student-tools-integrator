@@ -34,14 +34,21 @@
             </v-list-item>
           </router-link>
 
-          <router-link to="/calendar">
+          <router-link to="/calendar" class="d-flex align-center">
             <v-list-item link>
               <v-list-item-icon>
-                <v-icon>calendar_today</v-icon>
+                  <v-badge
+                    color="green"
+                    :content="getUpcomingEvents"
+                  >
+                    <v-icon>calendar_today</v-icon>
+                  </v-badge>
               </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title>Calendar</v-list-item-title>
+                <v-list-item-title>
+                  Calendar
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </router-link>
@@ -61,7 +68,12 @@
           <router-link to="/todo">
             <v-list-item link>
               <v-list-item-icon>
-                  <v-icon>list</v-icon>
+                  <v-badge
+                    color="green"
+                    :content="getTasksNumber"
+                  >
+                    <v-icon>list</v-icon>
+                  </v-badge>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -156,6 +168,12 @@ export default {
   computed: {
     theme () {
       return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+    },
+    getUpcomingEvents () {
+      return this.$store.getters.upcomingEventsGetter.length
+    },
+    getTasksNumber () {
+      return this.$store.getters.getTasks.length
     }
   }
 }

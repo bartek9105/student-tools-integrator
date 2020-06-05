@@ -1,20 +1,28 @@
 <template>
   <v-container>
-    <v-card
-      class="mx-auto"
-      max-width="400"
-      tile
-    >
-      <h1>Upcoming events</h1>
-      <p v-if="getEvents.length < 1">No events</p>
-      <v-list-item two-line v-else v-for="event in getEvents" :key="event._id">
-        <v-list-item-content>
-          <v-list-item-title>{{ event.name }}</v-list-item-title>
-          <v-list-item-subtitle>{{ event.details }}</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <router-link to="/calendar">Go to calendar</router-link>
-    </v-card>
+    <div class="d-flex align-center mb-8">
+      <h3 class="mr-4">Upcoming events</h3>
+      <router-link to="/calendar">Go to calendar view</router-link>
+    </div>
+    <div v-if="getEvents == 0">
+      <p>No upcoming events</p>
+    </div>
+    <v-simple-table v-else>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Event</th>
+            <th class="text-left">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="event in getUpcomingEvents" :key="event._id">
+            <td>{{ event.title }}</td>
+            <td v-if="event.start">{{ event.start.substr(0, 10) }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </v-container>
 </template>
 
@@ -27,8 +35,8 @@ export default {
     }
   },
   computed: {
-    getEvents () {
-      return this.$store.getters.eventsGetter
+    getUpcomingEvents () {
+      return this.$store.getters.upcomingEventsGetter
     }
   }
 }
