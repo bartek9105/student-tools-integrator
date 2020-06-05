@@ -40,7 +40,7 @@
       <v-col cols="12">
         <div class="d-flex justify-space-between align-center">
           <Breadcrumbs/>
-          <div>
+          <div v-if="getSubjects.length > 0">
             <v-tooltip left>
               <template v-slot:activator="{ on }">
                 <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogSubject = true">
@@ -109,7 +109,7 @@
                       <v-icon class="mr-2">person</v-icon> Teacher: {{ subject.teacher }}
                     </div>
                     <div>
-                      <v-icon class="mr-2">note</v-icon> Requirements: {{ subject.requirements.length }}
+                      <v-icon class="mr-2">note</v-icon> Requirements: {{ subject.requirements.length - 1 }}
                     </div>
                   </div>
                 </v-list-item-content>
@@ -150,28 +150,30 @@ export default {
   },
   methods: {
     addSubject () {
-      this.$store.dispatch('addSubject', {
-        name: this.subjectName,
-        teacher: this.teacherName,
-        color: this.borderColor,
-        description: this.description
-      }).then(() => {
-        this.subjectName = ''
-        this.teacherName = ''
-        this.borderColor = ''
-        this.description = ''
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'success',
-          text: 'New subject added'
+      if (this.subjectName !== '') {
+        this.$store.dispatch('addSubject', {
+          name: this.subjectName,
+          teacher: this.teacherName,
+          color: this.borderColor,
+          description: this.description
+        }).then(() => {
+          this.subjectName = ''
+          this.teacherName = ''
+          this.borderColor = ''
+          this.description = ''
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New subject added'
+          })
+        }).catch(err => {
+          console.log(err)
         })
-      }).catch(err => {
-        console.log(err)
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'error',
-          text: err
-        })
+      }
+      this.$store.dispatch('showSnackbar', {
+        snackbar: true,
+        color: 'error',
+        text: 'Subject name cannot be empty'
       })
     },
     updateSubjectDialog (currentSubject) {
