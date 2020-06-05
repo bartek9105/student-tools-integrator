@@ -202,6 +202,11 @@ export default {
       }).then(() => {
         this.editMode = false
         this.note.content = null
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Note updated'
+        })
       })
     },
     editNoteMode (note) {
@@ -212,6 +217,12 @@ export default {
       this.$store.dispatch('deleteNote', {
         noteId: noteId,
         subjectId: this.$route.params.id
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Note deleted'
+        })
       })
     },
     editRequirement (reqId) {
@@ -267,6 +278,11 @@ export default {
         subjectId: this.$route.params.id
       }).then(() => {
         this.note.content = null
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Note added'
+        })
       })
     },
     fileUpload () {
@@ -304,7 +320,6 @@ export default {
     async deleteFile (id) {
       try {
         await axios.delete(`http://localhost:3000/file/${id}`)
-        console.log(id)
       } catch (error) {
         console.log(error)
       }
