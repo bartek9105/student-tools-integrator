@@ -38,11 +38,13 @@
             <v-list-item link>
               <v-list-item-icon>
                   <v-badge
+                    v-if="getUpcomingEvents"
                     color="green"
                     :content="getUpcomingEvents"
                   >
                     <v-icon>calendar_today</v-icon>
                   </v-badge>
+                  <v-icon v-else>calendar_today</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -69,11 +71,13 @@
             <v-list-item link>
               <v-list-item-icon>
                   <v-badge
+                    v-if="getTasksNumber"
                     color="green"
                     :content="getTasksNumber"
                   >
                     <v-icon>list</v-icon>
                   </v-badge>
+                  <v-icon v-else>list</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
