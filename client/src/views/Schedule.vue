@@ -77,10 +77,6 @@
                 ></v-time-picker>
                 </v-menu>
               </div>
-              <div>
-                End time
-                <TimePicker v-on:pickTime="pickEndTime($event)"/>
-              </div>
             </div>
             <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
             <v-btn type="submit" color="primary" class="mr-4">
@@ -91,6 +87,90 @@
             Edit event
           </v-btn>
         </v-container>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogRecurring" max-width="500">
+      <v-card>
+        <v-card-text>
+          <v-container>
+            <v-form @submit.prevent="addRecurringEvent">
+              <v-select
+                  return-object
+                  :items="getSubjects"
+                  label="Select class"
+                  item-text="name"
+                  solo
+                  v-model="eventDetails.selectedClass"
+              ></v-select>
+              <div>
+                <v-icon class="mr-2" @click="dialogSubject = true">add</v-icon><span>Add new class</span>
+              </div>
+              <v-menu
+                ref="dateMenuRec"
+                v-model="dateMenuRec"
+                :close-on-content-click="false"
+                :return-value.sync="dateMenuRec"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+                >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="eventDetails.startRecur"
+                    label="Date"
+                    prepend-icon="event"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="eventDetails.startRecur" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="dateMenuRec = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.dateMenuRec.save(dateMenuRec)">OK</v-btn>
+                </v-date-picker>
+              </v-menu>
+              <v-menu
+                ref="dateMenuRec2"
+                v-model="dateMenuRec2"
+                :close-on-content-click="false"
+                :return-value.sync="dateMenuRec2"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+                >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="eventDetails.endRecur"
+                    label="Date"
+                    prepend-icon="event"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="eventDetails.endRecur" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="dateMenuRec2 = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.dateMenuRec2.save(dateMenuRec2)">OK</v-btn>
+                </v-date-picker>
+              </v-menu>
+              <v-select
+                :items="daysa"
+                item-text="dayName"
+                item-value="id"
+                v-model="eventDetails.daysOfWeek"
+                label="Repeat every"
+                solo
+              ></v-select>
+              <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
+              <v-btn type="submit" color="primary" class="mr-4">
+                Create event
+              </v-btn>
+            </v-form>
+              <v-btn @click="editRecurringEvent" color="primary" class="mr-4">
+                Edit event
+              </v-btn>
+          </v-container>
+        </v-card-text>
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogSubject" max-width="500">
@@ -187,13 +267,11 @@
 <script>
 
 import Breadcrumbs from '@/components/Breadcrumbs'
-import TimePicker from '@/components/TimePicker'
 
 export default {
   name: 'Schedule',
   components: {
-    Breadcrumbs,
-    TimePicker
+    Breadcrumbs
   },
   data () {
     return {
@@ -232,6 +310,9 @@ export default {
       ],
       timeMenu: false,
       dateMenu: false,
+      timeMenuRec: false,
+      dateMenuRec: false,
+      dateMenuRec2: false,
       dialogSubject: false,
       subjectName: null,
       eventDetails: {
@@ -251,30 +332,24 @@ export default {
     }
   },
   methods: {
-    closeDialog () {
-      this.dialogSingle = false
-      console.log('eee')
-      this.eventDetails = {
-        title: '',
-        start: null,
-        startTime: null,
-        endTime: null,
-        startRecur: null,
-        endRecur: null,
-        daysOfWeek: null,
-        room: null
-      }
-      this.editMode = false
-    },
     editSchedule (event) {
-      this.dialogSingle = true
-      this.editMode = true
-      this.eventDetails = {
-        eventId: event._id,
-        selectedClass: event.subject,
-        start: event.start.substr(0, 10),
-        room: event.room,
-        startTime: event.start.substr(11, 15)
+      if (!event.daysOfWeek) {
+        this.dialogSingle = true
+        this.editMode = true
+        this.eventDetails = {
+          eventId: event._id,
+          selectedClass: event.subject,
+          start: event.start.substr(0, 10),
+          room: event.room,
+          startTime: event.start.substr(11, 15)
+        }
+      } else {
+        this.dialogRecurring = true
+        this.editMode = true
+        this.eventDetails = {
+          ...event,
+          selectedClass: event.subject
+        }
       }
     },
     editEvent () {
@@ -287,6 +362,20 @@ export default {
       }).then(() => {
         this.editMode = false
         this.dialogSingle = false
+      })
+    },
+    editRecurringEvent () {
+      this.$store.dispatch('editRecurringScheduleEvent', {
+        eventId: this.eventDetails._id,
+        title: this.eventDetails.selectedClass.name,
+        subject: this.eventDetails.selectedClass._id,
+        room: this.eventDetails.room,
+        daysOfWeek: this.eventDetails.daysOfWeek,
+        startRecurence: this.eventDetails.startRecur,
+        endRecurence: this.eventDetails.endRecur
+      }).then(() => {
+        this.editMode = false
+        this.dialogRecurring = false
       })
     },
     addEvent () {
@@ -309,6 +398,18 @@ export default {
         room: null
       }
     },
+    addRecurringEvent () {
+      this.$store.dispatch('addEvent', {
+        title: this.eventDetails.selectedClass.name,
+        subject: this.eventDetails.selectedClass._id,
+        room: this.eventDetails.room,
+        daysOfWeek: this.eventDetails.daysOfWeek,
+        startRecurence: this.eventDetails.startRecur,
+        endRecurence: this.eventDetails.endRecur
+      }).then(() => {
+        this.dialogRecurring = false
+      })
+    },
     addSubject () {
       this.$store.dispatch('addSubject', {
         name: this.subjectName
@@ -325,27 +426,6 @@ export default {
     },
     fetchSchedule () {
       this.$store.dispatch('getEvents')
-    },
-    pickStartDate (start) {
-      this.eventDetails.startRecur = start
-    },
-    pickEndDate (end) {
-      this.eventDetails.endRecur = end
-    },
-    pickStart (start) {
-      this.eventDetails.start = start
-    },
-    pickStartTime (startTime) {
-      this.eventDetails.startTime = startTime
-    },
-    pickEndTime (endTime) {
-      this.eventDetails.endTime = endTime
-    },
-    pickStartTimeRecur (startTime) {
-      this.eventDetails.startTimeRecur = startTime
-    },
-    pickEndTimeRecur (endTime) {
-      this.eventDetails.endTimeRecur = endTime
     }
   },
   computed: {

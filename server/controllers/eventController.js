@@ -62,6 +62,22 @@ exports.editExamEvent = async (req, res) => {
     }
 }
 
+exports.editRecurringScheduleEvent = async (req, res) => {
+    try {
+        const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, {
+            title: req.body.title,
+            subject: req.body.subject,
+            room: req.body.room,
+            startRecur: req.body.startRecurence,
+            endRecur: req.body.endRecurence,
+            daysOfWeek: req.body.daysOfWeek
+        })
+        res.send(editedEvent)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 exports.editScheduleEvent = async (req, res) => {
     try {
         const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, {

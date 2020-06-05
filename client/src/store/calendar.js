@@ -46,7 +46,6 @@ export default ({
       }).catch(err => console.log(err))
     },
     editScheduleEvent ({ commit, dispatch }, exam) {
-      console.log(exam.title)
       Api().patch(`events/schedule/edit/${exam.eventId}`, {
         title: exam.title,
         start: exam.start,
@@ -57,6 +56,18 @@ export default ({
       }).catch(err => {
         console.log(err)
       })
+    },
+    editRecurringScheduleEvent ({ commit, dispatch }, event) {
+      Api().patch(`events/scheduleRecurring/edit/${event.eventId}`, {
+        title: event.title,
+        subject: event.subject,
+        room: event.room,
+        startRecur: event.startRecurence,
+        endRecur: event.endRecurence,
+        daysOfWeek: event.daysOfweek
+      }).then(() => {
+        dispatch('getEvents')
+      }).catch(err => console.log(err))
     }
   }
 })
