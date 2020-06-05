@@ -26,8 +26,7 @@ const subjectSchema = new mongoose.Schema({
         required: false
     },
     notes: [{
-        type: String,
-        required: false
+        content: String
     }],
     creator: {
         type: mongoose.Schema.Types.ObjectId,
