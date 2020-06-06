@@ -7,6 +7,7 @@ import tasks from './tasks'
 import projects from './projects'
 import subjects from './subjects'
 import exams from './exams'
+import offers from './offers'
 
 Vue.use(Vuex)
 
@@ -54,6 +55,7 @@ export default new Vuex.Store({
     tasks,
     projects,
     subjects,
-    exams
+    exams,
+    offers
   }
 })
