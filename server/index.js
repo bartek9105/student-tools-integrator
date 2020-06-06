@@ -7,11 +7,8 @@ const path = require('path')
 const assert = require('assert')
 const fs = require('fs')
 const mongodb = require('mongodb')
-<<<<<<< HEAD
 const helmet = require('helmet')
 const compression = require('compression')
-=======
->>>>>>> b2bb88bc047b93eb549f96b9f0cfef4ade4862f9
 
 dotenv.config()
 
@@ -27,12 +24,9 @@ const projectRoutes = require('./routes/project')
 const taskRoutes = require('./routes/task')
 const examRoutes = require('./routes/exam')
 
-<<<<<<< HEAD
 app.use(helmet())
 app.use(compression())
 
-=======
->>>>>>> b2bb88bc047b93eb549f96b9f0cfef4ade4862f9
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -44,12 +38,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/user', userRoutes)
-app.use('/subjects', subjectRoutes)
-app.use('/events', eventsRoutes)
-app.use('/projects', projectRoutes)
-app.use('/tasks', taskRoutes)
-app.use('/exams', examRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/subjects', subjectRoutes)
+app.use('/api/events', eventsRoutes)
+app.use('/api/projects', projectRoutes)
+app.use('/api/tasks', taskRoutes)
+app.use('/api/exams', examRoutes)
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(__dirname + '/public'))
+
+  app.get(/.*/, (req, res) => {
+    res.sendFile(__dirname + '/public/index.html')
+  })
+}
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -70,11 +72,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     })
 })
 
-<<<<<<< HEAD
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
-=======
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/student-integrator?retryWrites=true&w=majority`
->>>>>>> b2bb88bc047b93eb549f96b9f0cfef4ade4862f9
 
 let bucket
 
