@@ -20,16 +20,15 @@
         </v-col>
         <v-col cols="12" sm="12" md="6">
           <h3 class="mb-8">Offers list</h3>
-          <v-card>
+          <v-card v-for="offer in getOffers" :key="offer._id">
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="d-flex align-center">
-                  <v-list-item-title class="mb-4">Three-line item</v-list-item-title>
-                  <span class="caption">2020-06-06</span>
+                  <v-list-item-title class="mb-4">{{ offer.title }}</v-list-item-title>
+                  <span class="caption">{{ offer.createdAt.substr(0, 10) }}</span>
                 </div>
-                <v-list-item-subtitle>
-                  Secondary line text Lorem ipsum dolor sit amet,
-                  Secondary line text Lorem ipsum dolor sit amet,
+                <v-list-item-subtitle class="mb-4">
+                  {{ offer.description }}
                 </v-list-item-subtitle>
                 <v-list-item-subtitle>
                   554 112 332
@@ -52,6 +51,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export default {
   components: {
     Breadcrumbs
+  },
+  methods: {
+    fetchOffers () {
+      this.$store.dispatch('fetchOffers')
+    }
+  },
+  computed: {
+    getOffers () {
+      return this.$store.getters.getOffers
+    }
+  },
+  mounted () {
+    this.fetchOffers()
   }
 }
 </script>

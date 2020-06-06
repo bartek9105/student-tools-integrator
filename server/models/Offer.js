@@ -15,4 +15,6 @@ const offerSchema = new mongoose.Schema({
     }
 })
 
+offerSchema.set('timestamps', true)
+
 module.exports = mongoose.model('Offer', offerSchema)
