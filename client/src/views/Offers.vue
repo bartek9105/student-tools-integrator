@@ -36,9 +36,15 @@
                 <v-list-item-subtitle class="mb-4">
                   {{ offer.description }}
                 </v-list-item-subtitle>
-                <v-list-item-subtitle>
-                  554 112 332
-                </v-list-item-subtitle>
+                <div class="d-flex align-center">
+                  <v-list-item-subtitle>
+                    554 112 332
+                  </v-list-item-subtitle>
+                  <div class="d-flex">
+                    <v-btn color="primary text-white" class="mr-2">Edit</v-btn>
+                    <v-btn color="red" @click="deleteOffer(offer._id)">Delete</v-btn>
+                  </div>
+                </div>
               </v-list-item-content>
             </v-list-item>
           </v-card>
@@ -72,6 +78,9 @@ export default {
         description: this.description,
         contact: this.contact
       })
+    },
+    deleteOffer (offerId) {
+      this.$store.dispatch('deleteOffer', offerId)
     }
   },
   computed: {

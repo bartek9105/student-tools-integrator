@@ -22,3 +22,14 @@ exports.addOffer = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.deleteOffer = async (req, res) => {
+    try {
+        const deletedOffer = await Offer.findByIdAndRemove({
+            _id: req.params.id
+        })
+        res.send(deletedOffer)
+    } catch (error) {
+        console.log(error)
+    }
+}
