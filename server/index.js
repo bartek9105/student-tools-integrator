@@ -13,7 +13,7 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use(cors())
-app.use('/files', express.static(path.join(__dirname, 'files')))
+app.use('/api/files', express.static(path.join(__dirname, 'files')))
 
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
@@ -33,12 +33,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/user', userRoutes)
-app.use('/subjects', subjectRoutes)
-app.use('/events', eventsRoutes)
-app.use('/projects', projectRoutes)
-app.use('/tasks', taskRoutes)
-app.use('/exams', examRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/subjects', subjectRoutes)
+app.use('/api/events', eventsRoutes)
+app.use('/api/projects', projectRoutes)
+app.use('/api/tasks', taskRoutes)
+app.use('/api/exams', examRoutes)
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -51,7 +51,7 @@ const fileStorage = multer.diskStorage({
 
 const upload = multer({ storage: fileStorage })
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/api/upload', upload.single('file'), (req, res) => {
   fs.createReadStream(req.file.path).
     pipe(bucket.openUploadStream(req.file.filename)).
     on('error', function(error) {
@@ -70,7 +70,7 @@ mongoose.connection.on('connected', () => {
   bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db)
 })
 
-app.get('/files', async (req, res) => {
+app.get('/api/files', async (req, res) => {
   try {
     const result = await mongoose.connection.db.collection('fs.files').find().toArray()
     res.send(result)    
@@ -79,7 +79,7 @@ app.get('/files', async (req, res) => {
   }
 })
 // show file contents if is downloaded
-app.get('/files/:name', async (req, res) => {
+app.get('/api/files/:name', async (req, res) => {
   try {
     const result = await mongoose.connection.db.collection('fs.files').findOne({ filename: req.params.name })
     res.send(result)    
@@ -88,7 +88,7 @@ app.get('/files/:name', async (req, res) => {
   }
 })
 // download file
-app.get('/file/:name', (req, res) => {
+app.get('/api/file/:name', (req, res) => {
   bucket.openDownloadStreamByName(req.params.name).
   pipe(fs.createWriteStream(`files/${req.params.name}`)).
   on('error', function(error) {
@@ -96,7 +96,7 @@ app.get('/file/:name', (req, res) => {
   })
 })
 //delete file
-app.delete('/file/:id', async (req, res) => {
+app.delete('/api/file/:id', async (req, res) => {
   try {
     const obj_id = new mongoose.Types.ObjectId(req.params.id)
     await mongoose.connection.db.collection('fs.chunks').deleteMany({ files_id: obj_id })
@@ -106,4 +106,6 @@ app.delete('/file/:id', async (req, res) => {
   }
 })
 
-app.listen(3000)
+const port = process.env.PORT || 3000
+
+app.listen(port)
