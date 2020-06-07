@@ -30,7 +30,7 @@ export default new Vuex.Store({
   },
   actions: {
     signIn ({ commit }, credentials) {
-      return axios.post('http://localhost:3000/user/login', {
+      return axios.post('http://localhost:3000/api/user/login', {
         email: credentials.email,
         password: credentials.password
       }).then(res => {
@@ -38,7 +38,7 @@ export default new Vuex.Store({
       })
     },
     signUp ({ commit }, credentials) {
-      return axios.post('http://localhost:3000/user/register', {
+      return axios.post('http://localhost:3000/api/user/register', {
         email: credentials.email,
         password: credentials.password
       }).then(res => {

@@ -75,7 +75,4 @@ export default {
     padding: 0;
   }
 }
-.auth-form-container {
-  background-color: #fff;
-}
 </style>
