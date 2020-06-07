@@ -35,6 +35,9 @@ export default {
                 formatter: () => {
                   const avg = this.series.reduce((a, b) => a + b)
                   const avgResult = avg / this.labels.length
+                  if (isNaN(avgResult)) {
+                    return 'No data'
+                  }
                   return avgResult.toFixed(2)
                 }
               }

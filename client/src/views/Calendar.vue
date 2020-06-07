@@ -32,8 +32,8 @@
           <div class="d-flex align-center">
             <v-icon class="mr-4">date_range</v-icon>
             <p class="mb-0 subtitle-1">
-              <span class="font-weight-bold">From: </span> {{ currentEvent.start.toString().substr(0, 21) }}
-              <span class="font-weight-bold">To: </span> {{ currentEvent.end.toString().substr(0, 21) }}
+              <span class="font-weight-bold" v-if="currentEvent.start">From: </span> {{ currentEvent.start }}
+              <span class="font-weight-bold" v-if="currentEvent.end">To: </span> {{ currentEvent.end }}
             </p>
           </div>
           <div class="d-flex align-center mt-4">

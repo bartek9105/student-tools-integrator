@@ -29,8 +29,8 @@
         <p class="title text-center mt-4" v-if="getSubjectDetails.requirements.length == 0">
           No requirements added
         </p>
-        <v-card v-else>
-          <v-list-item v-for="(requirement, index) in getSubjectDetails.requirements" :key="index" class="d-flex justify-space-between align-center">
+        <v-card v-for="(requirement, index) in getSubjectDetails.requirements" :key="index" class="mb-4" v-else>
+          <v-list-item class="d-flex justify-space-between align-center">
             <v-list-item-content class="d-flex align-center">
               <v-progress-circular
                 :rotate="360"

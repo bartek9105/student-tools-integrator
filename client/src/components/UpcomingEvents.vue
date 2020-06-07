@@ -18,7 +18,11 @@
         <tbody>
           <tr v-for="event in getUpcomingEvents" :key="event._id">
             <td>{{ event.title }}</td>
-            <td v-if="event.start">{{ event.start.substr(0, 10) }}</td>
+            <td v-if="event.start">{{ event.start.substr(0, 10) }} - {{ event.end.substr(0, 10) }}</td>
+            <td v-if="event.startRecur">
+              <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
+              {{ event.startRecur }} - {{ event.endRecur }}
+            </td>
           </tr>
         </tbody>
       </template>
@@ -31,7 +35,7 @@ export default {
   name: 'UpcomingEvents',
   data () {
     return {
-
+      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
   computed: {

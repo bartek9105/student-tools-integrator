@@ -12,7 +12,9 @@ export default ({
       const today = new Date()
       return state.events.filter(el => {
         if (el.start) {
-          return new Date(el.start.substr(0, 10)) >= today
+          return new Date(el.start.substr(0, 10)) && new Date(el.end.substr(0, 10)) >= today
+        } else if (el.startRecur) {
+          return new Date(el.startRecur.substr(0, 10)) && new Date(el.endRecur.substr(0, 10)) >= today
         }
       })
     }
