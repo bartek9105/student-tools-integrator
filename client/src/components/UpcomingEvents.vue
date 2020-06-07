@@ -18,7 +18,10 @@
         <tbody>
           <tr v-for="event in getUpcomingEvents" :key="event._id">
             <td>{{ event.title }}</td>
-            <td v-if="event.start">{{ event.start.substr(0, 10) }} - {{ event.end.substr(0, 10) }}</td>
+            <td v-if="event.start">
+              {{ event.start.substr(0, 10) }} - {{ event.end.substr(0, 10) }}
+              {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
+            </td>
             <td v-if="event.startRecur">
               <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
               {{ event.startRecur }} - {{ event.endRecur }}

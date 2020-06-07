@@ -187,6 +187,72 @@
                   <v-btn text color="primary" @click="$refs.dateMenuRec2.save(dateMenuRec2)">OK</v-btn>
                 </v-date-picker>
               </v-menu>
+              <div class="d-flex justify-space-between">
+                <div class="d-flex justify-space-between my-2">
+                  <div>
+                    Start time
+                    <v-menu
+                    ref="timeRecurrMenu1"
+                    v-model="timeRecurrMenu1"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="timeRecurrMenu1"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="290px"
+                    >
+                    <template v-slot:activator="{ on }">
+                        <v-text-field
+                        v-model="eventDetails.startTimeRecur"
+                        label="Pick time"
+                        prepend-icon="access_time"
+                        readonly
+                        v-on="on"
+                        ></v-text-field>
+                    </template>
+                    <v-time-picker
+                        v-if="timeRecurrMenu1"
+                        v-model="eventDetails.startTimeRecur"
+                        full-width
+                        @click:minute="$refs.timeRecurrMenu1.save(timeRecurrMenu1)"
+                    ></v-time-picker>
+                    </v-menu>
+                  </div>
+                </div>
+                <div class="d-flex justify-space-between my-2">
+                  <div>
+                    End time
+                    <v-menu
+                    ref="timeRecurrMenu2"
+                    v-model="timeRecurrMenu2"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="timeRecurrMenu2"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="290px"
+                    >
+                    <template v-slot:activator="{ on }">
+                        <v-text-field
+                        v-model="eventDetails.endTimeRecur"
+                        label="Pick time"
+                        prepend-icon="access_time"
+                        readonly
+                        v-on="on"
+                        ></v-text-field>
+                    </template>
+                    <v-time-picker
+                        v-if="timeRecurrMenu2"
+                        v-model="eventDetails.endTimeRecur"
+                        full-width
+                        @click:minute="$refs.timeRecurrMenu2.save(timeRecurrMenu2)"
+                    ></v-time-picker>
+                    </v-menu>
+                  </div>
+                </div>
+              </div>
               <v-select
                 :items="daysa"
                 item-text="dayName"
@@ -261,13 +327,22 @@
               <span class="font-weight-medium">{{ days[new Date(event.start).getDay()] }} </span>
               <span v-if="event.start">({{ event.start.toString().substr(0, 10) }})</span>
             </td>
-            <td>
-              <span v-if="event.start">
+            <td v-if="event.start">
+              <span>
               {{ event.start.toString().substr(11,15) }}
               </span>
                -
-              <span v-if="event.end">
+              <span>
               {{ event.end.toString().substr(11,15) }}
+              </span>
+            </td>
+            <td v-else>
+              <span>
+              {{ event.startTime }}
+              </span>
+               -
+              <span>
+              {{ event.endTime }}
               </span>
             </td>
             <td>
@@ -350,6 +425,8 @@ export default {
       ],
       timeMenu1: false,
       timeMenu2: false,
+      timeRecurrMenu1: false,
+      timeRecurrMenu2: false,
       timeMenu: false,
       dateMenu: false,
       timeMenuRec: false,
@@ -415,7 +492,9 @@ export default {
         room: this.eventDetails.room,
         daysOfWeek: this.eventDetails.daysOfWeek,
         startRecurence: this.eventDetails.startRecur,
-        endRecurence: this.eventDetails.endRecur
+        endRecurence: this.eventDetails.endRecur,
+        startTime: this.eventDetails.startTimeRecur,
+        endTime: this.eventDetails.endTimeRecur
       }).then(() => {
         this.editMode = false
         this.dialogRecurring = false
@@ -449,7 +528,9 @@ export default {
         room: this.eventDetails.room,
         daysOfWeek: this.eventDetails.daysOfWeek,
         startRecurence: this.eventDetails.startRecur,
-        endRecurence: this.eventDetails.endRecur
+        endRecurence: this.eventDetails.endRecur,
+        startTime: this.eventDetails.startTimeRecur,
+        endTime: this.eventDetails.endTimeRecur
       }).then(() => {
         this.dialogRecurring = false
       })
