@@ -87,13 +87,24 @@ export default {
         description: this.offer.description,
         contact: this.offer.contact
       }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Offer added'
+        })
         this.offer.title = null
         this.offer.description = null
         this.offer.contact = null
       })
     },
     deleteOffer (offerId) {
-      this.$store.dispatch('deleteOffer', offerId)
+      this.$store.dispatch('deleteOffer', offerId).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Offer deleted'
+        })
+      })
     },
     editOfferMode (offer) {
       this.editMode = true
@@ -104,6 +115,11 @@ export default {
     },
     editOffer () {
       this.$store.dispatch('editOffer', this.offer).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Offer edited'
+        })
         this.editMode = false
         this.offer.offerId = null
         this.offer.title = null
