@@ -29,6 +29,16 @@ export default ({
         dispatch('fetchOffers')
       }).catch(err => console.log(err))
     },
+    editOffer ({ commit, dispatch }, offer) {
+      console.log(offer)
+      Api().patch(`offers/${offer.offerId}/edit`, {
+        title: offer.title,
+        description: offer.description,
+        contact: offer.contact
+      }).then(() => {
+        dispatch('fetchOffers')
+      }).catch(err => console.log(err))
+    },
     deleteOffer ({ commit, dispatch }, offerId) {
       Api().delete(`offers/${offerId}/delete`).then(() => {
         dispatch('fetchOffers')

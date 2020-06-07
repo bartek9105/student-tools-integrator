@@ -23,6 +23,19 @@ exports.addOffer = async (req, res) => {
     }
 }
 
+exports.editOffer = async (req, res) => {
+    try {
+        const editedOffer = await Offer.findByIdAndUpdate({ _id: req.params.id }, {
+            title: req.body.title,
+            description: req.body.description,
+            contact: req.body.contact
+        })
+        res.send(editedOffer)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 exports.deleteOffer = async (req, res) => {
     try {
         const deletedOffer = await Offer.findByIdAndRemove({
