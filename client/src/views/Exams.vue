@@ -49,7 +49,14 @@
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <TimePicker v-on:pickTime="pickTime($event)"/>
+            <div class="d-flex">
+              <div>
+                <TimePicker v-on:pickTime="changeStartTime($event)"/>
+              </div>
+              <div>
+                <TimePicker v-on:pickTime="changeEndTime($event)"/>
+              </div>
+            </div>
             <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
             <div class="d-flex justify-space-between align-center">
               <v-btn type="submit" color="primary" class="mr-4" @click="addExam" @click.stop="dialogTask = false">
@@ -100,7 +107,14 @@
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <TimePicker v-on:pickTime="updateTime($event)"/>
+            <div class="d-flex">
+              <div>
+                <TimePicker v-on:pickTime="updateStartTime($event)"/>
+              </div>
+              <div>
+                <TimePicker v-on:pickTime="updateEndTime($event)"/>
+              </div>
+            </div>
             <ColorPicker v-if="colorPicker" v-on:changeColor="updateColor($event)"/>
             <div class="d-flex justify-space-between align-center">
               <v-btn type="submit" color="primary" class="mr-4" @click="editExam(currentExam)" @click.stop="dialogTask = false">
@@ -125,6 +139,10 @@
               Date
             </th>
             <th class="text-left">
+              <v-icon class="mr-2">schedule</v-icon>
+              Time
+            </th>
+            <th class="text-left">
               <v-icon class="mr-2">person</v-icon>
               Teacher
             </th>
@@ -144,7 +162,8 @@
                 {{ exam.subject.name }}
               </router-link>
             </td>
-            <td>{{ exam.start }}</td>
+            <td>{{ exam.start.substr(0, 10) }}</td>
+            <td>{{ exam.start.substr(11, 15) }} - {{ exam.end.substr(11, 15) }}</td>
             <td>{{ exam.subject.teacher }}</td>
             <td>{{ exam.room }}</td>
             <td>
@@ -193,6 +212,7 @@ export default {
       dialogUpdateExam: false,
       selectedClass: '',
       startTime: null,
+      endTime: null,
       date: '',
       menu: false,
       room: '',
@@ -206,6 +226,7 @@ export default {
       this.$store.dispatch('addEvent', {
         title: this.selectedClass.name + ' exam',
         start: this.date + `T${this.startTime}`,
+        end: this.date + `T${this.endTime}`,
         daysOfWeek: null,
         subject: this.selectedClass._id,
         room: this.room,
@@ -257,8 +278,11 @@ export default {
     updateColor (color) {
       this.currentExam.color = color
     },
-    updateTime (time) {
-      this.currentExam.startTime = time
+    changeStartTime (time) {
+      this.startTime = time
+    },
+    changeEndTime (time) {
+      this.endTime = time
     },
     pickTime (time) {
       this.startTime = time
