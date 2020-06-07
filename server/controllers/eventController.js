@@ -53,6 +53,7 @@ exports.editExamEvent = async (req, res) => {
         const editedEvent = await Event.findByIdAndUpdate({ _id: req.params.id }, {
             title: req.body.title,
             start: req.body.start,
+            end: req.body.end,
             subject: req.body.subject,
             room: req.body.room
         })

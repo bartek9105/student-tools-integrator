@@ -260,7 +260,17 @@ export default {
       this.$store.dispatch('getEvents')
     },
     updateEditDialog (exam) {
-      this.currentExam = exam
+      this.currentExam = {
+        examId: exam._id,
+        title: exam.title,
+        room: exam.room,
+        exam: true,
+        subject: exam.subject,
+        start: exam.start.substr(0, 10),
+        end: exam.end.substr(0, 10),
+        startTime: exam.start.substr(11, 15),
+        endTime: exam.end.substr(11, 15)
+      }
       this.dialogUpdateExam = true
     },
     deleteExam (examId) {
@@ -283,6 +293,12 @@ export default {
     },
     changeEndTime (time) {
       this.endTime = time
+    },
+    updateStartTime (time) {
+      this.currentExam.startTime = time
+    },
+    updateEndTime (time) {
+      this.currentExam.endTime = time
     },
     pickTime (time) {
       this.startTime = time

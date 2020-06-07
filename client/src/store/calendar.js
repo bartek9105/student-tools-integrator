@@ -47,9 +47,10 @@ export default ({
       }).catch(err => console.log(err))
     },
     editExamEvent ({ commit, dispatch }, exam) {
-      Api().patch(`events/exam/edit/${exam._id}`, {
+      Api().patch(`events/exam/edit/${exam.examId}`, {
         title: exam.subject.name + ' exam',
         start: exam.start + `T${exam.startTime}`,
+        end: exam.end + `T${exam.endTime}`,
         subject: exam.subject._id,
         room: exam.room
       }).then(() => {
