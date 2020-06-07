@@ -19,12 +19,15 @@
           <tr v-for="event in getUpcomingEvents" :key="event._id">
             <td>{{ event.title }}</td>
             <td v-if="event.start">
-              {{ event.start.substr(0, 10) }} - {{ event.end.substr(0, 10) }}
-              {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
+              <v-icon class="mr-2">today</v-icon> {{ event.start.substr(0, 10) }} - {{ event.end.substr(0, 10) }}
+              <v-icon class="ml-2 mr-2">schedule</v-icon> {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
             </td>
             <td v-if="event.startRecur">
-              <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
-              {{ event.startRecur }} - {{ event.endRecur }}
+              <span class="font-weight-medium">
+              <v-icon class="mr-2">date_range</v-icon> Every {{ days[event.daysOfWeek] }}
+              </span>
+              ({{ event.startRecur }} - {{ event.endRecur }})
+              <v-icon class="ml-2 mr-2">schedule</v-icon> {{ event.startTime }} - {{ event.endTime }}
             </td>
           </tr>
         </tbody>
