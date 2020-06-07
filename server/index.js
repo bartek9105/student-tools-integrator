@@ -67,7 +67,6 @@ const fileStorage = multer.diskStorage({
 const upload = multer({ storage: fileStorage })
 
 app.post('/upload', upload.single('file'), (req, res) => {
-  console.log(req.file)
   fs.createReadStream(req.file.path).
     pipe(bucket.openUploadStream({
       filename: req.file.filename,

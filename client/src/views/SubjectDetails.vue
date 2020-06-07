@@ -80,7 +80,7 @@
 
               <v-list-item-action class="d-flex flex-row">
                 <v-btn icon>
-                  <v-icon color="grey lighten-1" @click="downloadFile(file.filename)">system_update_alt</v-icon>
+                  <v-icon color="grey lighten-1" @click="downloadFile(file.filename.filename)">system_update_alt</v-icon>
                 </v-btn>
                 <v-btn icon>
                   <v-icon color="grey lighten-1" @click="deleteFile(file._id)">clear</v-icon>
