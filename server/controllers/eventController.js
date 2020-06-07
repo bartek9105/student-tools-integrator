@@ -26,6 +26,7 @@ exports.addEvent = async (req, res) => {
             subject: req.body.subject,
             room: req.body.room,
             exam: req.body.exam,
+            color: req.body.color,
             creator: req.userId
         })
         const savedEvent = await event.save()
@@ -55,7 +56,8 @@ exports.editExamEvent = async (req, res) => {
             start: req.body.start,
             end: req.body.end,
             subject: req.body.subject,
-            room: req.body.room
+            room: req.body.room,
+            color: req.body.color
         })
         res.send(editedEvent)
     } catch (error) {

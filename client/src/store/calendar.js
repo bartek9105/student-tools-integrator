@@ -52,7 +52,8 @@ export default ({
         start: exam.start + `T${exam.startTime}`,
         end: exam.end + `T${exam.endTime}`,
         subject: exam.subject._id,
-        room: exam.room
+        room: exam.room,
+        color: exam.color
       }).then(() => {
         dispatch('getEvents')
       }).catch(err => console.log(err))

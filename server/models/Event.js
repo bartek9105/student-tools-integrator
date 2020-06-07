@@ -42,6 +42,10 @@ const eventSchema = new mongoose.Schema({
         required: false,
         type: String
     },
+    color: {
+        required: false,
+        type: String
+    },
     subject: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subject'

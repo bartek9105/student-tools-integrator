@@ -269,7 +269,8 @@ export default {
         start: exam.start.substr(0, 10),
         end: exam.end.substr(0, 10),
         startTime: exam.start.substr(11, 15),
-        endTime: exam.end.substr(11, 15)
+        endTime: exam.end.substr(11, 15),
+        color: exam.color
       }
       this.dialogUpdateExam = true
     },
