@@ -65,21 +65,16 @@
           </div>
         </template>
         <v-divider class="mt-4 mb-4"></v-divider>
-        <p class="title text-center mt-4" v-if="uploadedFiles.length == 0">
-          No files added
-        </p>
-        <v-card v-else lass="elevation-0">
+        <v-card class="elevation-0 mb-4" v-for="file in uploadedFiles" :key="file._id">
           <v-list two-line subheader>
             <v-list-item
-              v-for="file in uploadedFiles"
-              :key="file._id"
             >
               <v-list-item-avatar>
                 <v-icon>description</v-icon>
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title>{{ file.filename }}</v-list-item-title>
+                <v-list-item-title>{{ file.filename.filename }}</v-list-item-title>
                 <v-list-item-subtitle>File</v-list-item-subtitle>
               </v-list-item-content>
 
@@ -98,7 +93,8 @@
       <v-col cols="12" sm="12" md="12" lg="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
-          <ChartRadial :labels="getLabels" :series="getSeries"/>
+          <!--<ChartRadial :labels="getLabels" :series="getSeries"/>
+          -->
         </div>
       </v-col>
     </v-row>
@@ -170,13 +166,13 @@ import axios from 'axios'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-import ChartRadial from '@/components/ChartRadial'
+// import ChartRadial from '@/components/ChartRadial'
 import { quillEditor } from 'vue-quill-editor'
 
 export default {
   name: 'SubjectDetails',
   components: {
-    ChartRadial,
+    // ChartRadial,
     quillEditor
   },
   data () {
@@ -305,6 +301,7 @@ export default {
     async submitFile () {
       const formData = new FormData()
       formData.append('file', this.file)
+      formData.append('subjectId', this.$route.params.id)
       try {
         await axios.post('http://localhost:3000/upload', formData, {
           headers: {
@@ -317,7 +314,9 @@ export default {
     },
     async getUploadedFiles () {
       const files = await axios.get('http://localhost:3000/files')
-      this.uploadedFiles = files.data
+      this.uploadedFiles = files.data.filter(el => {
+        return el.filename.metadata === this.$route.params.id
+      })
     },
     downloadFile (fileName) {
       axios.get(`http://localhost:3000/files/${fileName}`, {

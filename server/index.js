@@ -67,8 +67,12 @@ const fileStorage = multer.diskStorage({
 const upload = multer({ storage: fileStorage })
 
 app.post('/upload', upload.single('file'), (req, res) => {
+  console.log(req.file)
   fs.createReadStream(req.file.path).
-    pipe(bucket.openUploadStream(req.file.filename)).
+    pipe(bucket.openUploadStream({
+      filename: req.file.filename,
+      metadata: req.body.subjectId
+    })).
     on('error', function(error) {
       assert.ifError(error);
     })
