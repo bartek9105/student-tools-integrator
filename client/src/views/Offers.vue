@@ -44,7 +44,7 @@
                 </v-list-item-subtitle>
                 <div class="d-flex align-center">
                   <v-list-item-subtitle>
-                    554 112 332
+                    {{ offer.contact }}
                   </v-list-item-subtitle>
                   <div class="d-flex">
                     <v-btn color="primary text-white" class="mr-2" @click="editOfferMode(offer)">Edit</v-btn>
@@ -66,6 +66,7 @@ export default {
   components: {
     Breadcrumbs
   },
+  name: 'Offers',
   data () {
     return {
       editMode: false,

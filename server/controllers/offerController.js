@@ -2,9 +2,7 @@ const Offer = require('../models/Offer')
 
 exports.getOffers = async (req, res) => {
     try {
-        const offers = await Offer.find({
-            creator: req.userId
-        })
+        const offers = await Offer.find()
         res.send(offers)
     } catch (error) {
         console.log(error)
