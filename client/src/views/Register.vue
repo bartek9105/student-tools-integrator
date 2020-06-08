@@ -1,7 +1,7 @@
 <template>
   <div class="container d-flex align-center" style="height: 100vh;">
     <v-row class="justify-center">
-      <v-col cols="12" md="4">
+      <v-col cols="12" xs="12" md="6">
         <div class="auth-form-container elevation-3">
           <div style="background-color: #1565C0;" class="white--text py-8 px-4 text-center">
             <p class="mb-0">Student Tools Integrator</p>
@@ -53,7 +53,7 @@ export default {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
-          text: 'Successfully registered'
+          text: 'Successfully registered. You can now sign in.'
         })
         this.$router.push('/login')
       }).catch(err => {
