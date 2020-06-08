@@ -19,8 +19,10 @@
           <tr v-for="event in getUpcomingEvents" :key="event._id">
             <td>{{ event.title }}</td>
             <td v-if="event.start">
-              <v-icon class="mr-2">today</v-icon> {{ event.start.substr(0, 10) }} - {{ event.end.substr(0, 10) }}
-              <v-icon class="ml-2 mr-2">schedule</v-icon> {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
+              <v-icon class="mr-2">today</v-icon>
+              {{ event.start.substr(0, 10) }} <span v-if="event.start.substr(0, 10)!==event.end.substr(0, 10)">- {{ event.end.substr(0, 10) }}</span>
+              <v-icon class="ml-2 mr-2">schedule</v-icon>
+              {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
             </td>
             <td v-if="event.startRecur">
               <span class="font-weight-medium">

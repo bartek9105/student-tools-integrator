@@ -1,10 +1,22 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center">
-      <Breadcrumbs/>
-      <v-btn class="primary" @click="dialog = true">Add event</v-btn>
-    </div>
+    <v-row>
+      <v-col cols="12">
+        <div class="d-flex justify-space-between align-center">
+          <Breadcrumbs/>
+          <v-tooltip left>
+            <template v-slot:activator="{ on }">
+              <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialog = true">
+                <v-icon dark>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+            <span>Add new event</span>
+          </v-tooltip>
+        </div>
+      </v-col>
+    </v-row>
     <FullCalendar
+      class="mt-2"
       defaultView="dayGridMonth"
       :plugins="plugins"
       :header="header"

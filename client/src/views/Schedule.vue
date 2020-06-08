@@ -19,7 +19,7 @@
               solo
               v-model="eventDetails.selectedClass"
             ></v-select>
-            <div @click="dialogSubject = true">
+            <div @click="dialogSubject = true" class="mb-6">
               <v-icon class="mr-2">add</v-icon><span>Add new class</span>
             </div>
             <v-menu
@@ -62,19 +62,19 @@
                   min-width="290px"
                   >
                   <template v-slot:activator="{ on }">
-                      <v-text-field
-                      v-model="eventDetails.startTime"
-                      label="Pick time"
-                      prepend-icon="access_time"
-                      readonly
-                      v-on="on"
-                      ></v-text-field>
+                    <v-text-field
+                    v-model="eventDetails.startTime"
+                    label="Pick time"
+                    prepend-icon="access_time"
+                    readonly
+                    v-on="on"
+                    ></v-text-field>
                   </template>
                   <v-time-picker
-                      v-if="timeMenu1"
-                      v-model="eventDetails.startTime"
-                      full-width
-                      @click:minute="$refs.timeMenu1.save(timeMenu1)"
+                    v-if="timeMenu1"
+                    v-model="eventDetails.startTime"
+                    full-width
+                    @click:minute="$refs.timeMenu1.save(timeMenu1)"
                   ></v-time-picker>
                   </v-menu>
                 </div>
@@ -94,26 +94,26 @@
                   min-width="290px"
                   >
                   <template v-slot:activator="{ on }">
-                      <v-text-field
-                      v-model="eventDetails.endTime"
-                      label="Pick time"
-                      prepend-icon="access_time"
-                      readonly
-                      v-on="on"
-                      ></v-text-field>
+                    <v-text-field
+                    v-model="eventDetails.endTime"
+                    label="Pick time"
+                    prepend-icon="access_time"
+                    readonly
+                    v-on="on"
+                    ></v-text-field>
                   </template>
                   <v-time-picker
-                      v-if="timeMenu2"
-                      v-model="eventDetails.endTime"
-                      full-width
-                      @click:minute="$refs.timeMenu2.save(timeMenu2)"
+                    v-if="timeMenu2"
+                    v-model="eventDetails.endTime"
+                    full-width
+                    @click:minute="$refs.timeMenu2.save(timeMenu2)"
                   ></v-time-picker>
                   </v-menu>
                 </div>
               </div>
             </div>
             <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
-            <v-btn type="submit" color="primary" class="mr-4">
+            <v-btn type="submit" v-if="!editMode" color="primary" class="mr-4">
               Create event
             </v-btn>
           </v-form>
@@ -129,12 +129,12 @@
           <v-container>
             <v-form @submit.prevent="addRecurringEvent">
               <v-select
-                  return-object
-                  :items="getSubjects"
-                  label="Select class"
-                  item-text="name"
-                  solo
-                  v-model="eventDetails.selectedClass"
+                return-object
+                :items="getSubjects"
+                label="Select class"
+                item-text="name"
+                solo
+                v-model="eventDetails.selectedClass"
               ></v-select>
               <div>
                 <v-icon class="mr-2" @click="dialogSubject = true">add</v-icon><span>Add new class</span>
@@ -203,19 +203,19 @@
                     min-width="290px"
                     >
                     <template v-slot:activator="{ on }">
-                        <v-text-field
-                        v-model="eventDetails.startTimeRecur"
-                        label="Pick time"
-                        prepend-icon="access_time"
-                        readonly
-                        v-on="on"
-                        ></v-text-field>
+                      <v-text-field
+                      v-model="eventDetails.startTimeRecur"
+                      label="Pick time"
+                      prepend-icon="access_time"
+                      readonly
+                      v-on="on"
+                      ></v-text-field>
                     </template>
                     <v-time-picker
-                        v-if="timeRecurrMenu1"
-                        v-model="eventDetails.startTimeRecur"
-                        full-width
-                        @click:minute="$refs.timeRecurrMenu1.save(timeRecurrMenu1)"
+                      v-if="timeRecurrMenu1"
+                      v-model="eventDetails.startTimeRecur"
+                      full-width
+                      @click:minute="$refs.timeRecurrMenu1.save(timeRecurrMenu1)"
                     ></v-time-picker>
                     </v-menu>
                   </div>
@@ -235,19 +235,19 @@
                     min-width="290px"
                     >
                     <template v-slot:activator="{ on }">
-                        <v-text-field
-                        v-model="eventDetails.endTimeRecur"
-                        label="Pick time"
-                        prepend-icon="access_time"
-                        readonly
-                        v-on="on"
-                        ></v-text-field>
+                      <v-text-field
+                      v-model="eventDetails.endTimeRecur"
+                      label="Pick time"
+                      prepend-icon="access_time"
+                      readonly
+                      v-on="on"
+                      ></v-text-field>
                     </template>
                     <v-time-picker
-                        v-if="timeRecurrMenu2"
-                        v-model="eventDetails.endTimeRecur"
-                        full-width
-                        @click:minute="$refs.timeRecurrMenu2.save(timeRecurrMenu2)"
+                      v-if="timeRecurrMenu2"
+                      v-model="eventDetails.endTimeRecur"
+                      full-width
+                      @click:minute="$refs.timeRecurrMenu2.save(timeRecurrMenu2)"
                     ></v-time-picker>
                     </v-menu>
                   </div>
@@ -328,22 +328,12 @@
               <span v-if="event.start">({{ event.start.toString().substr(0, 10) }})</span>
             </td>
             <td v-if="event.start">
-              <span>
-              {{ event.start.toString().substr(11,15) }}
-              </span>
-               -
-              <span>
-              {{ event.end.toString().substr(11,15) }}
-              </span>
+              <span> {{ event.start.toString().substr(11,15) }} </span> -
+              <span> {{ event.end.toString().substr(11,15) }} </span>
             </td>
             <td v-else>
-              <span>
-              {{ event.startTime }}
-              </span>
-               -
-              <span>
-              {{ event.endTime }}
-              </span>
+              <span> {{ event.startTime }} </span> -
+              <span> {{ event.endTime }} </span>
             </td>
             <td>
               {{ event.subject.teacher }}
@@ -452,6 +442,7 @@ export default {
   },
   methods: {
     editSchedule (event) {
+      console.log(event)
       if (!event.daysOfWeek) {
         this.dialogSingle = true
         this.editMode = true
@@ -460,7 +451,8 @@ export default {
           selectedClass: event.subject,
           start: event.start.substr(0, 10),
           room: event.room,
-          startTime: event.start.substr(11, 15)
+          startTime: event.start.substr(11, 15),
+          endTime: event.end.substr(11, 15)
         }
       } else {
         this.dialogRecurring = true
@@ -480,6 +472,11 @@ export default {
         subject: this.eventDetails.selectedClass._id,
         room: this.eventDetails.room
       }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Schedule edited'
+        })
         this.editMode = false
         this.dialogSingle = false
       })
@@ -508,18 +505,24 @@ export default {
         subject: this.eventDetails.selectedClass._id,
         room: this.eventDetails.room,
         daysOfWeek: null
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Schedule added'
+        })
+        this.dialogSingle = false
+        this.eventDetails = {
+          title: '',
+          start: null,
+          startTime: null,
+          endTime: null,
+          startRecur: null,
+          endRecur: null,
+          daysOfWeek: null,
+          room: null
+        }
       })
-      this.dialogSingle = false
-      this.eventDetails = {
-        title: '',
-        start: null,
-        startTime: null,
-        endTime: null,
-        startRecur: null,
-        endRecur: null,
-        daysOfWeek: null,
-        room: null
-      }
     },
     addRecurringEvent () {
       this.$store.dispatch('addEvent', {
@@ -547,7 +550,13 @@ export default {
       })
     },
     deleteScheduleElement (eventId) {
-      this.$store.dispatch('deleteEvent', eventId)
+      this.$store.dispatch('deleteEvent', eventId).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Schedule deleted'
+        })
+      })
     },
     fetchSchedule () {
       this.$store.dispatch('getEvents')
@@ -577,6 +586,7 @@ export default {
           selectedClass: null,
           room: null
         }
+        this.editMode = false
       }
     }
   },

@@ -36,7 +36,6 @@ export default ({
       })
     },
     addEvent ({ commit, dispatch }, payload) {
-      console.log(payload)
       Api().post('events/add', payload).then(() => {
         dispatch('getEvents')
       }).catch(err => console.log(err))
@@ -72,7 +71,6 @@ export default ({
       })
     },
     editRecurringScheduleEvent ({ commit, dispatch }, event) {
-      console.log(event)
       Api().patch(`events/scheduleRecurring/edit/${event.eventId}`, {
         title: event.title,
         subject: event.subject,

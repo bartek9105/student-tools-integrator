@@ -49,7 +49,7 @@ export default ({
         teacher: subject.teacher,
         color: subject.color,
         description: subject.description
-      }).then(() => console.log('edited subject')).catch(err => console.log(err))
+      }).then().catch(err => console.log(err))
     },
     deleteSubject ({ commit, dispatch }, subjectId) {
       Api().delete(`subjects/${subjectId}/delete`).then(() => {
