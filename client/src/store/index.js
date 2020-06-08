@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import AuthenticationService from '../services/AuthenticationService'
 import notifications from './notifications'
 import calendar from './calendar'
 import tasks from './tasks'
@@ -13,7 +13,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: ''
+    user: null
   },
   getters: {
     getUser (state) {
@@ -24,13 +24,13 @@ export default new Vuex.Store({
     SET_USER_DATA (state, userData) {
       state.user = userData
     },
-    DELETE_USER_DATA (state) {
-      state.user = null
+    DELETE_USER_DATA () {
+      location.reload()
     }
   },
   actions: {
     signIn ({ commit }, credentials) {
-      return axios.post('http://localhost:3000/api/user/login', {
+      return AuthenticationService().post('user/login', {
         email: credentials.email,
         password: credentials.password
       }).then(res => {
@@ -38,7 +38,7 @@ export default new Vuex.Store({
       })
     },
     signUp ({ commit }, credentials) {
-      return axios.post('http://localhost:3000/api/user/register', {
+      return AuthenticationService().post('user/register', {
         email: credentials.email,
         password: credentials.password
       }).then(res => {

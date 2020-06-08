@@ -2,7 +2,9 @@ const Offer = require('../models/Offer')
 
 exports.getOffers = async (req, res) => {
     try {
-        const offers = await Offer.find()
+        const offers = await Offer.find({
+            creator: req.userId
+        })
         res.send(offers)
     } catch (error) {
         console.log(error)
@@ -14,7 +16,8 @@ exports.addOffer = async (req, res) => {
         const newOffer = new Offer({
             title: req.body.title,
             description: req.body.description,
-            contact: req.body.contact
+            contact: req.body.contact,
+            creator: req.userId
         })
         const savedOffer = await newOffer.save()
         res.send(savedOffer)

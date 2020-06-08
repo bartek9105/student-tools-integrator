@@ -94,7 +94,9 @@ exports.deleteNote = async (req, res) => {
 
 exports.getSubjects = async (req, res) => {
     try {
-        const subjects = await Subject.find().populate('exams', 'name')
+        const subjects = await Subject.find({
+            creator: req.userId
+        }).populate('exams', 'name')
         res.send(subjects)       
     } catch (error) {
         console.log(error)
