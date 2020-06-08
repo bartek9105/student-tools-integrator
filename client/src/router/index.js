@@ -17,42 +17,50 @@ const routes = [
   {
     path: '/',
     name: 'Dashboard',
-    component: Dashboard
+    component: Dashboard,
+    meta: { requiresAuth: true }
   },
   {
     path: '/subjects',
     name: 'Subjects',
-    component: Subjects
+    component: Subjects,
+    meta: { requiresAuth: true }
   },
   {
     path: '/subject/:id',
     name: 'Subject',
-    component: SubjectDetails
+    component: SubjectDetails,
+    meta: { requiresAuth: true }
   },
   {
     path: '/calendar',
     name: 'Calendar',
-    component: Calendar
+    component: Calendar,
+    meta: { requiresAuth: true }
   },
   {
     path: '/exams',
     name: 'Exams',
-    component: Exams
+    component: Exams,
+    meta: { requiresAuth: true }
   },
   {
     path: '/offers',
     name: 'Offers',
-    component: Offers
+    component: Offers,
+    meta: { requiresAuth: true }
   },
   {
     path: '/schedule',
     name: 'Schedule',
-    component: Schedule
+    component: Schedule,
+    meta: { requiresAuth: true }
   },
   {
     path: '/todo',
     name: 'Todo',
-    component: Todo
+    component: Todo,
+    meta: { requiresAuth: true }
   },
   {
     path: '/login',
@@ -76,6 +84,14 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('user')
+  if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
+    next('/login')
+  }
+  next()
 })
 
 export default router

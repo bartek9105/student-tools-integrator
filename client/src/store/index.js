@@ -23,8 +23,10 @@ export default new Vuex.Store({
   mutations: {
     SET_USER_DATA (state, userData) {
       state.user = userData
+      localStorage.setItem('user', JSON.stringify(userData))
     },
     DELETE_USER_DATA () {
+      localStorage.removeItem('user')
       location.reload()
     }
   },
