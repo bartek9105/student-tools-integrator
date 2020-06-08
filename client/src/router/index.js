@@ -77,6 +77,10 @@ const routes = [
     meta: {
       hideNav: true
     }
+  },
+  {
+    path: '*',
+    component: Login
   }
 ]
 
