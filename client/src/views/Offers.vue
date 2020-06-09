@@ -47,8 +47,8 @@
                     {{ offer.contact }}
                   </v-list-item-subtitle>
                   <div class="d-flex">
-                    <v-btn color="primary text-white" class="mr-2" @click="editOfferMode(offer)">Edit</v-btn>
-                    <v-btn color="red" @click="deleteOffer(offer._id)">Delete</v-btn>
+                    <v-btn color="primary text-white" class="mr-2" @click="editOfferMode(offer)" v-if="offer.creator === getUserId">Edit</v-btn>
+                    <v-btn color="red" @click="deleteOffer(offer._id)" v-if="offer.creator === getUserId">Delete</v-btn>
                   </div>
                 </div>
               </v-list-item-content>
@@ -140,6 +140,9 @@ export default {
   computed: {
     getOffers () {
       return this.$store.getters.getOffers
+    },
+    getUserId () {
+      return this.$store.getters.getUser.userId
     }
   },
   mounted () {
