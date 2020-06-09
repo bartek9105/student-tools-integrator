@@ -223,28 +223,36 @@ export default {
   },
   methods: {
     addExam () {
-      this.$store.dispatch('addEvent', {
-        title: this.selectedClass.name + ' exam',
-        start: this.date + `T${this.startTime}`,
-        end: this.date + `T${this.endTime}`,
-        daysOfWeek: null,
-        subject: this.selectedClass._id,
-        room: this.room,
-        color: this.color,
-        exam: true
-      }).then(() => {
-        this.selectedClass = null
-        this.date = null
-        this.startTime = null
-        this.room = null
-        this.color = null
-        this.dialogNewExam = false
+      if (this.selectedClass !== null && this.date !== null && this.startTime !== null && this.endTime !== null) {
+        this.$store.dispatch('addEvent', {
+          title: this.selectedClass.name + ' exam',
+          start: this.date + `T${this.startTime}`,
+          end: this.date + `T${this.endTime}`,
+          daysOfWeek: null,
+          subject: this.selectedClass._id,
+          room: this.room,
+          color: this.color,
+          exam: true
+        }).then(() => {
+          this.selectedClass = null
+          this.date = null
+          this.startTime = null
+          this.room = null
+          this.color = null
+          this.dialogNewExam = false
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New class scheduled'
+          })
+        })
+      } else {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
-          color: 'success',
-          text: 'New class scheduled'
+          color: 'error',
+          text: 'Subject and data fields cannot be empty'
         })
-      })
+      }
     },
     editExam (exam) {
       this.$store.dispatch('editExamEvent', exam).then(() => {
