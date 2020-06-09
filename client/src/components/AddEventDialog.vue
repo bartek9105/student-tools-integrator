@@ -48,6 +48,7 @@
                 <v-container>
                   <v-form @submit.prevent="addRecurringEvent">
                     <v-text-field v-model="eventDetails.title" type="text" label="Event name"></v-text-field>
+                    <v-text-field v-model="eventDetails.details" type="text" label="Event details (optional)"></v-text-field>
                     <DatePicker v-on:pickDate="pickStartDateRecur($event)"/>
                     <DatePicker v-on:pickDate="pickEndDateRecur($event)"/>
                     <div class="d-flex justify-space-between my-2">
