@@ -423,7 +423,7 @@ export default {
       dialogSubject: false,
       subjectName: null,
       eventDetails: {
-        title: '',
+        title: null,
         start: null,
         startTimeSingle: null,
         endTimeSingle: null,
@@ -497,54 +497,83 @@ export default {
       })
     },
     addEvent () {
-      this.$store.dispatch('addEvent', {
-        title: this.eventDetails.selectedClass.name,
-        start: this.eventDetails.start + `T${this.eventDetails.startTimeSingle}`,
-        end: this.eventDetails.start + `T${this.eventDetails.endTimeSingle}`,
-        subject: this.eventDetails.selectedClass._id,
-        room: this.eventDetails.room,
-        daysOfWeek: null
-      }).then(() => {
+      if (this.eventDetails.selectedClass !== null && this.eventDetails.start !== null && this.eventDetails.end !== null && this.eventDetails.startTimeSingle !== null && this.eventDetails.endTimeSingle !== null) {
+        this.$store.dispatch('addEvent', {
+          title: this.eventDetails.selectedClass.name,
+          start: this.eventDetails.start + `T${this.eventDetails.startTimeSingle}`,
+          end: this.eventDetails.start + `T${this.eventDetails.endTimeSingle}`,
+          subject: this.eventDetails.selectedClass._id,
+          room: this.eventDetails.room,
+          daysOfWeek: null
+        }).then(() => {
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'Schedule added'
+          })
+          this.dialogSingle = false
+          this.eventDetails = {
+            title: null,
+            start: null,
+            startTimeSingle: null,
+            endTimeSingle: null,
+            daysOfWeek: null,
+            room: null
+          }
+        })
+      } else {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
-          color: 'success',
-          text: 'Schedule added'
+          color: 'error',
+          text: 'Choose class and date to be scheduled'
         })
-        this.dialogSingle = false
-        this.eventDetails = {
-          title: '',
-          start: null,
-          startTimeSingle: null,
-          endTimeSingle: null,
-          daysOfWeek: null,
-          room: null
-        }
-      })
+      }
     },
     addRecurringEvent () {
-      this.$store.dispatch('addEvent', {
-        title: this.eventDetails.selectedClass.name,
-        subject: this.eventDetails.selectedClass._id,
-        room: this.eventDetails.room,
-        daysOfWeek: this.eventDetails.daysOfWeek,
-        startRecurence: this.eventDetails.startRecur,
-        endRecurence: this.eventDetails.endRecur,
-        startTime: this.eventDetails.startTime,
-        endTime: this.eventDetails.endTime
-      }).then(() => {
-        this.dialogRecurring = false
-      })
-    },
-    addSubject () {
-      this.$store.dispatch('addSubject', {
-        name: this.subjectName
-      }).then(() => {
+      if (this.eventDetails.selectedClass !== null && this.eventDetails.daysOfWeek !== null && this.eventDetails.startRecur !== null && this.eventDetails.endRecur !== null && this.eventDetails.startTime !== null && this.eventDetails.endTime !== null) {
+        this.$store.dispatch('addEvent', {
+          title: this.eventDetails.selectedClass.name,
+          subject: this.eventDetails.selectedClass._id,
+          room: this.eventDetails.room,
+          daysOfWeek: this.eventDetails.daysOfWeek,
+          startRecurence: this.eventDetails.startRecur,
+          endRecurence: this.eventDetails.endRecur,
+          startTime: this.eventDetails.startTime,
+          endTime: this.eventDetails.endTime
+        }).then(() => {
+          this.dialogRecurring = false
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New recurring schedule added'
+          })
+        })
+      } else {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
-          color: 'success',
-          text: 'New class scheduled'
+          color: 'error',
+          text: 'Choose class and date to be scheduled'
         })
-      })
+      }
+    },
+    addSubject () {
+      if (this.subjectName !== null) {
+        this.$store.dispatch('addSubject', {
+          name: this.subjectName
+        }).then(() => {
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New class scheduled'
+          })
+        })
+      } else {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'error',
+          text: 'Subject name cannot be empty'
+        })
+      }
     },
     deleteScheduleElement (eventId) {
       this.$store.dispatch('deleteEvent', eventId).then(() => {
@@ -571,7 +600,7 @@ export default {
     dialogSingle (val) {
       if (!val) {
         this.eventDetails = {
-          title: '',
+          title: null,
           start: null,
           startTime: null,
           endTime: null,
