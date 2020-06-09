@@ -91,12 +91,14 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-title>
-                            <v-btn text @click="updateSubjectDialog(subject)">Edit</v-btn>
+                            <v-btn text @click="updateSubjectDialog(subject)">
+                              <v-icon class="mr-2">create</v-icon> Edit
+                            </v-btn>
                           </v-list-item-title>
                         </v-list-item>
                         <v-list-item>
                           <v-list-item-title>
-                            <v-btn text @click="deleteSubject(subject._id)">Delete</v-btn>
+                            <v-btn text @click="deleteSubject(subject._id)"><v-icon class="mr-2">delete</v-icon> Delete</v-btn>
                           </v-list-item-title>
                         </v-list-item>
                       </v-list>

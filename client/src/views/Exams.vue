@@ -4,10 +4,14 @@
       <v-col cols="12" sm="12" class="px-0">
           <div class="d-flex justify-space-between align-center">
             <Breadcrumbs/>
-            <v-btn color="primary ml-4" @click="dialogNewExam = true">
-              <v-icon class="mr-2">add</v-icon>
-              Add exam
-            </v-btn>
+            <v-tooltip left>
+              <template v-slot:activator="{ on }">
+                <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogNewExam = true">
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+              </template>
+              <span>Add new exam</span>
+            </v-tooltip>
           </div>
       </v-col>
     </v-row>
@@ -176,12 +180,16 @@
                 <v-list>
                   <v-list-item>
                     <v-list-item-title class="body-2" @click="updateEditDialog(exam)">
-                      <v-icon class="mr-2">create</v-icon> Edit
+                      <v-btn text>
+                        <v-icon class="mr-2">create</v-icon> Edit
+                      </v-btn>
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-title class="body-2" @click="deleteExam(exam._id)">
-                      <v-icon class="mr-2">delete</v-icon> Delete
+                      <v-btn text>
+                        <v-icon class="mr-2">delete</v-icon> Delete
+                      </v-btn>
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>

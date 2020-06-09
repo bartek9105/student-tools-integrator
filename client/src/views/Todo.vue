@@ -184,12 +184,16 @@
               <v-list>
                 <v-list-item>
                   <v-list-item-title class="body-2" @click="updateEditProjectDialog(project)">
-                    <v-icon class="mr-2">create</v-icon> Edit
+                    <v-btn text>
+                      <v-icon class="mr-2">create</v-icon> Edit
+                    </v-btn>
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
                   <v-list-item-title class="body-2" @click="deleteProject(project._id)">
-                    <v-icon class="mr-2">delete</v-icon> Delete
+                    <v-btn text>
+                      <v-icon class="mr-2">delete</v-icon> Delete
+                    </v-btn>
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -209,10 +213,14 @@
             <span class="mr-4">Tasks</span>
             <span class="caption display-all" @click="projectId = null">Display all tasks</span>
           </div>
-          <v-btn class="primary" @click="dialogTask = true">
-            <v-icon class="mr-2">add</v-icon>
-              Add task
-          </v-btn>
+          <v-tooltip left>
+            <template v-slot:activator="{ on }">
+              <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogTask = true">
+                <v-icon dark>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+            <span>Add new task</span>
+          </v-tooltip>
         </div>
         <div class="text-center pt-4" v-if="filterTasks.length == 0">
           <p class="headline">No tasks</p>
@@ -264,12 +272,16 @@
                         <v-list>
                           <v-list-item>
                             <v-list-item-title class="body-2" @click="updateEditTaskDialog(task)">
-                              <v-icon class="mr-2">create</v-icon> Edit
+                              <v-btn text>
+                                <v-icon class="mr-2">create</v-icon> Edit
+                              </v-btn>
                             </v-list-item-title>
                           </v-list-item>
                           <v-list-item>
                             <v-list-item-title class="body-2" @click="deleteTask(task._id)">
+                              <v-btn text>
                                 <v-icon class="mr-2">delete</v-icon> Delete
+                              </v-btn>
                             </v-list-item-title>
                           </v-list-item>
                         </v-list>
@@ -301,7 +313,7 @@ export default {
       dialogEditProject: false,
       dialogProject: false,
       menu: false,
-      taskName: '',
+      taskName: null,
       selectedProject: null,
       colorPicker: false,
       date: '',
@@ -335,22 +347,30 @@ export default {
       this.$store.dispatch('fetchTasks')
     },
     addTask () {
-      this.$store.dispatch('addTask', {
-        name: this.taskName,
-        project: this.selectedProject,
-        dueDate: this.date,
-        priority: this.selectedPriority
-      }).then(() => {
-        this.taskName = null
-        this.selectedProject = null
-        this.date = null
-        this.selectedPriority = null
+      if (this.taskName !== null) {
+        this.$store.dispatch('addTask', {
+          name: this.taskName,
+          project: this.selectedProject,
+          dueDate: this.date,
+          priority: this.selectedPriority
+        }).then(() => {
+          this.taskName = null
+          this.selectedProject = null
+          this.date = null
+          this.selectedPriority = null
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'New task added'
+          })
+        }).catch(err => console.log(err))
+      } else {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
-          color: 'success',
-          text: 'New task added'
+          color: 'error',
+          text: 'Task name cannot be empty'
         })
-      }).catch(err => console.log(err))
+      }
     },
     editTask (currentTask) {
       this.$store.dispatch('editTask', currentTask).then(() => {

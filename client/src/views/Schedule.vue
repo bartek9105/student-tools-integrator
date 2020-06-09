@@ -349,13 +349,17 @@
                 </template>
                 <v-list>
                   <v-list-item>
-                    <v-list-item-title>
-                      <v-btn text @click="editSchedule(event)">Edit</v-btn>
+                    <v-list-item-title @click="editSchedule(event)">
+                      <v-btn text>
+                        <v-icon class="mr-2">create</v-icon> Edit
+                      </v-btn>
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item>
-                    <v-list-item-title>
-                      <v-btn text @click="deleteScheduleElement(event._id)">Delete</v-btn>
+                    <v-list-item-title @click="deleteScheduleElement(event._id)">
+                      <v-btn text>
+                        <v-icon class="mr-2">delete</v-icon> Delete
+                      </v-btn>
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
