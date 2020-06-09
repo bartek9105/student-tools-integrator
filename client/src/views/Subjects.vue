@@ -111,7 +111,7 @@
                       <v-icon class="mr-2">person</v-icon> Teacher: {{ subject.teacher }}
                     </div>
                     <div>
-                      <v-icon class="mr-2">note</v-icon> Requirements: {{ subject.requirements.length }}
+                      <v-icon class="mr-2">note</v-icon> Requirements: {{ subject.requirements.length - 1 }}
                     </div>
                   </div>
                 </v-list-item-content>

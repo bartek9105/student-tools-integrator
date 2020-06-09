@@ -19,10 +19,10 @@
         <p class="title">Requirements</p>
         <div class="d-flex justify-space-between align-center">
           <v-text-field
-              v-model="requirements"
-              label="Requirements"
-              required
-              class="mr-4"
+            v-model="requirements"
+            label="Requirements"
+            required
+            class="mr-4"
           ></v-text-field>
           <v-btn color="primary" @click="addRequirement">Add</v-btn>
         </div>
@@ -30,7 +30,7 @@
           No requirements added
         </p>
         <v-card v-for="(requirement, index) in getSubjectDetails.requirements" :key="index" class="mb-4">
-          <v-list-item class="d-flex justify-space-between align-center">
+          <v-list-item class="d-flex justify-space-between align-center" v-if="requirement.name">
             <v-list-item-content class="d-flex align-center">
               <v-progress-circular
                 :rotate="360"
@@ -59,13 +59,16 @@
       <v-col cols="12" sm="12" md="6" lg="4">
         <p class="title">Attached files</p>
         <template>
-          <div class="d-flex justify-space-between">
+          <div>
             <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
-            <v-btn class="primary" @click="submitFile">Send</v-btn>
+            <v-btn class="primary mt-2" @click="submitFile">Send</v-btn>
           </div>
         </template>
         <v-divider class="mt-4 mb-4"></v-divider>
-        <v-card class="elevation-0 mb-4" v-for="file in uploadedFiles" :key="file._id">
+        <p class="title text-center mt-4" v-if="uploadedFiles.length == 0">
+          No files uploaded
+        </p>
+        <v-card class="elevation-0 mb-4" v-else v-for="file in uploadedFiles" :key="file._id">
           <v-list two-line subheader>
             <v-list-item
             >
@@ -108,54 +111,50 @@
         />
         <div v-if="editMode" class="mt-4">
           <v-btn @click="editNote" class="primary mr-4">Edit note</v-btn>
-          <v-btn @click="editMode = false">Cancel</v-btn>
+          <v-btn @click="cancelEdit">Cancel</v-btn>
         </div>
         <v-btn v-else @click="addNote" class="primary mt-4">Add note</v-btn>
       </v-col>
     </v-row>
     <p class="mt-8 title">Notes</p>
     <v-row>
-      <v-col cols="12" xs="12" sm="6" lg="3" v-for="(note, index) in getSubjectDetails.notes" :key="index">
+      <v-col cols="12" xs="12" sm="6" v-for="(note, index) in getSubjectDetails.notes" :key="index">
         <v-card
-          class="mx-auto overflow-hidden"
-          max-width="344"
-          height="150"
+          class="overflow-hidden"
         >
-          <div class="d-flex justify-space-between">
-            <v-card-text>
-              <div class="text--primary text-limit" v-html="note.content">
+          <div>
+            <v-card-text style="height: 170px;">
+              <div class="text--primary text-limit mb-0" v-html="note.content">
               </div>
             </v-card-text>
-            <v-menu offset-y>
-              <template v-slot:activator="{ on }">
-                <v-icon color="primary" dark v-on="on">
-                  more_vert
-                </v-icon>
-              </template>
-              <v-list>
-                <v-list-item>
-                  <v-list-item-title>
-                    <v-btn text @click="editNoteMode(note)">Edit</v-btn>
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-title>
-                    <v-btn text @click="deleteNote(note._id)">Delete</v-btn>
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
           </div>
           <v-card-actions>
             <v-btn
               text
               color="primary accent-4"
+              @click="displayFullNote(note.content)"
             >
               See more
             </v-btn>
+            <v-btn text @click="editNoteMode(note)">Edit</v-btn>
+            <v-btn text @click="deleteNote(note._id)">Delete</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-dialog v-model="dialog" width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Note</span>
+          </v-card-title>
+          <v-card-text v-html="currentNote"></v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialog = false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </v-container>
 </template>
@@ -187,10 +186,20 @@ export default {
       },
       editReqDialog: false,
       currentReqs: {},
-      editMode: false
+      editMode: false,
+      dialog: false,
+      currentNote: null
     }
   },
   methods: {
+    displayFullNote (note) {
+      this.dialog = true
+      this.currentNote = note
+    },
+    cancelEdit () {
+      this.editMode = false
+      this.note.content = null
+    },
     editNote () {
       this.$store.dispatch('editNote', {
         note: this.note.content,
@@ -365,13 +374,11 @@ export default {
 
 <style scoped>
   .text-limit {
-    display: block;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
     overflow: hidden;
-    white-space: nowrap;
-    max-height: 3.6em;
-    line-height: 1.8em;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
   }
   .flex-none {
     flex: none;
