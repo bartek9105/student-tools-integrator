@@ -47,10 +47,10 @@ export default ({
     },
     editExamEvent ({ commit, dispatch }, exam) {
       Api().patch(`events/exam/edit/${exam.examId}`, {
-        title: exam.subject.name + ' exam',
+        title: exam.selectedClass.name + ' exam',
         start: exam.start + `T${exam.startTime}`,
         end: exam.end + `T${exam.endTime}`,
-        subject: exam.subject._id,
+        subject: exam.selectedClass._id,
         room: exam.room,
         color: exam.color
       }).then(() => {

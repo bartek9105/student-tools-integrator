@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="12" md="7">
+      <v-col cols="12" sm="12" lg="8">
         <UpcomingEvents/>
       </v-col>
-      <v-col cols="12" sm="12" md="5">
+      <v-col cols="12" sm="12" lg="4">
         <TasksToday/>
       </v-col>
     </v-row>

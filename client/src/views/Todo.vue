@@ -153,10 +153,9 @@
       </v-card>
     </v-dialog>
     <v-row>
-      <v-col cols="12" sm="12" md="3">
+      <v-col cols="12" sm="12" md="12" lg="3">
         <v-card
-          class="mx-auto rounded px-4 py-6"
-          max-width="400"
+          class="px-4 py-6"
           tile
         >
         <div class="d-flex align-center mb-4" @click="dialogProject = true">
@@ -199,7 +198,7 @@
         </div>
         </v-card>
       </v-col>
-      <v-col cols="12" md="9">
+      <v-col cols="12" sm="12" md="12" lg="9">
         <v-text-field
           label="Search tasks"
           filled
@@ -442,12 +441,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .check-icon::before,
   .check-icon:hover {
     color: green;
   }
   .display-all:hover {
     cursor: pointer
+  }
+  td:not(:first-child) {
+    padding-top: 25px;
+    padding-bottom: 25px;
   }
 </style>

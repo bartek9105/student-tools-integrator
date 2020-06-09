@@ -22,111 +22,113 @@
               item-text="name"
               item-value="_id"
               solo
-              v-model="selectedClass"
+              v-model="examDetails.selectedClass"
             ></v-select>
-            <v-text-field type="text" label="Room" v-model="room"></v-text-field>
+            <v-text-field type="text" label="Room" v-model="examDetails.room"></v-text-field>
             <v-menu
               ref="menu"
               v-model="menu"
               :close-on-content-click="false"
-              :return-value.sync="date"
+              :return-value.sync="examDetails.start"
               transition="scale-transition"
               offset-y
               min-width="290px"
             >
             <template v-slot:activator="{ on }">
               <v-text-field
-                v-model="date"
+                v-model="examDetails.start"
                 label="Date"
                 prepend-icon="event"
                 readonly
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="date" no-title scrollable>
+            <v-date-picker v-model="examDetails.start" no-title scrollable>
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+              <v-btn text color="primary" @click="$refs.menu.save(examDetails.start)">OK</v-btn>
             </v-date-picker>
             </v-menu>
-            <div class="d-flex">
-              <div>
-                <TimePicker v-on:pickTime="changeStartTime($event)"/>
+            <div class="d-flex justify-space-between">
+              <div class="d-flex justify-space-between my-2">
+                <div>
+                  Start time
+                  <v-menu
+                  ref="timeMenu1"
+                  v-model="timeMenu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="timeMenu1"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                  >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                    v-model="examDetails.startTime"
+                    label="Pick time"
+                    prepend-icon="access_time"
+                    readonly
+                    v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-time-picker
+                    v-if="timeMenu1"
+                    v-model="examDetails.startTime"
+                    full-width
+                    @click:minute="$refs.timeMenu1.save(timeMenu1)"
+                  ></v-time-picker>
+                  </v-menu>
+                </div>
               </div>
-              <div>
-                <TimePicker v-on:pickTime="changeEndTime($event)"/>
+              <div class="d-flex justify-space-between my-2">
+                <div>
+                  End time
+                  <v-menu
+                  ref="timeMenu2"
+                  v-model="timeMenu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="timeMenu2"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="290px"
+                  >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                    v-model="examDetails.endTime"
+                    label="Pick time"
+                    prepend-icon="access_time"
+                    readonly
+                    v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-time-picker
+                    v-if="timeMenu2"
+                    v-model="examDetails.endTime"
+                    full-width
+                    @click:minute="$refs.timeMenu2.save(timeMenu2)"
+                  ></v-time-picker>
+                  </v-menu>
+                </div>
               </div>
             </div>
             <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
             <div class="d-flex justify-space-between align-center">
-              <v-btn type="submit" color="primary" class="mr-4" @click="addExam" @click.stop="dialogTask = false">
+              <v-btn type="submit" v-if="!editMode" color="primary" class="mr-4" @click="addExam" @click.stop="dialogTask = false">
                 Add exam
               </v-btn>
               <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
             </div>
           </v-form>
+          <v-btn v-if="editMode" color="primary" @click="editExam(examDetails)">Edit exam</v-btn>
         </v-container>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogUpdateExam" max-width="500">
-      <v-card>
-        <v-container>
-          <v-form @submit.prevent>
-            <v-select
-              return-object
-              :items="getSubjects"
-              label="Select class"
-              item-text="name"
-              item-value="_id"
-              solo
-              v-if="currentExam"
-              v-model="currentExam.subject"
-            ></v-select>
-            <v-text-field type="text" label="Room" v-if="currentExam" v-model="currentExam.room"></v-text-field>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="date"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="currentExam.start"
-                label="Date"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-if="currentExam" v-model="currentExam.start" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-            </v-date-picker>
-            </v-menu>
-            <div class="d-flex">
-              <div>
-                <TimePicker v-on:pickTime="updateStartTime($event)"/>
-              </div>
-              <div>
-                <TimePicker v-on:pickTime="updateEndTime($event)"/>
-              </div>
-            </div>
-            <ColorPicker v-if="colorPicker" v-on:changeColor="updateColor($event)"/>
-            <div class="d-flex justify-space-between align-center">
-              <v-btn type="submit" color="primary" class="mr-4" @click="editExam(currentExam)" @click.stop="dialogTask = false">
-                Update exam
-              </v-btn>
-              <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
-            </div>
-          </v-form>
-        </v-container>
-      </v-card>
-    </v-dialog>
-    <v-simple-table class="elevation-1">
+    <p v-if="getExams.length == 0" class="text-center display-1 gray--text">No scheduled class added</p>
+    <v-simple-table v-else class="elevation-1">
       <template v-slot:default>
         <thead>
           <tr class="pl-8">
@@ -196,49 +198,54 @@
 
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
-import TimePicker from '@/components/TimePicker'
 
 export default {
   name: 'Exams',
   components: {
     Breadcrumbs,
-    ColorPicker,
-    TimePicker
+    ColorPicker
   },
   data () {
     return {
-      color: '',
       dialogNewExam: false,
-      dialogUpdateExam: false,
-      selectedClass: '',
-      startTime: null,
-      endTime: null,
-      date: '',
+      timeMenu1: false,
+      timeMenu2: false,
+      examDetails: {
+        examId: null,
+        color: '',
+        title: null,
+        exam: null,
+        selectedClass: '',
+        startTime: null,
+        endTime: null,
+        room: '',
+        subject: null,
+        start: null
+      },
       menu: false,
-      room: '',
       colorPicker: false,
-      editedExam: null,
-      currentExam: null
+      editMode: false
     }
   },
   methods: {
     addExam () {
-      if (this.selectedClass !== null && this.date !== null && this.startTime !== null && this.endTime !== null) {
+      if (this.examDetails.selectedClass !== null && this.examDetails.start !== null && this.examDetails.startTime !== null && this.examDetails.endTime !== null) {
         this.$store.dispatch('addEvent', {
-          title: this.selectedClass.name + ' exam',
-          start: this.date + `T${this.startTime}`,
-          end: this.date + `T${this.endTime}`,
+          title: this.examDetails.selectedClass.name + ' exam',
+          start: this.examDetails.start + `T${this.examDetails.startTime}`,
+          end: this.examDetails.start + `T${this.examDetails.endTime}`,
           daysOfWeek: null,
-          subject: this.selectedClass._id,
-          room: this.room,
-          color: this.color,
+          subject: this.examDetails.selectedClass._id,
+          room: this.examDetails.room,
+          color: this.examDetails.color,
           exam: true
         }).then(() => {
-          this.selectedClass = null
-          this.date = null
-          this.startTime = null
-          this.room = null
-          this.color = null
+          this.examDetails.selectedClass = null
+          this.examDetails.start = null
+          this.examDetails.startTime = null
+          this.examDetails.endTime = null
+          this.examDetails.room = null
+          this.examDetails.color = null
           this.dialogNewExam = false
           this.$store.dispatch('showSnackbar', {
             snackbar: true,
@@ -256,11 +263,18 @@ export default {
     },
     editExam (exam) {
       this.$store.dispatch('editExamEvent', exam).then(() => {
-        this.dialogUpdateExam = false
+        this.editMode = false
+        this.dialogNewExam = false
+        this.examDetails.selectedClass = null
+        this.examDetails.start = null
+        this.examDetails.startTime = null
+        this.examDetails.endTime = null
+        this.examDetails.room = null
+        this.examDetails.color = null
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
-          text: 'Exam scheduled'
+          text: 'Exam edited'
         })
       })
     },
@@ -268,19 +282,18 @@ export default {
       this.$store.dispatch('getEvents')
     },
     updateEditDialog (exam) {
-      this.currentExam = {
-        examId: exam._id,
-        title: exam.title,
-        room: exam.room,
-        exam: true,
-        subject: exam.subject,
-        start: exam.start.substr(0, 10),
-        end: exam.end.substr(0, 10),
-        startTime: exam.start.substr(11, 15),
-        endTime: exam.end.substr(11, 15),
-        color: exam.color
-      }
-      this.dialogUpdateExam = true
+      this.examDetails.examId = exam._id
+      this.examDetails.title = exam.title
+      this.examDetails.room = exam.room
+      this.examDetails.selectedClass = exam.subject
+      this.examDetails.exam = true
+      this.examDetails.start = exam.start.substr(0, 10)
+      this.examDetails.end = exam.end.substr(0, 10)
+      this.examDetails.startTime = exam.start.substr(11, 15)
+      this.examDetails.endTime = exam.end.substr(11, 15)
+      this.examDetails.color = exam.color
+      this.dialogNewExam = true
+      this.editMode = true
     },
     deleteExam (examId) {
       this.$store.dispatch('deleteEvent', examId).then(() => {
@@ -292,25 +305,7 @@ export default {
       })
     },
     changeColor (color) {
-      this.color = color
-    },
-    updateColor (color) {
-      this.currentExam.color = color
-    },
-    changeStartTime (time) {
-      this.startTime = time
-    },
-    changeEndTime (time) {
-      this.endTime = time
-    },
-    updateStartTime (time) {
-      this.currentExam.startTime = time
-    },
-    updateEndTime (time) {
-      this.currentExam.endTime = time
-    },
-    pickTime (time) {
-      this.startTime = time
+      this.examDetails.color = color
     }
   },
   computed: {

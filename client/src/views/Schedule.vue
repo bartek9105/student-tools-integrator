@@ -283,7 +283,8 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <v-simple-table class="elevation-1">
+    <p v-if="getSchedule.length == 0" class="text-center display-1 gray--text">No scheduled class added</p>
+    <v-simple-table v-else class="elevation-1">
       <template v-slot:default>
         <thead>
           <tr>

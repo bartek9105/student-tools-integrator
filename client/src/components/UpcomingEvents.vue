@@ -13,23 +13,35 @@
           <tr>
             <th class="text-left">Event</th>
             <th class="text-left">Date</th>
+            <th class="text-left">Time</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="event in getUpcomingEvents" :key="event._id">
             <td>{{ event.title }}</td>
             <td v-if="event.start">
-              <v-icon class="mr-2">today</v-icon>
-              {{ event.start.substr(0, 10) }} <span v-if="event.start.substr(0, 10)!==event.end.substr(0, 10)">- {{ event.end.substr(0, 10) }}</span>
-              <v-icon class="ml-2 mr-2">schedule</v-icon>
-              {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
+              <div>
+                <v-icon class="mr-2">today</v-icon>
+                {{ event.start.substr(0, 10) }} <span v-if="event.start.substr(0, 10)!==event.end.substr(0, 10)">- {{ event.end.substr(0, 10) }}</span>
+              </div>
+            </td>
+            <td v-if="event.start">
+              <div>
+                <v-icon class="mr-2">schedule</v-icon>
+                {{ event.start.substr(11, 15) }} - {{ event.end.substr(11, 15) }}
+              </div>
             </td>
             <td v-if="event.startRecur">
-              <span class="font-weight-medium">
-              <v-icon class="mr-2">date_range</v-icon> Every {{ days[event.daysOfWeek] }}
-              </span>
-              ({{ event.startRecur }} - {{ event.endRecur }})
-              <v-icon class="ml-2 mr-2">schedule</v-icon> {{ event.startTime }} - {{ event.endTime }}
+              <div>
+                <span class="font-weight-medium">
+                <v-icon class="mr-2">date_range</v-icon> Every {{ days[event.daysOfWeek] }} ({{ event.startRecur }} - {{ event.endRecur }})
+                </span>
+              </div>
+            </td>
+            <td v-if="event.startRecur">
+              <div>
+                <v-icon class="mr-2">schedule</v-icon> {{ event.startTime }} - {{ event.endTime }}
+              </div>
             </td>
           </tr>
         </tbody>
@@ -54,6 +66,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  td:not(:first-child) {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
 </style>
