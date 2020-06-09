@@ -83,20 +83,28 @@ export default {
       this.$store.dispatch('fetchOffers')
     },
     addOffer () {
-      this.$store.dispatch('addOffer', {
-        title: this.offer.title,
-        description: this.offer.description,
-        contact: this.offer.contact
-      }).then(() => {
+      if (this.offer.title !== null && this.offer.description !== null && this.offer.contact !== null) {
+        this.$store.dispatch('addOffer', {
+          title: this.offer.title,
+          description: this.offer.description,
+          contact: this.offer.contact
+        }).then(() => {
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'Offer added'
+          })
+          this.offer.title = null
+          this.offer.description = null
+          this.offer.contact = null
+        })
+      } else {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
-          color: 'success',
-          text: 'Offer added'
+          color: 'error',
+          text: 'All fields must be filled in'
         })
-        this.offer.title = null
-        this.offer.description = null
-        this.offer.contact = null
-      })
+      }
     },
     deleteOffer (offerId) {
       this.$store.dispatch('deleteOffer', offerId).then(() => {

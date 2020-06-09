@@ -18,9 +18,6 @@ new Vue({
       const userData = JSON.parse(userString)
       this.$store.commit('SET_USER_DATA', userData)
     }
-    this.$store.dispatch('fetchSubjects')
-    this.$store.dispatch('fetchTasks')
-    this.$store.dispatch('getEvents')
   },
   render: h => h(App)
 }).$mount('#app')

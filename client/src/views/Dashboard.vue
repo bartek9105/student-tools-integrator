@@ -20,6 +20,11 @@ export default {
   components: {
     UpcomingEvents,
     TasksToday
+  },
+  created () {
+    this.$store.dispatch('fetchSubjects')
+    this.$store.dispatch('fetchTasks')
+    this.$store.dispatch('getEvents')
   }
 }
 </script>
