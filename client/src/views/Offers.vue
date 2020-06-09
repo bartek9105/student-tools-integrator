@@ -20,9 +20,14 @@
               filled
               v-model="offer.contact"
             ></v-text-field>
-            <v-btn color="primary" @click="editOffer" v-if="editMode">
-              Edit offer
-            </v-btn>
+            <div v-if="editMode">
+              <v-btn color="primary" class="mr-4" @click="editOffer">
+                Edit offer
+              </v-btn>
+              <v-btn @click="cancelEdit">
+                Cancel
+              </v-btn>
+            </div>
             <v-btn color="primary" @click="addOffer" v-else>
               Add offer
             </v-btn>
@@ -31,25 +36,25 @@
       </v-row>
       <v-row>
         <v-col cols="12" sm="12" md="12">
-          <h3 class="mb-8">Offers list</h3>
+          <h3 class="mb-8 mt-4">Offers list</h3>
           <v-card v-for="offer in getOffers" :key="offer._id" class="mb-4">
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="d-flex align-center">
-                  <v-list-item-title class="mb-4">{{ offer.title }}</v-list-item-title>
+                <div>
+                  <v-list-item-title class="title mb-4">{{ offer.title }}</v-list-item-title>
                   <span class="caption">{{ offer.createdAt.substr(0, 10) }}</span>
                 </div>
-                <v-list-item-subtitle class="mb-4">
-                  {{ offer.description }}
+                <v-list-item-subtitle class="mb-4 mt-4">
+                  <span class="font-weight-bold">Description:</span> {{ offer.description }}
                 </v-list-item-subtitle>
-                <div class="d-flex align-center">
+                <div>
                   <v-list-item-subtitle>
-                    {{ offer.contact }}
+                  <span class="font-weight-bold">Contact:</span> {{ offer.contact }}
                   </v-list-item-subtitle>
-                  <div class="d-flex">
-                    <v-btn color="primary text-white" class="mr-2" @click="editOfferMode(offer)" v-if="offer.creator === getUserId">Edit</v-btn>
-                    <v-btn color="red" @click="deleteOffer(offer._id)" v-if="offer.creator === getUserId">Delete</v-btn>
-                  </div>
+                </div>
+                <div class="mt-4">
+                  <v-btn color="primary text-white" class="mr-2" @click="editOfferMode(offer)" v-if="offer.creator === getUserId">Edit</v-btn>
+                  <v-btn color="red text-white" @click="deleteOffer(offer._id)" v-if="offer.creator === getUserId">Delete</v-btn>
                 </div>
               </v-list-item-content>
             </v-list-item>
@@ -79,6 +84,12 @@ export default {
     }
   },
   methods: {
+    cancelEdit () {
+      this.editMode = false
+      this.offer.title = null
+      this.offer.description = null
+      this.offer.contact = null
+    },
     fetchOffers () {
       this.$store.dispatch('fetchOffers')
     },
