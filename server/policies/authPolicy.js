@@ -10,7 +10,7 @@ exports.authValidator = (req, res, next) => {
 
     if (error) {
         res.status(400).send({
-            error: error
+            error: error.details[0].message
         })
     }
 
