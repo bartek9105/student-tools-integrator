@@ -3,8 +3,22 @@
     <div class="d-flex justify-space-between align-center mb-4">
       <Breadcrumbs/>
       <div>
-        <v-btn class="primary mr-2" @click="dialogSingle = true">Add</v-btn>
-        <v-btn class="primary" @click="dialogRecurring = true">Add Recurring</v-btn>
+        <v-tooltip left>
+          <template v-slot:activator="{ on }">
+            <v-btn class="mx-2" fab small dark color="primary" v-on="on" @click="dialogRecurring = true">
+              <v-icon dark>control_point_duplicate</v-icon>
+            </v-btn>
+          </template>
+          <span>Add new recurring event</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <template v-slot:activator="{ on }">
+            <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogSingle = true">
+              <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <span>Add new event</span>
+        </v-tooltip>
       </div>
     </div>
     <v-dialog v-model="dialogSingle" max-width="500">
