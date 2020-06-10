@@ -37,7 +37,8 @@
       <v-row>
         <v-col cols="12" sm="12" md="12">
           <h3 class="mb-8 mt-4">Offers list</h3>
-          <v-card v-for="offer in getOffers" :key="offer._id" class="mb-4">
+          <p class="text-center display-1 gray--text" v-if="getOffers.length == 0"> No offers added by users </p>
+          <v-card v-else v-for="offer in getOffers" :key="offer._id" class="mb-4">
             <v-list-item three-line>
               <v-list-item-content>
                 <div>

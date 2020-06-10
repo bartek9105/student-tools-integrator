@@ -30,7 +30,6 @@ export default ({
       }).catch(err => console.log(err))
     },
     editOffer ({ commit, dispatch }, offer) {
-      console.log(offer)
       Api().patch(`offers/${offer.offerId}/edit`, {
         title: offer.title,
         description: offer.description,

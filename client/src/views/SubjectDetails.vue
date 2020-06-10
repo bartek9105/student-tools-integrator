@@ -200,6 +200,7 @@ export default {
     cancelEdit () {
       this.editMode = false
       this.note.content = null
+      this.$store.dispatch('fetchSubjectDetails', this.$route.params.id)
     },
     editNote () {
       this.$store.dispatch('editNote', {
