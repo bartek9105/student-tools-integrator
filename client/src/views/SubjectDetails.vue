@@ -24,13 +24,13 @@
             required
             class="mr-4"
           ></v-text-field>
-          <v-btn color="primary" @click="addRequirement">Add</v-btn>
         </div>
-        <p class="title text-center mt-4" v-if="getSubjectDetails.requirements">
+        <v-btn color="primary" @click="addRequirement">Add</v-btn>
+        <p class="title text-center mt-8" v-if="getSubjectDetails.requirements.length == 0">
           No requirements added
         </p>
-        <v-card v-for="(requirement, index) in getSubjectDetails.requirements" :key="index" class="mb-4">
-          <v-list-item class="d-flex justify-space-between align-center" v-if="requirement.name">
+        <v-card v-for="(requirement, index) in getSubjectDetails.requirements" :key="index" class="mt-8 mb-4">
+          <v-list-item class="d-flex justify-space-between align-center">
             <v-list-item-content class="d-flex align-center">
               <v-progress-circular
                 :rotate="360"
@@ -60,15 +60,14 @@
         <p class="title">Attached files</p>
         <template>
           <div>
-            <input type="file" name="file" ref="file" label="File input" @change="fileUpload">
-            <v-btn class="primary mt-2" @click="submitFile">Send</v-btn>
+            <input type="file" name="file" ref="file" label="File input" class="mt-4" @change="fileUpload">
           </div>
         </template>
-        <v-divider class="mt-4 mb-4"></v-divider>
-        <p class="title text-center mt-4" v-if="uploadedFiles.length == 0">
+        <v-btn class="primary mt-4" @click="submitFile">Upload file</v-btn>
+        <p class="title text-center mt-8" v-if="uploadedFiles.length == 0">
           No files uploaded
         </p>
-        <v-card class="elevation-0 mb-4" v-else v-for="file in uploadedFiles" :key="file._id">
+        <v-card class="elevation-1 mb-4 mt-8" v-else v-for="file in uploadedFiles" :key="file._id">
           <v-list two-line subheader>
             <v-list-item
             >
@@ -96,8 +95,7 @@
       <v-col cols="12" sm="12" md="12" lg="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
-          <!--<ChartRadial :labels="getLabels" :series="getSeries"/>
-          -->
+          <ChartRadial :labels="getLabels" :series="getSeries"/>
         </div>
       </v-col>
     </v-row>
@@ -118,7 +116,10 @@
     </v-row>
     <p class="mt-8 title">Notes</p>
     <v-row>
-      <v-col cols="12" xs="12" sm="6" v-for="(note, index) in getSubjectDetails.notes" :key="index">
+      <p class="title text-center mt-4 ml-3" v-if="getSubjectDetails.notes.length == 0">
+        No notes added
+      </p>
+      <v-col cols="12" xs="12" sm="6" v-else v-for="(note, index) in getSubjectDetails.notes" :key="index">
         <v-card
           class="overflow-hidden"
         >
@@ -165,13 +166,13 @@ import axios from 'axios'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-// import ChartRadial from '@/components/ChartRadial'
+import ChartRadial from '@/components/ChartRadial'
 import { quillEditor } from 'vue-quill-editor'
 
 export default {
   name: 'SubjectDetails',
   components: {
-    // ChartRadial,
+    ChartRadial,
     quillEditor
   },
   data () {
@@ -231,23 +232,16 @@ export default {
       })
     },
     editRequirement (reqId) {
-      if (this.currentReqs.name !== null) {
-        this.$store.dispatch('editRequirement', {
-          reqId: reqId,
-          requirement: this.currentReqs.name,
-          progress: this.currentReqs.progress
-        }).then(() => {
-          this.$store.dispatch('showSnackbar', {
-            snackbar: true,
-            color: 'success',
-            text: 'Requirement updated'
-          })
+      this.$store.dispatch('editRequirement', {
+        reqId: reqId,
+        requirement: this.currentReqs.name,
+        progress: this.currentReqs.progress
+      }).then(() => {
+        this.$store.dispatch('showSnackbar', {
+          snackbar: true,
+          color: 'success',
+          text: 'Requirement updated'
         })
-      }
-      this.$store.dispatch('showSnackbar', {
-        snackbar: true,
-        color: 'error',
-        text: 'Requirement name cannot be empty'
       })
     },
     updateReqDialog (requirement) {
@@ -352,7 +346,11 @@ export default {
       return this.$store.getters.getSubjectDetails
     },
     getLabels () {
-      return this.getSubjectDetails.requirements.map(el => el.name)
+      return this.getSubjectDetails.requirements.map(el => {
+        if (typeof el.name === 'string') {
+          return el.name
+        }
+      })
     },
     getSeries () {
       const series = this.getSubjectDetails.requirements.map(el => el.progress)

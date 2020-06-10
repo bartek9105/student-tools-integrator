@@ -4,10 +4,6 @@ exports.addSubject = async (req, res) => {
     try {
         const newSubject = new Subject({
             name: req.body.name,
-            requirements: {
-                name: req.body.reqName,
-                progress: req.body.progress
-            },
             teacher: req.body.teacher,
             color: req.body.color,
             description: req.body.description,
