@@ -66,7 +66,7 @@ const fileStorage = multer.diskStorage({
 
 const upload = multer({ storage: fileStorage })
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/api/upload', upload.single('file'), (req, res) => {
   fs.createReadStream(req.file.path).
     pipe(bucket.openUploadStream({
       filename: req.file.filename,
@@ -88,7 +88,7 @@ mongoose.connection.on('connected', () => {
   bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db)
 })
 
-app.get('/files', async (req, res) => {
+app.get('/api/files', async (req, res) => {
   try {
     const result = await mongoose.connection.db.collection('fs.files').find().toArray()
     res.send(result)    
@@ -97,7 +97,7 @@ app.get('/files', async (req, res) => {
   }
 })
 // show file contents if is downloaded
-app.get('/files/:name', async (req, res) => {
+app.get('/api/files/:name', async (req, res) => {
   try {
     const result = await mongoose.connection.db.collection('fs.files').findOne({ filename: req.params.name })
     res.send(result)    
@@ -106,7 +106,7 @@ app.get('/files/:name', async (req, res) => {
   }
 })
 // download file
-app.get('/file/:name', (req, res) => {
+app.get('/api/file/:name', (req, res) => {
   bucket.openDownloadStreamByName(req.params.name).
   pipe(fs.createWriteStream(`files/${req.params.name}`)).
   on('error', function(error) {
@@ -114,7 +114,7 @@ app.get('/file/:name', (req, res) => {
   })
 })
 //delete file
-app.delete('/file/:id', async (req, res) => {
+app.delete('/api/file/:id', async (req, res) => {
   try {
     const obj_id = new mongoose.Types.ObjectId(req.params.id)
     await mongoose.connection.db.collection('fs.chunks').deleteMany({ files_id: obj_id })

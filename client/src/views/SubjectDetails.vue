@@ -162,7 +162,7 @@
 
 <script>
 
-import axios from 'axios'
+import Api from '../services/Api'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -315,7 +315,7 @@ export default {
       formData.append('file', this.file)
       formData.append('subjectId', this.$route.params.id)
       try {
-        await axios.post('http://localhost:3000/upload', formData, {
+        await Api().post('upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -325,13 +325,13 @@ export default {
       }
     },
     async getUploadedFiles () {
-      const files = await axios.get('http://localhost:3000/files')
+      const files = await Api().get('files')
       this.uploadedFiles = files.data.filter(el => {
         return el.filename.metadata === this.$route.params.id
       })
     },
     downloadFile (fileName) {
-      axios.get(`http://localhost:3000/files/${fileName}`, {
+      Api().get(`files/${fileName}`, {
         responseType: 'blob'
       }).then(response => {
         const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -344,7 +344,7 @@ export default {
     },
     async deleteFile (id) {
       try {
-        await axios.delete(`http://localhost:3000/file/${id}`)
+        await Api().delete(`file/${id}`)
       } catch (error) {
         console.log(error)
       }
