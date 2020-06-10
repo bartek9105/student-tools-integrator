@@ -15,7 +15,7 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use(cors())
-app.use('/files', express.static(path.join(__dirname, 'files')))
+app.use('server/files', express.static(path.join(__dirname, 'server/files')))
 
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
