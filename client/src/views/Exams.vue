@@ -131,7 +131,7 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <p v-if="getExams.length == 0" class="text-center display-1 gray--text">No scheduled class added</p>
+    <p v-if="getExams.length == 0" class="text-center display-1 gray--text">No scheduled exams</p>
     <v-simple-table v-else class="elevation-1">
       <template v-slot:default>
         <thead>

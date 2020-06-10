@@ -1,4 +1,5 @@
 const Subject = require('../models/Subject')
+const Event = require('../models/Event')
 
 exports.addSubject = async (req, res) => {
     try {
@@ -110,8 +111,9 @@ exports.getSubject = async (req, res) => {
 
 exports.deleteSubject = async (req, res) => {
     try {
-        const deletedSubject = await Subject.findByIdAndRemove({_id: req.params.id})
-        res.send(deletedSubject)
+        const removedSubject = await Subject.findByIdAndRemove({_id: req.params.id})
+        await Event.deleteOne({ subject: req.params.id })
+        res.send(removedSubject)
     } catch (error) {
         console.log(subjects)
     }
