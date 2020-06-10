@@ -88,10 +88,11 @@ export default ({
         dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
     },
-    editNote ({ commit }, payload) {
+    editNote ({ commit, dispatch }, payload) {
       Api().patch(`subjects/${payload.noteId}/editNote`, {
         note: payload.note
       }).then(() => {
+        dispatch('fetchSubjectDetails', payload.subjectId)
       }).catch(err => console.log(err))
     }
   }

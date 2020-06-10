@@ -204,7 +204,8 @@ export default {
     editNote () {
       this.$store.dispatch('editNote', {
         note: this.note.content,
-        noteId: this.note._id
+        noteId: this.note._id,
+        subjectId: this.$route.params.id
       }).then(() => {
         this.editMode = false
         this.note.content = null
@@ -286,17 +287,25 @@ export default {
       })
     },
     addNote () {
-      this.$store.dispatch('addNote', {
-        note: this.note.content,
-        subjectId: this.$route.params.id
-      }).then(() => {
-        this.note.content = null
+      if (this.note.content !== null) {
+        this.$store.dispatch('addNote', {
+          note: this.note.content,
+          subjectId: this.$route.params.id
+        }).then(() => {
+          this.note.content = null
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'success',
+            text: 'Note added'
+          })
+        })
+      } else {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
-          color: 'success',
-          text: 'Note added'
+          color: 'error',
+          text: 'Note cannot be empty'
         })
-      })
+      }
     },
     fileUpload () {
       this.file = this.$refs.file.files[0]
@@ -346,11 +355,7 @@ export default {
       return this.$store.getters.getSubjectDetails
     },
     getLabels () {
-      return this.getSubjectDetails.requirements.map(el => {
-        if (typeof el.name === 'string') {
-          return el.name
-        }
-      })
+      return this.getSubjectDetails.requirements.map(el => el.name)
     },
     getSeries () {
       const series = this.getSubjectDetails.requirements.map(el => el.progress)
