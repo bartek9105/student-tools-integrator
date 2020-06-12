@@ -2,20 +2,32 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const cors = require('cors')
-const multer = require('multer')
+const Multer = require('multer')
 const path = require('path')
-const assert = require('assert')
-const fs = require('fs')
-const mongodb = require('mongodb')
-const helmet = require('helmet')
-const compression = require('compression')
+const serviceKey = path.join(__dirname, './gcs-key.json')
+const Cloud = require('@google-cloud/storage')
+const {format} = require('util')
+const uuid = require('uuid')
 
 dotenv.config()
 
 const app = express()
 app.use(express.json())
 app.use(cors())
-app.use('/files', express.static(path.join(__dirname, 'server/files')))
+app.use('/files', express.static(path.join(__dirname, 'files')))
+
+const { Storage } = Cloud
+
+const storage = new Storage({
+  keyFilename: serviceKey,
+  projectId: 'citric-adviser-280109',
+})
+
+const bucket = storage.bucket('student-tools-integrator-bucket')
+
+const multer = Multer({
+  storage: Multer.memoryStorage()
+})
 
 const userRoutes = require('./routes/user')
 const subjectRoutes = require('./routes/subject')
@@ -24,9 +36,6 @@ const projectRoutes = require('./routes/project')
 const taskRoutes = require('./routes/task')
 const examRoutes = require('./routes/exam')
 const offerRoutes = require('./routes/offer')
-
-app.use(helmet())
-app.use(compression())
 
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
@@ -47,6 +56,54 @@ app.use('/api/tasks', taskRoutes)
 app.use('/api/exams', examRoutes)
 app.use('/api/offers', offerRoutes)
 
+app.post('/api/upload', multer.single('file'), (req, res, next) => {
+  if (!req.file) {
+    res.status(400).send('No file uploaded.');
+    return;
+  }
+  // Create a new blob in the bucket and upload the file data.
+  const blob = bucket.file(uuid.v1() + '/' + req.file.originalname)
+  const blobStream = blob.createWriteStream();
+
+  blobStream.on('error', (err) => {
+    next(err);
+  });
+
+  blobStream.on('finish', () => {
+    const metadata = {
+      metadata: {
+        userId: req.body.userId,
+        subjectId: req.body.subjectId
+      }
+    }
+    bucket.file(blob.name).setMetadata(metadata)
+    // The public URL can be used to directly access the file via HTTP.
+    const publicUrl = format(
+      `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+    );
+    res.status(200).send(publicUrl);
+  });
+
+  blobStream.end(req.file.buffer);
+});
+
+app.get('/api/files/:userId/:subjectId', async (req, res) => {
+  try {
+    const files = await bucket.getFiles()
+    const arr = []
+    const resFiles = files.forEach(el => {
+      el.forEach(x => arr.push(x.metadata))
+    })
+    if (arr.length !== 0) {
+      res.send(arr.filter(el => Object.values(el.metadata)[1] == req.params.subjectId))
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.delete('/api/file/')
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'))
 
@@ -55,73 +112,12 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'files')
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname)
-  }
-})
-
-const upload = multer({ storage: fileStorage })
-
-app.post('api/upload', upload.single('file'), (req, res) => {
-  fs.createReadStream(req.file.path).
-    pipe(bucket.openUploadStream({
-      filename: req.file.filename,
-      metadata: req.body.subjectId
-    })).
-    on('error', function(error) {
-      assert.ifError(error);
-    })
-})
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
-
-let bucket
 
 mongoose.connect(uri, { useNewUrlParser: true })
 
 mongoose.connection.on('connected', () => {
   console.log('connected')
-  bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db)
-})
-
-app.get('api/files', async (req, res) => {
-  try {
-    const result = await mongoose.connection.db.collection('fs.files').find().toArray()
-    res.send(result)    
-  } catch (error) {
-    console.log(error)
-  }
-})
-// show file contents if is downloaded
-app.get('api/files/:name', async (req, res) => {
-  try {
-    const result = await mongoose.connection.db.collection('fs.files').findOne({ filename: req.params.name })
-    res.send(result)    
-  } catch (error) {
-    console.log(error)
-  }
-})
-// download file
-app.get('api/file/:name', (req, res) => {
-  bucket.openDownloadStreamByName(req.params.name).
-  pipe(fs.createWriteStream(`files/${req.params.name}`)).
-  on('error', function(error) {
-    assert.ifError(error);
-  })
-})
-//delete file
-app.delete('api/file/:id', async (req, res) => {
-  try {
-    const obj_id = new mongoose.Types.ObjectId(req.params.id)
-    await mongoose.connection.db.collection('fs.chunks').deleteMany({ files_id: obj_id })
-    bucket.delete(obj_id)
-  } catch (error) {
-    console.log(error)
-  }
 })
 
 const port = process.env.PORT || 3000

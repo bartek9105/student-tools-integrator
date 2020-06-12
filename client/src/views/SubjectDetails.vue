@@ -64,10 +64,7 @@
           </div>
         </template>
         <v-btn class="primary mt-4" @click="submitFile">Upload file</v-btn>
-        <p class="title text-center mt-8" v-if="uploadedFiles.length == 0">
-          No files uploaded
-        </p>
-        <v-card class="elevation-1 mb-4 mt-8" v-else v-for="file in uploadedFiles" :key="file._id">
+        <v-card class="elevation-1 mb-4 mt-8" v-for="file in uploadedFiles" :key="file._id">
           <v-list two-line subheader>
             <v-list-item
             >
@@ -76,16 +73,16 @@
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title>{{ file.filename.filename }}</v-list-item-title>
+                <v-list-item-title>{{ file.name.split('/')[1] }}</v-list-item-title>
                 <v-list-item-subtitle>File</v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action class="d-flex flex-row">
                 <v-btn icon>
-                  <v-icon color="grey lighten-1" @click="downloadFile(file.filename.filename)">system_update_alt</v-icon>
+                  <v-icon color="grey lighten-1" @click="openFile(file.name)">system_update_alt</v-icon>
                 </v-btn>
                 <v-btn icon>
-                  <v-icon color="grey lighten-1" @click="deleteFile(file._id)">clear</v-icon>
+                  <v-icon color="grey lighten-1">clear</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
@@ -193,6 +190,9 @@ export default {
     }
   },
   methods: {
+    openFile (name) {
+      window.open(`https://storage.cloud.google.com/student-tools-integrator-bucket/${name}`, '_blank')
+    },
     displayFullNote (note) {
       this.dialog = true
       this.currentNote = note
@@ -314,6 +314,7 @@ export default {
     async submitFile () {
       const formData = new FormData()
       formData.append('file', this.file)
+      formData.append('userId', this.$store.getters.getUser.userId)
       formData.append('subjectId', this.$route.params.id)
       try {
         await Api().post('upload', formData, {
@@ -325,27 +326,10 @@ export default {
         console.log(error)
       }
     },
-    async getUploadedFiles () {
-      const files = await Api().get('files')
-      this.uploadedFiles = files.data.filter(el => {
-        return el.filename.metadata === this.$route.params.id
-      })
-    },
-    downloadFile (fileName) {
-      Api().get(`files/${fileName}`, {
-        responseType: 'blob'
-      }).then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', `${fileName}`)
-        document.body.appendChild(link)
-        link.click()
-      })
-    },
-    async deleteFile (id) {
+    async getFiles () {
       try {
-        await Api().delete(`file/${id}`)
+        const files = await Api().get(`files/${this.$store.getters.getUser.userId}/${this.$route.params.id}`)
+        this.uploadedFiles = files.data
       } catch (error) {
         console.log(error)
       }
@@ -368,10 +352,10 @@ export default {
   },
   mounted () {
     this.fetchSubjectDetails()
-    this.getUploadedFiles()
+    this.getFiles()
   },
   updated () {
-    this.getUploadedFiles()
+    this.getFiles()
   }
 }
 </script>
