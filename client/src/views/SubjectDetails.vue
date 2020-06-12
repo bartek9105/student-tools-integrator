@@ -82,7 +82,7 @@
                   <v-icon color="grey lighten-1" @click="openFile(file.name)">system_update_alt</v-icon>
                 </v-btn>
                 <v-btn icon>
-                  <v-icon color="grey lighten-1">clear</v-icon>
+                  <v-icon color="grey lighten-1" @click="deleteFile(file.name)">clear</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
@@ -190,6 +190,15 @@ export default {
     }
   },
   methods: {
+    async deleteFile (name) {
+      try {
+        const uuid = name.split('/')[0]
+        const filename = name.split('/')[1]
+        await Api().delete(`file/${uuid}/${filename}`)
+      } catch (error) {
+        console.log(error)
+      }
+    },
     openFile (name) {
       window.open(`https://storage.cloud.google.com/student-tools-integrator-bucket/${name}`, '_blank')
     },

@@ -102,7 +102,14 @@ app.get('/api/files/:userId/:subjectId', async (req, res) => {
   }
 })
 
-app.delete('/api/file/')
+app.delete('/api/file/:uuid/:filename', async (req, res) => {
+  try {
+    await bucket.file(`${req.params.uuid}/${req.params.filename}`).delete()
+    res.send('File deleted')
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'))
