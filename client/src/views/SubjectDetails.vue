@@ -92,7 +92,8 @@
       <v-col cols="12" sm="12" md="12" lg="4">
         <div class="d-flex flex-column align-center">
           <p class="title">Passing class progress</p>
-          <ChartRadial :labels="getLabels" :series="getSeries"/>
+          <ChartRadial v-if="getLabels.length > 0" :labels="getLabels" :series="getSeries"/>
+          <p class="subtitle-1 mt-8" v-else>Add requirements to see your progress</p>
         </div>
       </v-col>
     </v-row>
