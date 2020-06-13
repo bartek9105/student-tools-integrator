@@ -63,21 +63,20 @@ app.post('/api/upload', multer.single('file'), (req, res, next) => {
   }
   // Create a new blob in the bucket and upload the file data.
   const blob = bucket.file(uuid.v1() + '/' + req.file.originalname)
+  const metadata = {
+    metadata: {
+      userId: req.body.userId,
+      subjectId: req.body.subjectId
+    }
+  }
   const blobStream = blob.createWriteStream();
 
   blobStream.on('error', (err) => {
     next(err);
   });
 
-  blobStream.on('finish', () => {
-    const metadata = {
-      metadata: {
-        userId: req.body.userId,
-        subjectId: req.body.subjectId
-      }
-    }
+  blobStream.on('finish', async () => {
     bucket.file(blob.name).setMetadata(metadata)
-    // The public URL can be used to directly access the file via HTTP.
     const publicUrl = format(
       `https://storage.googleapis.com/${bucket.name}/${blob.name}`
     );
@@ -91,12 +90,10 @@ app.get('/api/files/:userId/:subjectId', async (req, res) => {
   try {
     const files = await bucket.getFiles()
     const arr = []
-    const resFiles = files.forEach(el => {
+    files.forEach(el => {
       el.forEach(x => arr.push(x.metadata))
     })
-    if (arr.length !== 0) {
-      res.send(arr.filter(el => Object.values(el.metadata)[1] == req.params.subjectId))
-    }
+    res.send(arr.filter(el => Object.values(el.metadata)[1] == req.params.subjectId))
   } catch (error) {
     console.log(error)
   }

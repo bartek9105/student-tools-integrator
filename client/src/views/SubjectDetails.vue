@@ -195,6 +195,7 @@ export default {
         const uuid = name.split('/')[0]
         const filename = name.split('/')[1]
         await Api().delete(`file/${uuid}/${filename}`)
+        this.getFiles()
       } catch (error) {
         console.log(error)
       }
@@ -326,11 +327,13 @@ export default {
       formData.append('userId', this.$store.getters.getUser.userId)
       formData.append('subjectId', this.$route.params.id)
       try {
-        await Api().post('upload', formData, {
+        const link = await Api().post('upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         })
+        const linkCut = link.data.substr(63)
+        this.uploadedFiles.push({ name: linkCut })
       } catch (error) {
         console.log(error)
       }
@@ -361,9 +364,6 @@ export default {
   },
   mounted () {
     this.fetchSubjectDetails()
-    this.getFiles()
-  },
-  updated () {
     this.getFiles()
   }
 }
