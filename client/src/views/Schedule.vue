@@ -544,7 +544,7 @@ export default {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'error',
-          text: 'Choose class and date to be scheduled'
+          text: 'Pick class and date'
         })
       }
     },
@@ -571,7 +571,7 @@ export default {
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'error',
-          text: 'Choose class and date to be scheduled'
+          text: 'Pick class and date'
         })
       }
     },

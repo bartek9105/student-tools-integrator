@@ -174,7 +174,7 @@ export default {
       })
     },
     addRecurringEvent () {
-      if (this.eventDetails.title !== null && this.eventDetails.startRecur !== null && this.eventDetails.endRecur !== null) {
+      if (this.eventDetails.title !== null && this.eventDetails.startRecur !== null && this.eventDetails.endRecur !== null && this.eventDetails.daysOfWeek !== null && this.eventDetails.startTimeRecur !== null && this.eventDetails.endTimeRecur !== null) {
         this.$store.dispatch('addEvent', {
           title: this.eventDetails.title,
           startRecurence: this.eventDetails.startRecur,

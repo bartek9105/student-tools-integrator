@@ -4,7 +4,7 @@ exports.getExams = async (req, res) => {
     try {
         const exams = await Exam.find({
             creator: req.userId
-        }).populate('subject', 'name')
+        })
         res.send(exams)
     } catch (error) {
         console.log(error);

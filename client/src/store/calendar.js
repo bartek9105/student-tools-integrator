@@ -49,7 +49,7 @@ export default ({
       Api().patch(`events/exam/edit/${exam.examId}`, {
         title: exam.selectedClass.name + ' exam',
         start: exam.start + `T${exam.startTime}`,
-        end: exam.end + `T${exam.endTime}`,
+        end: exam.start + `T${exam.endTime}`,
         subject: exam.selectedClass._id,
         room: exam.room,
         color: exam.color

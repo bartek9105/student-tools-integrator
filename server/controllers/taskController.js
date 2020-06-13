@@ -4,7 +4,7 @@ exports.getTasks = async (req, res) => {
     try {
         const tasks = await Task.find({
             creator: req.userId
-        })
+        }).populate('project', 'name')
         res.send(tasks)
     } catch (error) {
         console.log(error)

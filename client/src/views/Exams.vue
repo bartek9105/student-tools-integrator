@@ -324,6 +324,20 @@ export default {
       return this.$store.getters.eventsGetter.filter(el => el.exam)
     }
   },
+  watch: {
+    dialogNewExam (val) {
+      if (!val) {
+        this.editMode = false
+        this.dialogNewExam = false
+        this.examDetails.selectedClass = null
+        this.examDetails.start = null
+        this.examDetails.startTime = null
+        this.examDetails.endTime = null
+        this.examDetails.room = null
+        this.examDetails.color = null
+      }
+    }
+  },
   mounted () {
     this.fetchExams()
   }

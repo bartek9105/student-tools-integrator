@@ -159,22 +159,22 @@
           tile
         >
         <div class="d-flex align-center mb-4" @click="dialogProject = true">
-          <v-btn icon>
-            <v-icon>add</v-icon>
+          <v-btn text>
+            <v-icon class="mr-2">add</v-icon>
+            <span class="body-2">Add project</span>
           </v-btn>
-          <span class="body-2">Add project</span>
         </div>
         <div v-if="getProjects.length == 0" class="text-center">
           <p>No projects added</p>
         </div>
         <div class="mb-4" v-else v-for="project in getProjects" :key="project._id">
           <div class="d-flex justify-space-between">
-            <div>
+            <v-btn text>
               <v-icon :color="project.color" class="mr-4">
                 fiber_manual_record
               </v-icon>
               <span class="caption" @click="projectId = project._id">{{ project.name }}</span>
-            </div>
+            </v-btn>
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
                 <v-icon v-on="on">
