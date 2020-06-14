@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 const cors = require('cors')
 const Multer = require('multer')
 const path = require('path')
-const serviceKey = path.join(__dirname, './gcs-key.json')
+// const serviceKey = path.join(__dirname, './gcs-key.json')
 const Cloud = require('@google-cloud/storage')
 const {format} = require('util')
 const uuid = require('uuid')
@@ -14,12 +14,11 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use(cors())
-app.use('/files', express.static(path.join(__dirname, 'files')))
 
 const { Storage } = Cloud
 
 const storage = new Storage({
-  keyFilename: serviceKey,
+  keyFilename: process.env.GCP_CRED,
   projectId: 'citric-adviser-280109',
 })
 
