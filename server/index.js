@@ -3,12 +3,15 @@ const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const cors = require('cors')
 const Multer = require('multer')
+const fs = require('fs')
 const path = require('path')
 const Cloud = require('@google-cloud/storage')
 const {format} = require('util')
 const uuid = require('uuid')
 
 dotenv.config()
+
+fs.writeFile(process.env.GCP_CRED_FILE, process.env.GCP_CRED, (err) => {});
 
 const serviceKey = path.join(__dirname, './gcs-key.json')
 
