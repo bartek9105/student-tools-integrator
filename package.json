@@ -7,9 +7,9 @@
     "node": "10.15.2"
   },
   "scripts": {
-    "preinstall": "node gcsSetup.js",
     "start": "node index.js",
-    "devStart": "nodemon index.js"
+    "devStart": "nodemon index.js",
+    "preinstall": "node gcsSetup.js"
   },
   "author": "Bartłomiej Matoga",
   "license": "ISC",

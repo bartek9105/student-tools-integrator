@@ -7,9 +7,10 @@ const path = require('path')
 const Cloud = require('@google-cloud/storage')
 const {format} = require('util')
 const uuid = require('uuid')
-const serviceKey = path.join(__dirname, './gcs-key.json')
 
 dotenv.config()
+
+const serviceKey = path.join(__dirname, './gcs-key.json')
 
 const app = express()
 app.use(express.json())
@@ -35,7 +36,6 @@ const projectRoutes = require('./routes/project')
 const taskRoutes = require('./routes/task')
 const examRoutes = require('./routes/exam')
 const offerRoutes = require('./routes/offer')
-const { json } = require('express')
 
 app.use((req, res, next) => {
   res.append('Access-Control-Expose-Headers', 'Content-Disposition')
