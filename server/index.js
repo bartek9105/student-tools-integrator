@@ -7,6 +7,7 @@ const path = require('path')
 const Cloud = require('@google-cloud/storage')
 const {format} = require('util')
 const uuid = require('uuid')
+const serviceKey = path.join(__dirname, './gcs-key.json')
 
 dotenv.config()
 
@@ -17,7 +18,7 @@ app.use(cors())
 const { Storage } = Cloud
 
 const storage = new Storage({
-  keyFilename: process.env.GCP_KEY_FILE,
+  keyFilename: serviceKey,
   projectId: 'citric-adviser-280109',
 })
 
