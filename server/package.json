@@ -8,8 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "devStart": "nodemon index.js",
-    "postinstall": "node gcsSetup.js"
+    "devStart": "nodemon index.js"
   },
   "author": "Bartłomiej Matoga",
   "license": "ISC",
