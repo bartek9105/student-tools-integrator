@@ -11,9 +11,9 @@ const uuid = require('uuid')
 
 dotenv.config()
 
-fs.writeFile(process.env.GCP_CRED_FILE, process.env.GCP_CRED, (err) => {});
+// fs.writeFile(process.env.GCP_CRED_FILE, process.env.GCP_CRED, (err) => {});
 
-const serviceKey = path.join(__dirname, './gcs-key.json')
+// const serviceKey = path.join(__dirname, './gcs-key.json')
 
 const app = express()
 app.use(express.json())
@@ -22,8 +22,8 @@ app.use(cors())
 const { Storage } = Cloud
 
 const storage = new Storage({
-  keyFilename: serviceKey,
-  projectId: 'citric-adviser-280109',
+  credentials: JSON.parse(process.env.GCP_CRED),
+  projectId: 'citric-adviser-280109'
 })
 
 const bucket = storage.bucket('student-tools-integrator-bucket')
