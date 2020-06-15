@@ -41,7 +41,7 @@ export default ({
     deleteOffer ({ commit, dispatch }, offerId) {
       Api().delete(`offers/${offerId}/delete`).then(() => {
         dispatch('fetchOffers')
-      }).catch(err => console.log(err))
+      })
     }
   }
 })

@@ -69,9 +69,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media screen and (min-width: 960px) {
-  .container {
-    padding: 0;
+  @media screen and (min-width: 960px) {
+    .container {
+      padding: 0;
+    }
   }
-}
 </style>

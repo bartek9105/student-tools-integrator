@@ -3,9 +3,9 @@ const Offer = require('../models/Offer')
 exports.getOffers = async (req, res) => {
     try {
         const offers = await Offer.find()
-        res.send(offers)
+        res.status(200).send(offers)
     } catch (error) {
-        console.log(error)
+        res.status(400).send({ error: error })
     }
 }
 
@@ -18,9 +18,9 @@ exports.addOffer = async (req, res) => {
             creator: req.userId
         })
         const savedOffer = await newOffer.save()
-        res.send(savedOffer)
+        res.status(200).send(savedOffer)
     } catch (error) {
-        console.log(error)
+        res.status(400).send({ error: error })
     }
 }
 
@@ -31,9 +31,9 @@ exports.editOffer = async (req, res) => {
             description: req.body.description,
             contact: req.body.contact
         })
-        res.send(editedOffer)
+        res.status(200).send(editedOffer)
     } catch (error) {
-        console.log(error)
+        res.status(400).send({ error: error })
     }
 }
 
@@ -42,8 +42,8 @@ exports.deleteOffer = async (req, res) => {
         const deletedOffer = await Offer.findByIdAndRemove({
             _id: req.params.id
         })
-        res.send(deletedOffer)
+        res.status(200).send(deletedOffer)
     } catch (error) {
-        console.log(error)
+        res.status(400).send({ error: error })
     }
 }

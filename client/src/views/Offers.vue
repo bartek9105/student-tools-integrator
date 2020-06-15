@@ -91,16 +91,21 @@ export default {
       this.offer.description = null
       this.offer.contact = null
     },
-    fetchOffers () {
-      this.$store.dispatch('fetchOffers')
+    async fetchOffers () {
+      try {
+        await this.$store.dispatch('fetchOffers')
+      } catch (error) {
+        console.log(error)
+      }
     },
-    addOffer () {
-      if (this.offer.title !== null && this.offer.description !== null && this.offer.contact !== null) {
-        this.$store.dispatch('addOffer', {
-          title: this.offer.title,
-          description: this.offer.description,
-          contact: this.offer.contact
-        }).then(() => {
+    async addOffer () {
+      try {
+        if (this.offer.title !== null && this.offer.description !== null && this.offer.contact !== null) {
+          await this.$store.dispatch('addOffer', {
+            title: this.offer.title,
+            description: this.offer.description,
+            contact: this.offer.contact
+          })
           this.$store.dispatch('showSnackbar', {
             snackbar: true,
             color: 'success',
@@ -109,23 +114,28 @@ export default {
           this.offer.title = null
           this.offer.description = null
           this.offer.contact = null
-        })
-      } else {
-        this.$store.dispatch('showSnackbar', {
-          snackbar: true,
-          color: 'error',
-          text: 'All fields must be filled in'
-        })
+        } else {
+          this.$store.dispatch('showSnackbar', {
+            snackbar: true,
+            color: 'error',
+            text: 'All fields must be filled in'
+          })
+        }
+      } catch (error) {
+        console.log(error)
       }
     },
-    deleteOffer (offerId) {
-      this.$store.dispatch('deleteOffer', offerId).then(() => {
+    async deleteOffer (offerId) {
+      try {
+        await this.$store.dispatch('deleteOffer', offerId)
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
           text: 'Offer deleted'
         })
-      })
+      } catch (error) {
+        console.log(error)
+      }
     },
     editOfferMode (offer) {
       this.editMode = true
@@ -134,8 +144,9 @@ export default {
       this.offer.description = offer.description
       this.offer.contact = offer.contact
     },
-    editOffer () {
-      this.$store.dispatch('editOffer', this.offer).then(() => {
+    async editOffer () {
+      try {
+        await this.$store.dispatch('editOffer', this.offer)
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
@@ -146,7 +157,9 @@ export default {
         this.offer.title = null
         this.offer.description = null
         this.offer.contact = null
-      })
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   computed: {
