@@ -173,12 +173,6 @@ export default {
           color: this.examDetails.color,
           exam: true
         }).then(() => {
-          this.examDetails.selectedClass = null
-          this.examDetails.start = null
-          this.examDetails.startTime = null
-          this.examDetails.endTime = null
-          this.examDetails.room = null
-          this.examDetails.color = null
           this.dialogNewExam = false
           this.$store.dispatch('showSnackbar', {
             snackbar: true,
@@ -198,12 +192,6 @@ export default {
       this.$store.dispatch('editExamEvent', exam).then(() => {
         this.editMode = false
         this.dialogNewExam = false
-        this.examDetails.selectedClass = null
-        this.examDetails.start = null
-        this.examDetails.startTime = null
-        this.examDetails.endTime = null
-        this.examDetails.room = null
-        this.examDetails.color = null
         this.$store.dispatch('showSnackbar', {
           snackbar: true,
           color: 'success',
