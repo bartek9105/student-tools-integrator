@@ -13,7 +13,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null
+    user: null,
+    drawer: null
   },
   getters: {
     getUser (state) {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     DELETE_USER_DATA () {
       localStorage.removeItem('user')
       location.reload()
+    },
+    SHOW_SIDEBAR (state) {
+      state.drawer = !state.drawer
     }
   },
   actions: {
