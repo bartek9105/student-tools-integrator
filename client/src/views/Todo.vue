@@ -64,30 +64,7 @@
               solo
               v-model="selectedPriority"
             ></v-select>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="date"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="date"
-                label="Due date"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="date" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-            </v-date-picker>
-            </v-menu>
+            <DatePicker :initDate="dueDate" v-on:pickDate="pickDate($event)"/>
             <v-btn type="submit" color="primary" class="mr-4" @click="addTask" @click.stop="dialogTask = false">
               Create task
             </v-btn>
@@ -120,31 +97,7 @@
               v-if="currentTask"
               v-model="currentTask.priority"
             ></v-select>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="date"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-if="currentTask"
-                v-model="currentTask.dueDate"
-                label="Due date"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-if="currentTask" v-model="currentTask.dueDate" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-            </v-date-picker>
-            </v-menu>
+            <DatePicker v-on:pickDate="pickEditDate($event)"/>
             <v-btn type="submit" color="primary" class="mr-4" @click="editTask(currentTask)" @click.stop="dialogEditTask = false">
               Edit task
             </v-btn>
@@ -221,66 +174,66 @@
         <v-simple-table class="mb-8 pt-4 elevation-1 rounded" v-else>
             <template v-slot:default>
               <thead>
-                  <tr>
-                    <th class="text-left">Complete</th>
-                    <th class="text-left">Name</th>
-                    <th class="text-left">Due date</th>
-                    <th class="text-left">Priority</th>
-                    <th class="text-left">Action</th>
-                  </tr>
+                <tr>
+                  <th class="text-left">Complete</th>
+                  <th class="text-left">Name</th>
+                  <th class="text-left">Due date</th>
+                  <th class="text-left">Priority</th>
+                  <th class="text-left">Action</th>
+                </tr>
               </thead>
               <tbody>
-                  <tr class="mt-2" v-for="task in filterTasks" :key="task._id">
-                    <td>
-                      <v-btn icon class="check-icon" @click="deleteTask(task._id)">
-                        <v-icon>check_circle_outline</v-icon>
-                      </v-btn>
-                    </td>
-                    <td>{{ task.name }}</td>
-                    <td v-if="task.dueDate">{{ task.dueDate }}</td>
-                    <td v-else>-</td>
-                    <td v-if="task.priority">
-                      <v-chip
-                        class="ma-2"
-                        :color="task.priority.color"
-                        text-color="white"
-                        small
-                      >
-                        <v-avatar left>
-                          <v-icon>flag</v-icon>
-                        </v-avatar>
-                        {{ task.priority.name }}
-                      </v-chip>
-                    </td>
-                    <td v-else>
-                      -
-                    </td>
-                    <td>
-                      <v-menu offset-y>
-                        <template v-slot:activator="{ on }">
-                          <v-icon v-on="on">
-                          more_vert
-                          </v-icon>
-                        </template>
-                        <v-list>
-                          <v-list-item>
-                            <v-list-item-title class="body-2" @click="updateEditTaskDialog(task)">
-                              <v-btn text>
-                                <v-icon class="mr-2">create</v-icon> Edit
-                              </v-btn>
-                            </v-list-item-title>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-title class="body-2" @click="deleteTask(task._id)">
-                              <v-btn text>
-                                <v-icon class="mr-2">delete</v-icon> Delete
-                              </v-btn>
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </td>
-                  </tr>
+                <tr class="mt-2" v-for="task in filterTasks" :key="task._id">
+                  <td>
+                    <v-btn icon class="check-icon" @click="deleteTask(task._id)">
+                      <v-icon>check_circle_outline</v-icon>
+                    </v-btn>
+                  </td>
+                  <td>{{ task.name }}</td>
+                  <td v-if="task.dueDate">{{ task.dueDate }}</td>
+                  <td v-else>-</td>
+                  <td v-if="task.priority">
+                    <v-chip
+                      class="ma-2"
+                      :color="task.priority.color"
+                      text-color="white"
+                      small
+                    >
+                      <v-avatar left>
+                        <v-icon>flag</v-icon>
+                      </v-avatar>
+                      {{ task.priority.name }}
+                    </v-chip>
+                  </td>
+                  <td v-else>
+                    -
+                  </td>
+                  <td>
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on }">
+                        <v-icon v-on="on">
+                        more_vert
+                        </v-icon>
+                      </template>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-title class="body-2" @click="updateEditTaskDialog(task)">
+                            <v-btn text>
+                              <v-icon class="mr-2">create</v-icon> Edit
+                            </v-btn>
+                          </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item>
+                          <v-list-item-title class="body-2" @click="deleteTask(task._id)">
+                            <v-btn text>
+                              <v-icon class="mr-2">delete</v-icon> Delete
+                            </v-btn>
+                          </v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </td>
+                </tr>
               </tbody>
             </template>
         </v-simple-table>
@@ -293,13 +246,15 @@
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
 import AddButton from '@/components/AddButton'
+import DatePicker from '@/components/DatePicker'
 
 export default {
   name: 'Todo',
   components: {
     Breadcrumbs,
     ColorPicker,
-    AddButton
+    AddButton,
+    DatePicker
   },
   data () {
     return {
@@ -311,7 +266,7 @@ export default {
       taskName: null,
       selectedProject: null,
       colorPicker: false,
-      date: '',
+      dueDate: '',
       search: '',
       priorities: [
         {
@@ -338,6 +293,12 @@ export default {
     }
   },
   methods: {
+    pickDate (date) {
+      this.dueDate = date
+    },
+    pickEditDate (editDate) {
+      this.currentTask.date = editDate
+    },
     fetchTasks () {
       this.$store.dispatch('fetchTasks')
     },
@@ -346,12 +307,12 @@ export default {
         this.$store.dispatch('addTask', {
           name: this.taskName,
           project: this.selectedProject,
-          dueDate: this.date,
+          dueDate: this.dueDate,
           priority: this.selectedPriority
         }).then(() => {
           this.taskName = null
           this.selectedProject = null
-          this.date = null
+          this.dueDate = null
           this.selectedPriority = null
           this.$store.dispatch('showSnackbar', {
             snackbar: true,
