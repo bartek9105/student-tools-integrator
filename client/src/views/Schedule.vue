@@ -29,95 +29,10 @@
             <div @click="dialogSubject = true" class="mb-6">
               <v-icon class="mr-2">add</v-icon><span>Add new class</span>
             </div>
-            <v-menu
-              ref="dateMenu"
-              v-model="dateMenu"
-              :close-on-content-click="false"
-              :return-value.sync="dateMenu"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="eventDetails.start"
-                label="Date"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="eventDetails.start" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.dateMenu.save(dateMenu)">OK</v-btn>
-            </v-date-picker>
-            </v-menu>
+            <DatePicker :date="eventDetails.start" v-on:pickDate="pickStartDate($event)"/>
             <div class="d-flex justify-space-between">
-              <div class="d-flex justify-space-between my-2">
-                <div>
-                  Start time
-                  <v-menu
-                  ref="timeMenu1"
-                  v-model="timeMenu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeMenu1"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                  >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="eventDetails.startTimeSingle"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="timeMenu1"
-                    v-model="eventDetails.startTimeSingle"
-                    full-width
-                    @click:minute="$refs.timeMenu1.save(timeMenu1)"
-                  ></v-time-picker>
-                  </v-menu>
-                </div>
-              </div>
-              <div class="d-flex justify-space-between my-2">
-                <div>
-                  End time
-                  <v-menu
-                  ref="timeMenu2"
-                  v-model="timeMenu2"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeMenu2"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                  >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="eventDetails.endTimeSingle"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="timeMenu2"
-                    v-model="eventDetails.endTimeSingle"
-                    full-width
-                    @click:minute="$refs.timeMenu2.save(timeMenu2)"
-                  ></v-time-picker>
-                  </v-menu>
-                </div>
-              </div>
+              <TimePicker :initTime="eventDetails.startTimeSingle" v-on:pickTime="pickStartTimeSingle($event)"/>
+              <TimePicker :initTime="eventDetails.endTimeSingle" v-on:pickTime="pickEndTimeSingle($event)"/>
             </div>
             <v-text-field label="Room" v-model="eventDetails.room"></v-text-field>
             <v-btn type="submit" v-if="!editMode" color="primary" class="mr-4">
@@ -383,12 +298,16 @@
 
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AddButton from '@/components/AddButton'
+import DatePicker from '@/components/DatePicker'
+import TimePicker from '@/components/TimePicker'
 
 export default {
   name: 'Schedule',
   components: {
     Breadcrumbs,
-    AddButton
+    AddButton,
+    DatePicker,
+    TimePicker
   },
   data () {
     return {
@@ -453,6 +372,15 @@ export default {
     }
   },
   methods: {
+    pickStartDate (date) {
+      this.eventDetails.start = date
+    },
+    pickStartTimeSingle (startTimeSingle) {
+      this.eventDetails.startTimeSingle = startTimeSingle
+    },
+    pickEndTimeSingle (endTimeSingle) {
+      this.eventDetails.endTimeSingle = endTimeSingle
+    },
     editSchedule (event) {
       if (!event.daysOfWeek) {
         this.dialogSingle = true
@@ -526,14 +454,6 @@ export default {
             text: 'Schedule added'
           })
           this.dialogSingle = false
-          this.eventDetails = {
-            title: null,
-            start: null,
-            startTimeSingle: null,
-            endTimeSingle: null,
-            daysOfWeek: null,
-            room: null
-          }
         })
       } else {
         this.$store.dispatch('showSnackbar', {
@@ -618,6 +538,8 @@ export default {
           start: null,
           startTime: null,
           endTime: null,
+          startTimeSingle: null,
+          endTimeSingle: null,
           startTimeRecur: null,
           endTimeRecur: null,
           startRecur: null,

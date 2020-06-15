@@ -1,21 +1,21 @@
 <template>
     <v-menu
-        ref="menu"
-        v-model="menu"
-        :close-on-content-click="false"
-        :return-value.sync="date"
-        transition="scale-transition"
-        offset-y
-        min-width="290px"
+      ref="menu"
+      v-model="menu"
+      :close-on-content-click="false"
+      :return-value.sync="date"
+      transition="scale-transition"
+      offset-y
+      min-width="290px"
     >
     <template v-slot:activator="{ on }">
-        <v-text-field
-        v-model="date"
-        label="Pick date"
-        prepend-icon="event"
-        readonly
-        v-on="on"
-        ></v-text-field>
+      <v-text-field
+      v-model="date"
+      label="Pick date"
+      prepend-icon="event"
+      readonly
+      v-on="on"
+      ></v-text-field>
     </template>
     <v-date-picker v-model="date" @input="pickDate" no-title scrollable>
         <v-spacer></v-spacer>
@@ -28,9 +28,10 @@
 <script>
 export default {
   name: 'DatePicker',
+  props: ['initDate'],
   data () {
     return {
-      date: '',
+      date: this.initDate,
       menu: false
     }
   },

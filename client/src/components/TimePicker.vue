@@ -4,7 +4,7 @@
     v-model="menu"
     :close-on-content-click="false"
     :nudge-right="40"
-    :return-value.sync="time"
+    :return-value.sync="date"
     transition="scale-transition"
     offset-y
     max-width="290px"
@@ -12,7 +12,7 @@
     >
     <template v-slot:activator="{ on }">
         <v-text-field
-        v-model="time"
+        v-model="date"
         label="Pick time"
         prepend-icon="access_time"
         readonly
@@ -21,10 +21,10 @@
     </template>
     <v-time-picker
         v-if="menu"
-        v-model="time"
+        v-model="date"
         @input="pickTime"
         full-width
-        @click:minute="$refs.menu.save(time)"
+        @click:minute="$refs.menu.save(date)"
     ></v-time-picker>
     </v-menu>
 </template>
@@ -32,15 +32,21 @@
 <script>
 export default {
   name: 'TimePicker',
+  props: ['initTime'],
   data () {
     return {
-      time: null,
+      date: this.initTime,
       menu: false
     }
   },
   methods: {
     pickTime () {
-      this.$emit('pickTime', this.time)
+      this.$emit('pickTime', this.date)
+    }
+  },
+  watch: {
+    initTime () {
+      this.date = this.initTime
     }
   }
 }
