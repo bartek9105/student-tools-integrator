@@ -60,118 +60,14 @@
             <div>
               <v-icon class="mr-2" @click="dialogSubject = true">add</v-icon><span>Add new class</span>
             </div>
-            <v-menu
-              ref="dateMenuRec"
-              v-model="dateMenuRec"
-              :close-on-content-click="false"
-              :return-value.sync="dateMenuRec"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-              >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="eventDetails.startRecur"
-                  label="Date"
-                  prepend-icon="event"
-                  readonly
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="eventDetails.startRecur" no-title scrollable>
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="dateMenuRec = false">Cancel</v-btn>
-                <v-btn text color="primary" @click="$refs.dateMenuRec.save(dateMenuRec)">OK</v-btn>
-              </v-date-picker>
-            </v-menu>
-            <v-menu
-              ref="dateMenuRec2"
-              v-model="dateMenuRec2"
-              :close-on-content-click="false"
-              :return-value.sync="dateMenuRec2"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-              >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="eventDetails.endRecur"
-                  label="Date"
-                  prepend-icon="event"
-                  readonly
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="eventDetails.endRecur" no-title scrollable>
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="dateMenuRec2 = false">Cancel</v-btn>
-                <v-btn text color="primary" @click="$refs.dateMenuRec2.save(dateMenuRec2)">OK</v-btn>
-              </v-date-picker>
-            </v-menu>
+            <DatePicker :initDate="eventDetails.startRecur" v-on:pickDate="pickStartRecurDate($event)"/>
+            <DatePicker :initDate="eventDetails.endRecur" v-on:pickDate="pickEndRecurDate($event)"/>
             <div class="d-flex justify-space-between">
               <div class="d-flex justify-space-between my-2">
-                <div>
-                  Start time
-                  <v-menu
-                  ref="timeRecurrMenu1"
-                  v-model="timeRecurrMenu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeRecurrMenu1"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                  >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="eventDetails.startTime"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="timeRecurrMenu1"
-                    v-model="eventDetails.startTime"
-                    full-width
-                    @click:minute="$refs.timeRecurrMenu1.save(timeRecurrMenu1)"
-                  ></v-time-picker>
-                  </v-menu>
-                </div>
+                <TimePicker :initTime="eventDetails.startTime" v-on:pickTime="pickStartRecurTime($event)"/>
               </div>
               <div class="d-flex justify-space-between my-2">
-                <div>
-                  End time
-                  <v-menu
-                  ref="timeRecurrMenu2"
-                  v-model="timeRecurrMenu2"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeRecurrMenu2"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                  >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="eventDetails.endTime"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="timeRecurrMenu2"
-                    v-model="eventDetails.endTime"
-                    full-width
-                    @click:minute="$refs.timeRecurrMenu2.save(timeRecurrMenu2)"
-                  ></v-time-picker>
-                  </v-menu>
-                </div>
+                <TimePicker :initTime="eventDetails.endTime" v-on:pickTime="pickEndRecurTime($event)"/>
               </div>
             </div>
             <v-select
@@ -313,7 +209,7 @@ export default {
     return {
       dialogSingle: false,
       dialogRecurring: false,
-      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       daysa: [
         {
           id: 0,
@@ -344,15 +240,6 @@ export default {
           dayName: 'Saturday'
         }
       ],
-      timeMenu1: false,
-      timeMenu2: false,
-      timeRecurrMenu1: false,
-      timeRecurrMenu2: false,
-      timeMenu: false,
-      dateMenu: false,
-      timeMenuRec: false,
-      dateMenuRec: false,
-      dateMenuRec2: false,
       dialogSubject: false,
       subjectName: null,
       eventDetails: {
@@ -372,6 +259,18 @@ export default {
     }
   },
   methods: {
+    pickStartRecurTime (time) {
+      this.eventDetails.startTime = time
+    },
+    pickEndRecurTime (time) {
+      this.eventDetails.endTime = time
+    },
+    pickStartRecurDate (date) {
+      this.eventDetails.startRecur = date
+    },
+    pickEndRecurDate (date) {
+      this.eventDetails.endRecur = date
+    },
     pickStartDate (date) {
       this.eventDetails.start = date
     },
@@ -532,6 +431,26 @@ export default {
   },
   watch: {
     dialogSingle (val) {
+      if (!val) {
+        this.eventDetails = {
+          title: null,
+          start: null,
+          startTime: null,
+          endTime: null,
+          startTimeSingle: null,
+          endTimeSingle: null,
+          startTimeRecur: null,
+          endTimeRecur: null,
+          startRecur: null,
+          endRecur: null,
+          daysOfWeek: null,
+          selectedClass: null,
+          room: null
+        }
+        this.editMode = false
+      }
+    },
+    dialogRecurring (val) {
       if (!val) {
         this.eventDetails = {
           title: null,

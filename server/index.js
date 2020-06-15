@@ -31,7 +31,6 @@ const subjectRoutes = require('./routes/subject')
 const eventsRoutes = require('./routes/event')
 const projectRoutes = require('./routes/project')
 const taskRoutes = require('./routes/task')
-const examRoutes = require('./routes/exam')
 const offerRoutes = require('./routes/offer')
 
 app.use((req, res, next) => {
@@ -50,7 +49,6 @@ app.use('/api/subjects', subjectRoutes)
 app.use('/api/events', eventsRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/tasks', taskRoutes)
-app.use('/api/exams', examRoutes)
 app.use('/api/offers', offerRoutes)
 
 app.post('/api/upload', multer.single('file'), (req, res, next) => {

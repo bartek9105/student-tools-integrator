@@ -39,6 +39,11 @@ export default {
     pickDate () {
       this.$emit('pickDate', this.date)
     }
+  },
+  watch: {
+    initDate () {
+      this.date = this.initDate
+    }
   }
 }
 </script>
