@@ -4,14 +4,7 @@
       <v-col cols="12" sm="12" class="px-0">
           <div class="d-flex justify-space-between align-center">
             <Breadcrumbs/>
-            <v-tooltip left>
-              <template v-slot:activator="{ on }">
-                <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogNewExam = true">
-                  <v-icon dark>mdi-plus</v-icon>
-                </v-btn>
-              </template>
-              <span>Add new exam</span>
-            </v-tooltip>
+            <AddButton @click="dialogNewExam = true">Add new exam</AddButton>
           </div>
       </v-col>
     </v-row>
@@ -206,12 +199,14 @@
 
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
+import AddButton from '@/components/AddButton'
 
 export default {
   name: 'Exams',
   components: {
     Breadcrumbs,
-    ColorPicker
+    ColorPicker,
+    AddButton
   },
   data () {
     return {

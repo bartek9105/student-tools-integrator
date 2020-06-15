@@ -11,14 +11,7 @@
           </template>
           <span>Add new recurring event</span>
         </v-tooltip>
-        <v-tooltip left>
-          <template v-slot:activator="{ on }">
-            <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogSingle = true">
-              <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
-          </template>
-          <span>Add new event</span>
-        </v-tooltip>
+        <AddButton @click="dialogSingle = true">Add new event</AddButton>
       </div>
     </div>
     <v-dialog v-model="dialogSingle" max-width="500">
@@ -389,11 +382,13 @@
 <script>
 
 import Breadcrumbs from '@/components/Breadcrumbs'
+import AddButton from '@/components/AddButton'
 
 export default {
   name: 'Schedule',
   components: {
-    Breadcrumbs
+    Breadcrumbs,
+    AddButton
   },
   data () {
     return {

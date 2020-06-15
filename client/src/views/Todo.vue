@@ -213,14 +213,7 @@
             <span class="mr-4">Tasks</span>
             <span class="caption display-all" @click="projectId = null">Display all tasks</span>
           </div>
-          <v-tooltip left>
-            <template v-slot:activator="{ on }">
-              <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogTask = true">
-                <v-icon dark>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-            <span>Add new task</span>
-          </v-tooltip>
+          <AddButton @click="dialogTask = true">Add new task</AddButton>
         </div>
         <div class="text-center pt-4" v-if="filterTasks.length == 0">
           <p class="headline">No tasks</p>
@@ -299,12 +292,14 @@
 <script>
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
+import AddButton from '@/components/AddButton'
 
 export default {
   name: 'Todo',
   components: {
     Breadcrumbs,
-    ColorPicker
+    ColorPicker,
+    AddButton
   },
   data () {
     return {

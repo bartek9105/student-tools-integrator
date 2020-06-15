@@ -41,14 +41,7 @@
         <div class="d-flex justify-space-between align-center">
           <Breadcrumbs/>
           <div v-if="getSubjects.length > 0">
-            <v-tooltip left>
-              <template v-slot:activator="{ on }">
-                <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialogSubject = true">
-                  <v-icon dark>mdi-plus</v-icon>
-                </v-btn>
-              </template>
-              <span>Add new subject</span>
-            </v-tooltip>
+            <AddButton @click="dialogSubject = true">Add new subject</AddButton>
           </div>
         </div>
       </v-col>
@@ -127,12 +120,14 @@
 <script>
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
+import AddButton from '@/components/AddButton'
 
 export default {
   name: 'Subjects',
   components: {
     Breadcrumbs,
-    ColorPicker
+    ColorPicker,
+    AddButton
   },
   data () {
     return {

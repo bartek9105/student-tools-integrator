@@ -4,14 +4,7 @@
       <v-col cols="12">
         <div class="d-flex justify-space-between align-center">
           <Breadcrumbs/>
-          <v-tooltip left>
-            <template v-slot:activator="{ on }">
-              <v-btn class="mx-2" fab dark color="primary" v-on="on" @click="dialog = true">
-                <v-icon dark>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-            <span>Add new event</span>
-          </v-tooltip>
+          <AddButton @click="dialog = true">Add new event</AddButton>
         </div>
       </v-col>
     </v-row>
@@ -71,6 +64,7 @@
 
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AddEventDialog from '@/components/AddEventDialog'
+import AddButton from '@/components/AddButton'
 
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -81,7 +75,8 @@ export default {
   components: {
     FullCalendar,
     Breadcrumbs,
-    AddEventDialog
+    AddEventDialog,
+    AddButton
   },
   data () {
     return {
