@@ -22,94 +22,13 @@
               v-model="examDetails.selectedClass"
             ></v-select>
             <v-text-field type="text" label="Room" v-model="examDetails.room"></v-text-field>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="examDetails.start"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="examDetails.start"
-                label="Date"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="examDetails.start" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.menu.save(examDetails.start)">OK</v-btn>
-            </v-date-picker>
-            </v-menu>
+            <DatePicker :initDate="examDetails.start" v-on:pickDate="pickStartDate($event)"/>
             <div class="d-flex justify-space-between">
               <div class="d-flex justify-space-between my-2">
-                <div>
-                  Start time
-                  <v-menu
-                  ref="timeMenu1"
-                  v-model="timeMenu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeMenu1"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                  >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="examDetails.startTime"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="timeMenu1"
-                    v-model="examDetails.startTime"
-                    full-width
-                    @click:minute="$refs.timeMenu1.save(timeMenu1)"
-                  ></v-time-picker>
-                  </v-menu>
-                </div>
+                <TimePicker :initTime="examDetails.startTime" v-on:pickTime="pickStartTime($event)"/>
               </div>
               <div class="d-flex justify-space-between my-2">
-                <div>
-                  End time
-                  <v-menu
-                  ref="timeMenu2"
-                  v-model="timeMenu2"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeMenu2"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                  >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                    v-model="examDetails.endTime"
-                    label="Pick time"
-                    prepend-icon="access_time"
-                    readonly
-                    v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-if="timeMenu2"
-                    v-model="examDetails.endTime"
-                    full-width
-                    @click:minute="$refs.timeMenu2.save(timeMenu2)"
-                  ></v-time-picker>
-                  </v-menu>
-                </div>
+                <TimePicker :initTime="examDetails.endTime" v-on:pickTime="pickEndTime($event)"/>
               </div>
             </div>
             <ColorPicker v-if="colorPicker" v-on:changeColor="changeColor($event)"/>
@@ -200,19 +119,21 @@
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ColorPicker from '@/components/ColorPicker'
 import AddButton from '@/components/AddButton'
+import DatePicker from '@/components/DatePicker'
+import TimePicker from '@/components/TimePicker'
 
 export default {
   name: 'Exams',
   components: {
     Breadcrumbs,
     ColorPicker,
-    AddButton
+    AddButton,
+    DatePicker,
+    TimePicker
   },
   data () {
     return {
       dialogNewExam: false,
-      timeMenu1: false,
-      timeMenu2: false,
       examDetails: {
         examId: null,
         color: '',
@@ -231,6 +152,15 @@ export default {
     }
   },
   methods: {
+    pickStartDate (date) {
+      this.examDetails.start = date
+    },
+    pickStartTime (time) {
+      this.examDetails.startTime = time
+    },
+    pickEndTime (time) {
+      this.examDetails.endTime = time
+    },
     addExam () {
       if (this.examDetails.selectedClass !== null && this.examDetails.start !== null && this.examDetails.startTime !== null && this.examDetails.endTime !== null) {
         this.$store.dispatch('addEvent', {
