@@ -20,7 +20,6 @@
             <td>{{ task.name }}</td>
             <td v-if="task.priority">
               <v-chip
-                class="ma-2"
                 :color="task.priority.color"
                 text-color="white"
                 small
