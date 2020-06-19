@@ -55,7 +55,7 @@ export default {
   name: 'UpcomingEvents',
   data () {
     return {
-      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     }
   },
   computed: {
@@ -70,5 +70,28 @@ export default {
   td:not(:first-child) {
     padding-top: 25px;
     padding-bottom: 25px;
+  }
+  @media screen and (max-width: 768px) {
+    td:not(:first-child) {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .v-data-table table {
+      display: flex;
+    }
+    tr {
+      display: flex;
+      flex-direction: column
+    }
+    td:not(:last-child) {
+      border-bottom: none !important;
+    }
+    td {
+      display: flex;
+      align-items: center;
+    }
+    thead {
+      display: none;
+    }
   }
 </style>
