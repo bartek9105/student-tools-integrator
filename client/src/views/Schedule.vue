@@ -135,29 +135,31 @@
           <tr v-for="event in getSchedule" :key="event._id">
             <td class="mobile-row">
               <router-link :to="'subject/' + event.subject._id"> {{ event.title }} </router-link>
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-icon color="primary" dark v-on="on" class="responsive-crud-menu">
-                    more_vert
-                  </v-icon>
-                </template>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-title @click="editSchedule(event)">
-                      <v-btn text>
-                        <v-icon class="mr-2">create</v-icon> Edit
-                      </v-btn>
-                    </v-list-item-title>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-title @click="deleteScheduleElement(event._id)">
-                      <v-btn text>
-                        <v-icon class="mr-2">delete</v-icon> Delete
-                      </v-btn>
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+              <div class="responsive-crud-menu">
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-icon color="primary" dark v-on="on">
+                      more_vert
+                    </v-icon>
+                  </template>
+                  <v-list>
+                    <v-list-item>
+                      <v-list-item-title @click="editSchedule(event)">
+                        <v-btn text>
+                          <v-icon class="mr-2">create</v-icon> Edit
+                        </v-btn>
+                      </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title @click="deleteScheduleElement(event._id)">
+                        <v-btn text>
+                          <v-icon class="mr-2">delete</v-icon> Delete
+                        </v-btn>
+                      </v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
             </td>
             <td v-if="event.daysOfWeek">
               <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
