@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
                 password: hashPassword
             })
             const savedUser = await user.save()
-            res.send({
+            res.status(200).send({
                 user: savedUser
             })        
         } else {
@@ -46,8 +46,8 @@ exports.login = async (req, res) => {
         const token = jwt.sign({
             email: req.body.email,
             userId: user._id
-        }, 'secretsecretsecretkey', { expiresIn: '1h'})
-        res.send({
+        }, 'secretsecretsecretkey', { expiresIn: '3h'})
+        res.status(200).send({
             token: token,
             userId: user._id
         })
