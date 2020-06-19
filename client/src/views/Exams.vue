@@ -75,16 +75,39 @@
         </thead>
         <tbody>
           <tr v-for="exam in getExams" :key="exam._id">
-            <td class="border" :style="{'border-left-color': exam.color}">
+            <td class="border mobile-row" :style="{'border-left-color': exam.color}">
               <router-link :to="'/subject/' + exam.subject._id">
                 {{ exam.subject.name }}
               </router-link>
+              <div class="responsive-crud-menu">
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">more_vert</v-icon>
+                  </template>
+                  <v-list>
+                    <v-list-item>
+                      <v-list-item-title class="body-2" @click="updateEditDialog(exam)">
+                        <v-btn text>
+                          <v-icon class="mr-2">create</v-icon> Edit
+                        </v-btn>
+                      </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title class="body-2" @click="deleteExam(exam._id)">
+                        <v-btn text>
+                          <v-icon class="mr-2">delete</v-icon> Delete
+                        </v-btn>
+                      </v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
             </td>
             <td>{{ exam.start.substr(0, 10) }}</td>
             <td>{{ exam.start.substr(11, 15) }} - {{ exam.end.substr(11, 15) }}</td>
             <td>{{ exam.subject.teacher }}</td>
             <td>{{ exam.room }}</td>
-            <td>
+            <td class="crud-menu">
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
                   <v-icon v-on="on">more_vert</v-icon>
@@ -258,10 +281,56 @@ export default {
 </script>
 
 <style scoped>
-  tr {
-    height: 70px;
+  @media screen and (min-width: 768px) {
+    tr {
+      height: 64px;
+    }
   }
   .border {
     border-left: 3px solid;
+  }
+  .responsive-crud-menu {
+    display: none;
+  }
+  td:not(:first-child) {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+  .table-header {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+  }
+  @media screen and (max-width: 768px) {
+    .mobile-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .crud-menu {
+      display: none;
+    }
+    .responsive-crud-menu {
+      display: block;
+    }
+    td:not(:first-child) {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .v-data-table table {
+      display: flex;
+    }
+    tr {
+      display: flex;
+      flex-direction: column
+    }
+    td:not(:last-child) {
+      border-bottom: none !important;
+    }
+    td {
+      display: flex;
+      align-items: center;
+    }
+    thead {
+      display: none;
+    }
   }
 </style>

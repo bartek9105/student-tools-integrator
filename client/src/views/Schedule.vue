@@ -162,11 +162,10 @@
               </div>
             </td>
             <td v-if="event.daysOfWeek">
-              <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
-              ({{ event.startRecur}} - {{ event.endRecur }})
+              <span class="font-weight-medium mr-2">Every {{ days[event.daysOfWeek] }}</span> &nbsp; ({{ event.startRecur}} - {{ event.endRecur }})
             </td>
             <td v-else>
-              <span class="font-weight-medium">{{ days[new Date(event.start).getDay()] }} </span>
+              <span class="font-weight-medium mr-2">{{ days[new Date(event.start).getDay()] }} </span>
               <span v-if="event.start">({{ event.start.toString().substr(0, 10) }})</span>
             </td>
             <td v-if="event.start">
