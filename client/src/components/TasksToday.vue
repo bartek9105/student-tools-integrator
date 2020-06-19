@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <div class="d-flex flex-column mb-4">
-        <h3 class="mr-2 mb-4">Tasks due today</h3>
-        <router-link to="/todo">Go to todo list view</router-link>
+      <h3 class="mr-2 mb-4">Tasks due today</h3>
+      <router-link to="/todo">Go to todo list view</router-link>
     </div>
     <div v-if="getTodaysTasks == 0">
       <p>No tasks for today</p>
@@ -31,9 +31,7 @@
                 {{ task.priority.name }}
               </v-chip>
             </td>
-            <td v-else>
-              -
-            </td>
+            <td v-else>-</td>
           </tr>
         </tbody>
       </template>

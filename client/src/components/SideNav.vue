@@ -10,9 +10,8 @@
       <router-link to="/">
         <v-list-item link>
           <v-list-item-icon>
-          <v-icon>dashboard</v-icon>
+            <v-icon>dashboard</v-icon>
           </v-list-item-icon>
-
           <v-list-item-content>
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
@@ -79,7 +78,7 @@
 
           <v-list-item-content>
             <v-list-item-title>
-                To do list
+              To do list
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -115,10 +114,6 @@
 <script>
 export default {
   name: 'SideNav',
-  data () {
-    return {
-    }
-  },
   computed: {
     getUpcomingEvents () {
       return this.$store.getters.upcomingEventsGetter.length

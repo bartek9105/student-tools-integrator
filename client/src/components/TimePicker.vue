@@ -1,5 +1,5 @@
 <template>
-    <v-menu
+  <v-menu
     ref="menu"
     v-model="menu"
     :close-on-content-click="false"
@@ -11,22 +11,22 @@
     min-width="290px"
     >
     <template v-slot:activator="{ on }">
-        <v-text-field
-        v-model="date"
-        label="Pick time"
-        prepend-icon="access_time"
-        readonly
-        v-on="on"
-        ></v-text-field>
+      <v-text-field
+      v-model="date"
+      label="Pick time"
+      prepend-icon="access_time"
+      readonly
+      v-on="on"
+      ></v-text-field>
     </template>
     <v-time-picker
-        v-if="menu"
-        v-model="date"
-        @input="pickTime"
-        full-width
-        @click:minute="$refs.menu.save(date)"
+      v-if="menu"
+      v-model="date"
+      @input="pickTime"
+      full-width
+      @click:minute="$refs.menu.save(date)"
     ></v-time-picker>
-    </v-menu>
+  </v-menu>
 </template>
 
 <script>

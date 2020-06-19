@@ -1,5 +1,5 @@
 <template>
-    <v-color-picker class="ma-2 mx-0 mb-8" :swatches="swatches" v-model="color" @input="changeColor" show-swatches hide-inputs hide-canvas></v-color-picker>
+  <v-color-picker class="ma-2 mx-0 mb-8" :swatches="swatches" v-model="color" @input="changeColor" show-swatches hide-inputs hide-canvas></v-color-picker>
 </template>
 
 <script>

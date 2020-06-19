@@ -6,12 +6,16 @@ const Multer = require('multer')
 const Cloud = require('@google-cloud/storage')
 const {format} = require('util')
 const uuid = require('uuid')
+const helmet = require('helmet')
+const compression = require('helmet')
 
 dotenv.config()
 
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(helmet())
+app.use(compression())
 
 const { Storage } = Cloud
 
@@ -105,7 +109,6 @@ app.delete('/api/file/:uuid/:filename', async (req, res) => {
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(__dirname + '/public'))
-
   app.get(/.*/, (req, res) => {
     res.sendFile(__dirname + '/public/index.html')
   })
@@ -113,10 +116,13 @@ if (process.env.NODE_ENV === 'production') {
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-xbxsg.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
-mongoose.connect(uri, { useNewUrlParser: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
-mongoose.connection.on('connected', () => {
-  console.log('connected')
+const db = mongoose.connection
+
+db.on('error', console.error.bind(console, 'connection error:'))
+db.once('open', function() {
+  console.log('Connected to db')
 })
 
 const port = process.env.PORT || 3000
