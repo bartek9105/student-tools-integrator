@@ -10,6 +10,7 @@ import Todo from '@/views/Todo'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Calendar from '@/views/Calendar'
+import NotFoundPage from '@/views/NotFoundPage'
 
 Vue.use(VueRouter)
 
@@ -80,7 +81,10 @@ const routes = [
   },
   {
     path: '*',
-    component: Login
+    component: NotFoundPage,
+    meta: {
+      hideNav: true
+    }
   }
 ]
 
