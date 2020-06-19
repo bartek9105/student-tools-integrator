@@ -133,8 +133,31 @@
         </thead>
         <tbody>
           <tr v-for="event in getSchedule" :key="event._id">
-            <td>
+            <td class="mobile-row">
               <router-link :to="'subject/' + event.subject._id"> {{ event.title }} </router-link>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-icon color="primary" dark v-on="on" class="responsive-crud-menu">
+                    more_vert
+                  </v-icon>
+                </template>
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-title @click="editSchedule(event)">
+                      <v-btn text>
+                        <v-icon class="mr-2">create</v-icon> Edit
+                      </v-btn>
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-title @click="deleteScheduleElement(event._id)">
+                      <v-btn text>
+                        <v-icon class="mr-2">delete</v-icon> Delete
+                      </v-btn>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </td>
             <td v-if="event.daysOfWeek">
               <span class="font-weight-medium">Every {{ days[event.daysOfWeek] }}</span>
@@ -158,7 +181,7 @@
             <td>
               {{ event.room }}
             </td>
-            <td>
+            <td class="crud-menu">
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
                   <v-icon color="primary" dark v-on="on">
@@ -478,6 +501,9 @@ export default {
 </script>
 
 <style scoped>
+  .responsive-crud-menu {
+    display: none;
+  }
   td:not(:first-child) {
     padding-top: 25px;
     padding-bottom: 25px;
@@ -485,5 +511,38 @@ export default {
   .table-header {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
+  }
+  @media screen and (max-width: 768px) {
+    .mobile-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .crud-menu {
+      display: none;
+    }
+    .responsive-crud-menu {
+      display: block;
+    }
+    td:not(:first-child) {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .v-data-table table {
+      display: flex;
+    }
+    tr {
+      display: flex;
+      flex-direction: column
+    }
+    td:not(:last-child) {
+      border-bottom: none !important;
+    }
+    td {
+      display: flex;
+      align-items: center;
+    }
+    thead {
+      display: none;
+    }
   }
 </style>
