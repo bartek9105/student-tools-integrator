@@ -171,7 +171,7 @@
         <div class="text-center pt-4" v-if="filterTasks.length == 0">
           <p class="headline">No tasks</p>
         </div>
-        <v-simple-table class="mb-8 pt-4 elevation-1 rounded" v-else>
+        <v-simple-table class="mb-8 elevation-1 rounded" v-else>
             <template v-slot:default>
               <thead>
                 <tr>
@@ -183,18 +183,45 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="mt-2" v-for="task in filterTasks" :key="task._id">
-                  <td>
-                    <v-btn icon class="check-icon" @click="deleteTask(task._id)">
-                      <v-icon>check_circle_outline</v-icon>
-                    </v-btn>
+                <tr v-for="task in filterTasks" :key="task._id">
+                  <td class="mobile-row">
+                    <div class="d-flex align-center">
+                      <v-btn icon class="check-icon" @click="deleteTask(task._id)">
+                        <v-icon>check_circle_outline</v-icon>
+                      </v-btn>
+                      <div class="task-name-sm">{{ task.name }}</div>
+                    </div>
+                    <div class="responsive-crud-menu">
+                      <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                          <v-icon v-on="on">
+                          more_vert
+                          </v-icon>
+                        </template>
+                        <v-list>
+                          <v-list-item>
+                            <v-list-item-title class="body-2" @click="updateEditTaskDialog(task)">
+                              <v-btn text>
+                                <v-icon class="mr-2">create</v-icon> Edit
+                              </v-btn>
+                            </v-list-item-title>
+                          </v-list-item>
+                          <v-list-item>
+                            <v-list-item-title class="body-2" @click="deleteTask(task._id)">
+                              <v-btn text>
+                                <v-icon class="mr-2">delete</v-icon> Delete
+                              </v-btn>
+                            </v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </div>
                   </td>
-                  <td>{{ task.name }}</td>
+                  <td class="task-name-lg">{{ task.name }}</td>
                   <td v-if="task.dueDate">{{ task.dueDate }}</td>
                   <td v-else>-</td>
                   <td v-if="task.priority">
                     <v-chip
-                      class="ma-2"
                       :color="task.priority.color"
                       text-color="white"
                       small
@@ -208,7 +235,7 @@
                   <td v-else>
                     -
                   </td>
-                  <td>
+                  <td class="crud-menu">
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
                         <v-icon v-on="on">
@@ -428,5 +455,49 @@ export default {
   td:not(:first-child) {
     padding-top: 25px;
     padding-bottom: 25px;
+  }
+  .responsive-crud-menu {
+    display: none;
+  }
+  @media screen and (min-width: 768px) {
+    .task-name-sm {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .mobile-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .task-name-lg {
+      display: none;
+    }
+    .crud-menu {
+      display: none;
+    }
+    .responsive-crud-menu {
+      display: flex;
+    }
+    td:not(:first-child) {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .v-data-table table {
+      display: flex;
+    }
+    tr {
+      display: flex;
+      flex-direction: column
+    }
+    td:not(:last-child) {
+      border-bottom: none !important;
+    }
+    td {
+      display: flex;
+      align-items: center;
+    }
+    thead {
+      display: none;
+    }
   }
 </style>
