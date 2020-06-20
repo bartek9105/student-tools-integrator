@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.77a277bf862014789bb22e7915f571a4.js"
+  "/precache-manifest.d6e14f981f9aaf28533fc37fc55cdc93.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "Student Tools Integrator"});
+workbox.core.setCacheNameDetails({prefix: "client"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
