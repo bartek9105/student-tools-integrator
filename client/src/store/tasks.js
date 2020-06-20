@@ -25,10 +25,10 @@ export default ({
         })
         .catch(error => console.log(error))
     },
-    addTask ({ commit }, task) {
-      Api().post('tasks/add', task).then(res => {
-        commit('ADD_TASK', res.data).catch(err => console.log(err))
-      })
+    addTask ({ commit, dispatch }, task) {
+      Api().post('tasks/add', task).then(() => {
+        dispatch('fetchTasks')
+      }).catch(err => console.log(err))
     },
     editTask ({ commit, dispatch }, task) {
       Api().patch(`tasks/${task._id}/edit`, {

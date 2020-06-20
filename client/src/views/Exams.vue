@@ -36,10 +36,10 @@
               <v-btn type="submit" v-if="!editMode" color="primary" class="mr-4" @click="addExam" @click.stop="dialogTask = false">
                 Add exam
               </v-btn>
+              <v-btn v-if="editMode" color="primary" @click="editExam(examDetails)">Edit exam</v-btn>
               <v-icon @click="colorPicker = !colorPicker">palette</v-icon>
             </div>
           </v-form>
-          <v-btn v-if="editMode" color="primary" @click="editExam(examDetails)">Edit exam</v-btn>
         </v-container>
       </v-card>
     </v-dialog>

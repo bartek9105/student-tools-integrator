@@ -324,7 +324,7 @@ export default {
       this.dueDate = date
     },
     pickEditDate (editDate) {
-      this.currentTask.date = editDate
+      this.currentTask.dueDate = editDate
     },
     fetchTasks () {
       this.$store.dispatch('fetchTasks')
@@ -427,7 +427,7 @@ export default {
         if (this.projectId === null) {
           return tasks.name.toLowerCase().match(this.search)
         }
-        return tasks.name.toLowerCase().match(this.search) && tasks.project === this.projectId
+        return tasks.name.toLowerCase().match(this.search) && tasks.project._id === this.projectId
       })
     },
     getTasks () {

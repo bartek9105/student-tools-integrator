@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({
             email: req.body.email,
             userId: user._id
-        }, 'secretsecretsecretkey', { expiresIn: '3h'})
+        }, 'secretsecretsecretkey')
         res.status(200).send({
             token: token,
             userId: user._id
