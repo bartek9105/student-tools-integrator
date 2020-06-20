@@ -1,5 +1,5 @@
 <template>
-    <v-dialog
+  <v-dialog
       :value="value" @input="$emit('input')"
       fullscreen
       hide-overlay
@@ -62,12 +62,12 @@
                       </div>
                     </div>
                     <v-select
-                        :items="days"
-                        item-text="dayName"
-                        item-value="id"
-                        v-model="eventDetails.daysOfWeek"
-                        label="Repeat every"
-                        solo
+                      :items="days"
+                      item-text="dayName"
+                      item-value="id"
+                      v-model="eventDetails.daysOfWeek"
+                      label="Repeat every"
+                      solo
                     ></v-select>
                     <v-btn type="submit" color="primary" class="mr-4">
                       Create event
@@ -80,7 +80,7 @@
         </v-tabs>
       </v-card>
     </template>
-    </v-dialog>
+  </v-dialog>
 </template>
 
 <script>
@@ -104,36 +104,7 @@ export default {
         details: null,
         dialogMutable: this.dialog
       },
-      days: [
-        {
-          id: 0,
-          dayName: 'Sunday'
-        },
-        {
-          id: 1,
-          dayName: 'Monday'
-        },
-        {
-          id: 2,
-          dayName: 'Tuesday'
-        },
-        {
-          id: 3,
-          dayName: 'Wednesday'
-        },
-        {
-          id: 4,
-          dayName: 'Thursday'
-        },
-        {
-          id: 5,
-          dayName: 'Friday'
-        },
-        {
-          id: 6,
-          dayName: 'Saturday'
-        }
-      ]
+      days: [{ id: 0, dayName: 'Sunday' }, { id: 1, dayName: 'Monday' }, { id: 2, dayName: 'Tuesday' }, { id: 3, dayName: 'Wednesday' }, { id: 4, dayName: 'Thursday' }, { id: 5, dayName: 'Friday' }, { id: 6, dayName: 'Saturday' }]
     }
   },
   props: ['value'],

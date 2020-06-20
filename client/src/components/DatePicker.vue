@@ -10,17 +10,17 @@
   >
     <template v-slot:activator="{ on }">
       <v-text-field
-      v-model="date"
-      label="Pick date"
-      prepend-icon="event"
-      readonly
-      v-on="on"
+        v-model="date"
+        label="Pick date"
+        prepend-icon="event"
+        readonly
+        v-on="on"
       ></v-text-field>
     </template>
     <v-date-picker v-model="date" @input="pickDate" no-title scrollable>
-        <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-        <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+      <v-spacer></v-spacer>
+      <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+      <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
     </v-date-picker>
   </v-menu>
 </template>

@@ -3,14 +3,7 @@
     <div class="d-flex justify-space-between align-center mb-4">
       <Breadcrumbs/>
       <div>
-        <v-tooltip left>
-          <template v-slot:activator="{ on }">
-            <v-btn class="mx-2" fab small dark color="primary" v-on="on" @click="dialogRecurring = true">
-              <v-icon dark>control_point_duplicate</v-icon>
-            </v-btn>
-          </template>
-          <span>Add new recurring event</span>
-        </v-tooltip>
+        <AddRecurringButton @click="dialogRecurring = true">Add recurring event</AddRecurringButton>
         <AddButton @click="dialogSingle = true">Add new event</AddButton>
       </div>
     </div>
@@ -71,7 +64,7 @@
               </div>
             </div>
             <v-select
-              :items="daysa"
+              :items="daysIndex"
               item-text="dayName"
               item-value="id"
               v-model="eventDetails.daysOfWeek"
@@ -107,24 +100,19 @@
         <thead>
           <tr>
             <th class="text-left table-header font-weight-black">
-              <v-icon class="mr-2">class</v-icon>
-              Class
+              <v-icon class="mr-2">class</v-icon> Class
             </th>
             <th class="text-left table-header font-weight-black">
-              <v-icon class="mr-2">calendar_today</v-icon>
-              Day
+              <v-icon class="mr-2">calendar_today</v-icon> Day
             </th>
             <th class="text-left table-header font-weight-black">
-              <v-icon class="mr-2">schedule</v-icon>
-              Time
+              <v-icon class="mr-2">schedule</v-icon> Time
             </th>
             <th class="text-left table-header font-weight-black">
-              <v-icon class="mr-2">person</v-icon>
-              Teacher
+              <v-icon class="mr-2">person</v-icon> Teacher
             </th>
             <th class="text-left table-header font-weight-black">
-              <v-icon class="mr-2">room</v-icon>
-              Room
+              <v-icon class="mr-2">room</v-icon> Room
             </th>
             <th class="text-left table-header font-weight-black">
               Action
@@ -138,9 +126,7 @@
               <div class="responsive-crud-menu">
                 <v-menu offset-y>
                   <template v-slot:activator="{ on }">
-                    <v-icon color="primary" dark v-on="on">
-                      more_vert
-                    </v-icon>
+                    <v-icon color="primary" dark v-on="on">more_vert</v-icon>
                   </template>
                   <v-list>
                     <v-list-item>
@@ -162,7 +148,7 @@
               </div>
             </td>
             <td v-if="event.daysOfWeek">
-              <span class="font-weight-medium mr-2">Every {{ days[event.daysOfWeek] }}</span> &nbsp; ({{ event.startRecur}} - {{ event.endRecur }})
+              <span class="font-weight-medium mr-2">Every {{ days[event.daysOfWeek] }}</span> ({{ event.startRecur}} - {{ event.endRecur }})
             </td>
             <td v-else>
               <span class="font-weight-medium mr-2">{{ days[new Date(event.start).getDay()] }} </span>
@@ -185,9 +171,7 @@
             <td class="crud-menu">
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-icon color="primary" dark v-on="on">
-                    more_vert
-                  </v-icon>
+                  <v-icon color="primary" dark v-on="on"> more_vert </v-icon>
                 </template>
                 <v-list>
                   <v-list-item>
@@ -218,6 +202,7 @@
 
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AddButton from '@/components/AddButton'
+import AddRecurringButton from '@/components/AddRecurringButton'
 import DatePicker from '@/components/DatePicker'
 import TimePicker from '@/components/TimePicker'
 
@@ -227,43 +212,15 @@ export default {
     Breadcrumbs,
     AddButton,
     DatePicker,
-    TimePicker
+    TimePicker,
+    AddRecurringButton
   },
   data () {
     return {
       dialogSingle: false,
       dialogRecurring: false,
       days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      daysa: [
-        {
-          id: 0,
-          dayName: 'Sunday'
-        },
-        {
-          id: 1,
-          dayName: 'Monday'
-        },
-        {
-          id: 2,
-          dayName: 'Tuesday'
-        },
-        {
-          id: 3,
-          dayName: 'Wednesday'
-        },
-        {
-          id: 4,
-          dayName: 'Thursday'
-        },
-        {
-          id: 5,
-          dayName: 'Friday'
-        },
-        {
-          id: 6,
-          dayName: 'Saturday'
-        }
-      ],
+      daysIndex: [{ id: 0, dayName: 'Sunday' }, { id: 1, dayName: 'Monday' }, { id: 2, dayName: 'Tuesday' }, { id: 3, dayName: 'Wednesday' }, { id: 4, dayName: 'Thursday' }, { id: 5, dayName: 'Friday' }, { id: 6, dayName: 'Saturday' }],
       dialogSubject: false,
       subjectName: null,
       eventDetails: {
